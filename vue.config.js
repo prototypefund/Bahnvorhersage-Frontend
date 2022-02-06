@@ -1,5 +1,8 @@
 module.exports = {
   runtimeCompiler: true,
+  devServer: {
+    proxy: 'http://localhost:5000'
+  },
 
   css: {
     loaderOptions: {
