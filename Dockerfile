@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY ./ .
-RUN npm run build
+RUN npm run build --modern
 RUN find /app/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\|json\)$' -exec gzip -f -k {} \;
 
 FROM nginx as production-stage
