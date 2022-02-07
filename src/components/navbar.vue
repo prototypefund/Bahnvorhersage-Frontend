@@ -14,8 +14,8 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <router-link class="navbar-brand" to="#search"><img src="../assets/img/IC.svg" height="24" width="32" alt="bahnvorhersage logo"></router-link>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <router-link class="navbar-brand" to="#search"><img src="../assets/img/IC.svg" height="24"></router-link>
             <li class="nav-item">
               <router-link class="nav-link" :to="{ path: '/connections', hash: '#content' }">Verbindungen</router-link>
             </li>
