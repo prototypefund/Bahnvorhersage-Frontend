@@ -1,4 +1,12 @@
-# Bahn-Vorhersage Frontend
+# Bahn-Vorhersage Frontend https://bahnvorhersage.de
+```
+████████████████████████████████████▇▆▅▃▁
+       Bahn-Vorhersage      ███████▙  ▜██▆▁
+███████████████████████████████████████████▃
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█████▄▖
+█████████████████████████████████████████████
+ ▜█▀▀▜█▘                       ▜█▀▀▜█▘   ▀▀▀
+```
 This is the frontend for https://bahnvorhersage.de.
 
 # Instructions
