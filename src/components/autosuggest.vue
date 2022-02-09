@@ -80,7 +80,7 @@ export default {
     matches () {
       return this.stations.filter(
         function (item) {
-          if (this.count < 20 && item.toLowerCase().indexOf(this.search) >= 0) {
+          if (this.search && this.count < 20 && item.toLowerCase().indexOf(this.search) >= 0) {
             this.count++
             return true
           }
