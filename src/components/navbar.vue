@@ -85,6 +85,10 @@ export default {
       update.methods.clearCache()
       window.location.href = 'https://bahnvorhersage.de/?rebrand=true'
     }
+    else if (window.location.hostname.indexOf('trainconnectionprediction.de') !== -1) {
+      update.methods.clearCache()
+      window.location.href = 'https://bahnvorhersage.de/?rebrand=true'
+    }
     this.progress = new ProgressBar.Line('#pgr_bar', {
       strokeWidth: 0.8,
       color: '#3f51b5',
