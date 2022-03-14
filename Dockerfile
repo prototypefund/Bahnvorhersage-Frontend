@@ -3,9 +3,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY ./ .
-RUN $DEV_SERVER && echo $'\
+ARG DEV_SERVER
+RUN if [ "$DEV_SERVER" ]; then echo $'\
 User-agent: *\n\
-Disallow: / ' | tee public/robots.txt
+Disallow: / ' | tee public/robots.txt; fi
 RUN npm run build --modern
 RUN find /app/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\|json\)$' -exec gzip -f -k {} \;
 
