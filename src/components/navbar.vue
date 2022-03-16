@@ -47,10 +47,10 @@
             <install-button></install-button>
             <a
               class="btn btn-primary"
-              href="https://github.com/TrAInConnectionPrediction/tcp"
+              href="https://gitlab.com/bahnvorhersage/bahnvorhersage"
               target="_blank"
               rel="noopener"
-              ><i class="tcp-github"></i> Projekt auf GitHub</a
+              ><i class="tcp-gitlab"></i> Projekt auf GitLab</a
             >
           </div>
         </div>

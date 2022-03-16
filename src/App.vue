@@ -48,11 +48,11 @@
         <div>
           Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen Bugreport auf
           <a
-            href="https://github.com/TrAInConnectionPrediction/tcp/issues"
+            href="https://gitlab.com/bahnvorhersage/bahnvorhersage/-/issues?sort=created_date&state=opened"
             class="link-dark fw-bold"
             target="_blank"
             rel="noopener"
-            >GitHub</a
+            >GitLab</a
           >
         </div>
       </div>
