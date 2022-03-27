@@ -29,7 +29,7 @@
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
                 <li>
                   <router-link class="nav-link" :to="{ path: '/stats/overview', hash: '#content' }"
                     >Übersicht</router-link
@@ -41,6 +41,9 @@
                   >
                 </li>
               </ul>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ path: '/dev', hash: '#content' }">Infos für Devs</router-link>
             </li>
           </ul>
           <div class="d-flex gap-2">

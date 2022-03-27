@@ -39,6 +39,16 @@ const routes = [
     path: '/stats/stations',
     name: 'Bahnhofs-Statistiken',
     component: () => import('../views/stats/Stations.vue')
+  },
+  {
+    path: '/dev',
+    name: 'Infos für Devs',
+    component: () => import('../views/dev.vue')
+  },
+  {
+    path: '/stationviewer',
+    name: 'Stationviewer',
+    component: () => import('../views/StationDataViewer.vue')
   }
   // {
   //   path: '/data/obstacles',

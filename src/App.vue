@@ -14,12 +14,12 @@
             <h6 class="display-6">mit</h6>
             <h1 class="display-4 fw-bold">Bahn-Vorhersage</h1>
           </div>
-          <searchform id="search" class="search hover shadow"> </searchform>
+          <searchform id="search" class="search hover shadow rounded"> </searchform>
         </div>
       </div>
     </div>
     <div class="container-fluid d-flex flex-column align-items-center py-5 main_background">
-      <main id="main">
+      <main>
         <router-view id="content" />
       </main>
     </div>
@@ -113,7 +113,11 @@ export default {
     display_fetch_error: function (response) {
       if (!response.ok) {
         this.$store.commit('stop_progress')
-        this.error = Error(response.statusText)
+        if (response.status === 429) {
+          this.error = Error('Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut.')
+        } else {
+          this.error = Error(response.statusText)
+        }
         console.log(response.url)
         console.log(this.error)
       }
@@ -181,10 +185,6 @@ export default {
   min-height: 800px;
 }
 
-#main {
-  max-width: 1200px;
-}
-
 .shadow-xxxl {
   box-shadow: 0 0 3em 2em $page_background;
 }
@@ -217,7 +217,7 @@ body {
 }
 
 .text_content {
-  max-width: 800px;
+  max-width: 50em;
   width: 90%;
   margin: auto !important;
   margin-bottom: 80px !important;
@@ -288,6 +288,10 @@ body {
 .search {
   grid-area: search;
   padding: 3em 1em;
+}
+
+.disclaimer {
+  color: $gray-500;
 }
 
 @include media-breakpoint-up(sm) {

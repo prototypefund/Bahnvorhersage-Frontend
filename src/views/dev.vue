@@ -1,0 +1,28 @@
+<template>
+  <div id="impressum" class="text_content">
+    <h1 class="text-center">Informationen für Softwareentwickler*innen</h1>
+    <p>
+      Für dieses Projekt haben wir viele Daten gesammelt und kombinieren. Damit auch andere etwas von unserer Arbeit haben,
+      stellen wir einige dieser Daten öffentlich zur Verfügung. Dies beinhaltet:
+    </p>
+    <ul>
+      <li>Stationsdaten</li>
+    </ul>
+    <p>
+      Wir dürfen keine historischen Verspätungsinformationen veröffentlichen. Falls du Interesse an diesen Daten hast, kannst du:
+      <ol>
+        <li>Bei den Eisenbahnverkehrsunternehmen (EVU) nach den Daten fragen</li>
+        <li>Bei einem Verkehrsministerium oder einer Servicegesellschaft eines Verkehrsministeriums nachfragen. Ggf. kann hier das <a href="https://fragdenstaat.de">Informationsfreiheitsgesetz</a> helfen</li>
+        <li>Politisch aktiv werden, um EVUs dazu zu zwingen, diese Daten öffentlich zu machen</li>
+        <li>Selber die Daten sammeln</li>
+      </ol>
+    </p>
+    <em class="fst-italic disclaimer">
+      Disclaimer: Wir garantieren nicht, dass die Daten richtig sind. Und wir
+      wissen, dass einige unserer Datenquellen kleinere oder größere Fehler haben. Wenn dir ein Fehler
+      auffällt, dann mache doch bitte ein Issue auf GitLab auf.
+    </em>
+    <h2>Stationsdaten</h2>
+    <router-link class="btn btn-primary" :to="{ path: '/stationviewer', hash: '#content' }">Stationsdatenviewer</router-link>
+  </div>
+</template>

@@ -129,11 +129,17 @@ export default {
 }
 
 .custom_card {
+  @include border-radius;
+  background-color: $page_gray;
+  overflow: hidden;
   margin-bottom: 5px;
   color: $text_color;
 }
 
 .card_header {
+  @include border-radius;
+  background-color: $page_gray;
+  overflow: hidden;
   height: max-content;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr minmax(190px, 1fr);
