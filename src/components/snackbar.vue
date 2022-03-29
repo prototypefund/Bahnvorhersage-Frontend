@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
     <div v-if="show" class="snackbar-center">
-      <div id="snackbar" class="shadow">
-        <div :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
+      <div id="snackbar" class="">
+        <div class="shadow rounded snack-content" :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
           <div>
             <slot></slot>
           </div>
@@ -69,7 +69,6 @@ export default Vue.extend({
 #snackbar {
   width: 95%;
   max-width: 600px;
-  background-color: $page_lighter_gray;
 
   .layout {
     padding: 20px 30px;
@@ -85,6 +84,10 @@ export default Vue.extend({
   .layout.multiline {
     grid-template-rows: auto min-content;
     row-gap: 20px;
+  }
+
+  .snack-content {
+    background-color: $page_lighter_gray;
   }
 }
 

@@ -29,7 +29,7 @@
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
                 <li>
                   <router-link class="nav-link" :to="{ path: '/stats/overview', hash: '#content' }"
                     >Übersicht</router-link
@@ -38,6 +38,21 @@
                 <li>
                   <router-link class="nav-link" :to="{ path: '/stats/stations', hash: '#content' }"
                     >Bahnhöfe</router-link
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <router-link
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                :to="{ path: '/opendata', hash: '#content' }"
+                >Open Data</router-link
+              >
+              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+                <li>
+                  <router-link class="nav-link" :to="{ path: '/stationviewer', hash: '#content' }"
+                    >Stationsdaten</router-link
                   >
                 </li>
               </ul>
