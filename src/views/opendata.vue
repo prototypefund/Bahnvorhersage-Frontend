@@ -18,7 +18,7 @@
     <em class="fst-italic disclaimer">
       Disclaimer: Wir garantieren nicht, dass die Daten richtig sind. Und wir
       wissen, dass einige unserer Datenquellen kleinere oder größere Fehler haben. Wenn dir ein Fehler
-      auffällt, dann mache doch bitte ein Issue auf GitLab auf.
+      auffällt, dann mache doch bitte ein Issue auf <a href="https://gitlab.com/bahnvorhersage/bahnvorhersage/-/issues" target="_blank">GitLab</a> auf.
     </em>
   </div>
 </template>
