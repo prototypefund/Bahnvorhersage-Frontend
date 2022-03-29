@@ -136,6 +136,7 @@ export default {
 
 <style lang="scss">
 .stats-overview {
+  @include border-radius;
   display: grid;
   grid-template-columns: min-content repeat(3, auto);
   gap: 2px;
@@ -144,6 +145,7 @@ export default {
 }
 
 .stats-overview > div {
+  @include border-radius;
   text-align: center;
   vertical-align: middle;
   background-color: $page_gray;
