@@ -42,7 +42,7 @@
       </template>
     </snackbar>
     <!-- Error box -->
-    <snackbar v-if="error" :timeout="15000" :layout="'multiline'" :style_class="'bg-danger'">
+    <snackbar v-if="error" :timeout="15000" :layout="'multiline'" class="text-dark" :style_class="'bg-danger'">
       <div>
         <div><b>Holy Guacamole!</b> {{ error.toString() }}</div>
         <div>
