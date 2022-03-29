@@ -3,7 +3,7 @@
     <h1 class="text-center">Open Data</h1>
     <p>
       Für dieses Projekt haben wir viele Daten gesammelt und kombinieren. Damit auch andere etwas von unserer Arbeit haben,
-      stellen wir einige dieser Daten öffentlich zur Verfügung. Dies beinhaltet:
+      stellen wir einige dieser Daten öffentlich zur Verfügung. Dies beinhaltet bislang:
     </p>
     <router-link class="btn btn-primary" :to="{ path: '/stationviewer', hash: '#content' }">Stationsdaten</router-link>
     <p>
