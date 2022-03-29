@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
     <div v-if="show" class="snackbar-center">
-      <div id="snackbar" class="shadow">
-        <div :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
+      <div id="snackbar" class="">
+        <div class="shadow rounded text-dark" :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
           <div>
             <slot></slot>
           </div>
