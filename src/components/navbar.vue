@@ -42,8 +42,20 @@
                 </li>
               </ul>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ path: '/dev', hash: '#content' }">Infos für Devs</router-link>
+            <li class="nav-item dropdown">
+              <router-link
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                :to="{ path: '/opendata', hash: '#content' }"
+                >Open Data</router-link
+              >
+              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+                <li>
+                  <router-link class="nav-link" :to="{ path: '/stationviewer', hash: '#content' }"
+                    >Stationsdaten</router-link
+                  >
+                </li>
+              </ul>
             </li>
           </ul>
           <div class="d-flex gap-2">

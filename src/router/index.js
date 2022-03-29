@@ -41,9 +41,9 @@ const routes = [
     component: () => import('../views/stats/Stations.vue')
   },
   {
-    path: '/dev',
-    name: 'Infos für Devs',
-    component: () => import('../views/dev.vue')
+    path: '/opendata',
+    name: 'Open Data',
+    component: () => import('../views/opendata.vue')
   },
   {
     path: '/stationviewer',

@@ -1,13 +1,11 @@
 <template>
   <div id="impressum" class="text_content">
-    <h1 class="text-center">Informationen für Softwareentwickler*innen</h1>
+    <h1 class="text-center">Open Data</h1>
     <p>
       Für dieses Projekt haben wir viele Daten gesammelt und kombinieren. Damit auch andere etwas von unserer Arbeit haben,
       stellen wir einige dieser Daten öffentlich zur Verfügung. Dies beinhaltet:
     </p>
-    <ul>
-      <li>Stationsdaten</li>
-    </ul>
+    <router-link class="btn btn-primary" :to="{ path: '/stationviewer', hash: '#content' }">Stationsdaten</router-link>
     <p>
       Wir dürfen keine historischen Verspätungsinformationen veröffentlichen. Falls du Interesse an diesen Daten hast, kannst du:
       <ol>
@@ -22,7 +20,5 @@
       wissen, dass einige unserer Datenquellen kleinere oder größere Fehler haben. Wenn dir ein Fehler
       auffällt, dann mache doch bitte ein Issue auf GitLab auf.
     </em>
-    <h2>Stationsdaten</h2>
-    <router-link class="btn btn-primary" :to="{ path: '/stationviewer', hash: '#content' }">Stationsdatenviewer</router-link>
   </div>
 </template>

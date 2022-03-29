@@ -4,12 +4,12 @@
       <div class="text_content">
         <h1 class="text-center">Stations- / Bahnhofsdaten</h1>
         <p>
-          Unsere Stationsdaten kommen in erster Linie vom IRIS (<b>I</b>nternes <b>R</b>eisenden<b>i</b>informations<b>s</b>ystem). Diese werden mit Koordinaten aus Hafas und DB OpenData
+          Unsere Stationsdaten kommen in erster Linie vom IRIS (<b>I</b>nternes <b>R</b>eisenden<b>i</b>nformations<b>s</b>ystem). Diese werden mit Koordinaten aus Hafas und DB OpenData
           angereichert. Da sich z.B. Bahnhofsnamen hin und wieder ändern, hat jeder Datenpunkt einen
           <pre class="d-inline">valid_from</pre> und einen <pre class="d-inline">valid_to</pre> tag.
         </p>
         <p>
-          Den vollen Datensatz gibt es <a href="api/stations.json" target="_blank">hier</a> in einem maschinenlesbaren Format (JSON).
+          Den vollen Datensatz gibt es hier: <a href="api/stations.json" target="_blank">stations.json</a>
         </p>
       </div>
       <div class="text-center">
@@ -27,8 +27,8 @@
           <pre class="header">db</pre>
           <pre class="header">iris</pre>
 
-          <div style="display: contents" v-for="(station, index) in stations" :key="station.index">
-            <pre>{{ index }}</pre>
+          <div style="display: contents" v-for="station in stations" :key="station.index">
+            <pre>{{ station.index }}</pre>
             <pre>{{ station.name }}</pre>
             <pre>{{ station.eva }}</pre>
             <pre>{{ station.ds100 }}</pre>
