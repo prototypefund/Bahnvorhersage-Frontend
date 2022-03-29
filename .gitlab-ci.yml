@@ -6,15 +6,15 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- test
-- build
+  - test
+  - build
 # - push
 sast:
   stage: test
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 
-image: docker:19.03.12  
+image: docker:19.03.12
 
 services:
   - docker:19.03.12-dind
@@ -28,7 +28,6 @@ Build:
     - docker pull $CI_REGISTRY_IMAGE || true
     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE --tag $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-
 # # Tag the "master" branch as "latest"
 # Push latest:
 #   stage: push

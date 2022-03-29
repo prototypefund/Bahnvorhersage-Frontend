@@ -1,5 +1,5 @@
 export default {
-  data () {
+  data() {
     return {
       // refresh variables
       refreshing: false,
@@ -8,7 +8,7 @@ export default {
     }
   },
 
-  created () {
+  created() {
     // Listen for our custom event from the SW registration
     document.addEventListener('sw_updated', this.updateAvailable, { once: true })
 
@@ -25,13 +25,13 @@ export default {
     // Store the SW registration so we can send it a message
     // We use `updateExists` to control whatever alert, toast, dialog, etc we want to use
     // To alert the user there is an update they need to refresh for
-    updateAvailable (event) {
+    updateAvailable(event) {
       this.registration = event.detail
       this.updateExists = true
     },
 
     // Called when the user accepts the update
-    refreshApp () {
+    refreshApp() {
       this.updateExists = false
       // Make sure we only send a 'skip waiting' message if the SW is waiting
       if (!this.registration || !this.registration.waiting) return
@@ -39,9 +39,11 @@ export default {
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
     },
 
-    clearCache () {
+    clearCache() {
       caches.keys().then(function (names) {
-        for (let name of names) { caches.delete(name) }
+        for (let name of names) {
+          caches.delete(name)
+        }
       })
     }
   }

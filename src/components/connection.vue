@@ -5,12 +5,14 @@
       <div class="p-3 col1">
         <div v-if="summary.dp_ct.isSame(summary.dp_pt)">{{ summary.dp_ct.format('HH:mm') }}</div>
         <div v-else>
-          {{ summary.dp_ct.format('HH:mm') }} <del class="outdated">{{ summary.dp_pt.format('HH:mm') }}</del>
+          {{ summary.dp_ct.format('HH:mm') }}
+          <del class="outdated">{{ summary.dp_pt.format('HH:mm') }}</del>
         </div>
 
         <div v-if="summary.ar_ct.isSame(summary.ar_pt)">{{ summary.ar_ct.format('HH:mm') }}</div>
         <div v-else>
-          {{ summary.ar_ct.format('HH:mm') }} <del class="outdated">{{ summary.ar_pt.format('HH:mm') }}</del>
+          {{ summary.ar_ct.format('HH:mm') }}
+          <del class="outdated">{{ summary.ar_pt.format('HH:mm') }}</del>
         </div>
       </div>
       <div class="p-3 col2">{{ summary.duration }}</div>

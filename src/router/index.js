@@ -62,10 +62,12 @@ const router = new VueRouter({
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
   routes: routes,
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
       Vue.nextTick(() => {
-        document.getElementById(to.hash.substring(1)).scrollIntoView({ behavior: 'smooth', block: 'center' })
+        document
+          .getElementById(to.hash.substring(1))
+          .scrollIntoView({ behavior: 'smooth', block: 'center' })
       })
       // Does not work but it's the vue way
       return { selector: to.hash }

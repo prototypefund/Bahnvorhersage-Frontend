@@ -4,7 +4,10 @@
     <div id="intro" class="container-md">
       <div class="d-flex justify-content-center align-items-center" style="height: 100%">
         <div class="hero-layout">
-          <div v-if="'rebrand' in this.$route.query && this.$route.query['rebrand'] === 'true'" class="slogan d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-if="'rebrand' in this.$route.query && this.$route.query['rebrand'] === 'true'"
+            class="slogan d-flex flex-column justify-content-center align-items-center"
+          >
             <h6 class="display-6 fw-bold">TrAIn_Connection_Prediction</h6>
             <h6 class="display-6">heißt jetzt</h6>
             <h1 class="display-4 fw-bold">Bahn-Vorhersage</h1>
@@ -30,8 +33,8 @@
       </div>
       <br />
       <span
-        >© 2022 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in keiner Verbindung mit der
-        Deutschen Bahn und ihren Tochter-Unternehmen.
+        >© 2022 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in keiner Verbindung mit
+        der Deutschen Bahn und ihren Tochter-Unternehmen.
       </span>
     </footer>
     <!-- Update Service worker -->
@@ -42,7 +45,13 @@
       </template>
     </snackbar>
     <!-- Error box -->
-    <snackbar v-if="error" :timeout="15000" :layout="'multiline'" class="text-dark" :style_class="'bg-danger'">
+    <snackbar
+      v-if="error"
+      :timeout="15000"
+      :layout="'multiline'"
+      class="text-dark"
+      :style_class="'bg-danger'"
+    >
       <div>
         <div><b>Holy Guacamole!</b> {{ error.toString() }}</div>
         <div>
@@ -76,10 +85,12 @@ export default {
     }
   },
   components: {
-    searchform, snackbar, navbar
+    searchform,
+    snackbar,
+    navbar
   },
   mixins: [update],
-  mounted () {
+  mounted() {
     const styles = {
       light_grey: 'color: #e5e5e5;',
       light_grey_bg_black: 'color: #e5e5e5;background-color: #000;font-weight: bold;',
@@ -88,15 +99,15 @@ export default {
     }
     console.log(
       '%c████████████████████████████████████▇▆▅▃▁\n' +
-      '%c       Bahn-Vorhersage      ███████▙  ▜' +
-      '%c██▆▁\n' +
-      '%c███████████████████████████████████████████▃\n' +
-      '%c▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀' +
-      '%c█████▄' +
-      '%c▖\n' +
-      '%c█████████████████████████████████████████████\n' +
-      '%c ▜█▀▀▜█▘                       ▜█▀▀▜█▘' +
-      '%c   ▀▀▀',
+        '%c       Bahn-Vorhersage      ███████▙  ▜' +
+        '%c██▆▁\n' +
+        '%c███████████████████████████████████████████▃\n' +
+        '%c▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀' +
+        '%c█████▄' +
+        '%c▖\n' +
+        '%c█████████████████████████████████████████████\n' +
+        '%c ▜█▀▀▜█▘                       ▜█▀▀▜█▘' +
+        '%c   ▀▀▀',
       styles.light_grey,
       styles.light_grey_bg_black,
       styles.light_grey,
@@ -114,7 +125,9 @@ export default {
       if (!response.ok) {
         this.$store.commit('stop_progress')
         if (response.status === 429) {
-          this.error = Error('Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut.')
+          this.error = Error(
+            'Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut.'
+          )
         } else {
           this.error = Error(response.statusText)
         }
@@ -169,7 +182,9 @@ export default {
             this.$router.push('/connections')
           }
           this.$nextTick(() => {
-            document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'center' })
+            document
+              .getElementById('content')
+              .scrollIntoView({ behavior: 'smooth', block: 'center' })
           })
         })
     }
@@ -178,8 +193,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap";
-@import "src/assets/scss/font.scss";
+@import '~bootstrap/scss/bootstrap';
+@import 'src/assets/scss/font.scss';
 
 #intro {
   min-height: 800px;
@@ -274,8 +289,9 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content;
-  grid-template-areas: "slogan"
-                       "search";
+  grid-template-areas:
+    'slogan'
+    'search';
   grid-gap: 20px;
   margin: 0 auto;
   width: 100%;
@@ -295,7 +311,7 @@ body {
 }
 
 @include media-breakpoint-up(sm) {
-  .search{
+  .search {
     padding: 3em;
   }
 }
@@ -304,7 +320,7 @@ body {
   .hero-layout {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "slogan search";
+    grid-template-areas: 'slogan search';
   }
 }
 </style>

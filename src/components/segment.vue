@@ -7,9 +7,12 @@
       <div class="station">
         {{ segment.dp_station_display_name }}
       </div>
-      <div class="time" v-if="segment.dp_pt.isSame(segment.dp_ct)">ab {{ segment.dp_ct.format('HH:mm') }}</div>
+      <div class="time" v-if="segment.dp_pt.isSame(segment.dp_ct)">
+        ab {{ segment.dp_ct.format('HH:mm') }}
+      </div>
       <div class="time" v-else>
-        ab {{ segment.dp_ct.format('HH:mm') }} <del class="outdated">{{ segment.dp_pt.format('HH:mm') }}</del>
+        ab {{ segment.dp_ct.format('HH:mm') }}
+        <del class="outdated">{{ segment.dp_pt.format('HH:mm') }}</del>
       </div>
       <div class="platform" v-if="segment.dp_pp == segment.dp_cp">von Gl. {{ segment.dp_cp }}</div>
       <div class="platform" v-else>
@@ -17,16 +20,23 @@
       </div>
 
       <div class="train">
-        <img v-if="segment.dp_c in train_icons" v-bind:src="train_icons[segment.dp_c]" height="20px" />
+        <img
+          v-if="segment.dp_c in train_icons"
+          v-bind:src="train_icons[segment.dp_c]"
+          height="20px"
+        />
         {{ segment.train_name }} nach {{ segment.train_destination }}
       </div>
 
       <div class="station">
         {{ segment.ar_station_display_name }}
       </div>
-      <div class="time" v-if="segment.ar_pt.isSame(segment.ar_ct)">an {{ segment.ar_ct.format('HH:mm') }}</div>
+      <div class="time" v-if="segment.ar_pt.isSame(segment.ar_ct)">
+        an {{ segment.ar_ct.format('HH:mm') }}
+      </div>
       <div class="time" v-else>
-        an {{ segment.ar_ct.format('HH:mm') }} <del class="outdated">{{ segment.ar_pt.format('HH:mm') }}</del>
+        an {{ segment.ar_ct.format('HH:mm') }}
+        <del class="outdated">{{ segment.ar_pt.format('HH:mm') }}</del>
       </div>
       <div class="platform" v-if="segment.ar_pp == segment.ar_cp">an Gl. {{ segment.ar_cp }}</div>
       <div class="platform" v-else>
@@ -38,7 +48,9 @@
         Verbindungs-Score:
         <span v-bind:style="text_color">{{ segment.score }}%</span>
       </div>
-      <div class="transfer" v-bind:style="transfer_style">Umsteigezeit: {{ segment.transfer_time }} Min.</div>
+      <div class="transfer" v-bind:style="transfer_style">
+        Umsteigezeit: {{ segment.transfer_time }} Min.
+      </div>
       <div v-if="segment.walk" class="walk" v-bind:style="transfer_style">
         <div style="display: contents">
           <i class="tcp-pedestrian" style="font-size: 1.2rem"></i>
@@ -104,7 +116,10 @@ export default {
 .leg {
   @include border-radius;
   display: inline-grid;
-  grid-template-columns: minmax(max-content, auto) minmax(max-content, auto) minmax(max-content, auto);
+  grid-template-columns: minmax(max-content, auto) minmax(max-content, auto) minmax(
+      max-content,
+      auto
+    );
   background-color: $page_lighter_gray;
 }
 

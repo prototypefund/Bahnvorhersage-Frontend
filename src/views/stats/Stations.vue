@@ -9,7 +9,12 @@
         :lazy="true"
         :tooltip="'always'"
       ></vue-slider>
-      <input class="btn btn-primary" type="button" value="Plot generieren" v-on:click="updatePlot" />
+      <input
+        class="btn btn-primary"
+        type="button"
+        value="Plot generieren"
+        v-on:click="updatePlot"
+      />
     </div>
     <img
       class="stats-image"
@@ -35,10 +40,11 @@ export default {
     return {
       values: [],
       dates: [],
-      plotURL: window.location.protocol + '//' + window.location.host + '/api/stationplot/default.webp'
+      plotURL:
+        window.location.protocol + '//' + window.location.host + '/api/stationplot/default.webp'
     }
   },
-  created () {
+  created() {
     this.$store.commit('start_progress')
     fetch(window.location.protocol + '//' + window.location.host + '/api/stationplot/limits', {
       method: 'GET',
@@ -47,7 +53,7 @@ export default {
       }
     })
       .then((response) => this.$parent.display_fetch_error(response))
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((limits) => {
         limits.min = dayjs(limits.min, 'YYYY-MM-DD')
         limits.max = dayjs(limits.max, 'YYYY-MM-DD')
@@ -64,7 +70,7 @@ export default {
       })
   },
   methods: {
-    updatePlot () {
+    updatePlot() {
       const new_url =
         window.location.protocol +
         '//' +
@@ -79,12 +85,13 @@ export default {
         this.plotURL = new_url
       }
     },
-    loaded_img () {
+    loaded_img() {
       this.$store.commit('stop_progress')
       document.getElementById('stats_image').scrollIntoView({ behavior: 'smooth' })
     },
-    replaceByDefault () {
-      this.plotURL = window.location.protocol + '//' + window.location.host + '/api/stationplot/default.webp'
+    replaceByDefault() {
+      this.plotURL =
+        window.location.protocol + '//' + window.location.host + '/api/stationplot/default.webp'
       this.$store.commit('start_progress')
     }
   }

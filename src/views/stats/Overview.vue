@@ -3,8 +3,9 @@
     <div v-if="show" class="text_content">
       <div>
         <h1>Übersicht über die verwendeten Daten</h1>
-        Unser Machine Learning System wird auf echten Verspätungsinformationen trainiert. Diese Daten werden rund um die
-        Uhr von uns aktualisiert. Hier gibt es eine Übersicht über den Datensatz.
+        Unser Machine Learning System wird auf echten Verspätungsinformationen trainiert. Diese
+        Daten werden rund um die Uhr von uns aktualisiert. Hier gibt es eine Übersicht über den
+        Datensatz.
       </div>
       <div class="text-center">
         Letzte Aktuallisierung der Statistik: {{ stats.time }}
@@ -117,7 +118,7 @@ export default {
       show: false
     }
   },
-  created () {
+  created() {
     fetch(window.location.protocol + '//' + window.location.host + '/api/stats', {
       type: 'GET',
       data: null,

@@ -1,6 +1,6 @@
 <template>
   <div id="stats" class="obstacles">
-    <h1 class="text-center"> Zug-Behinderungen in Deutschland </h1>
+    <h1 class="text-center">Zug-Behinderungen in Deutschland</h1>
     <div class="stats-picker">
       <vue-slider
         v-model="value"
@@ -62,14 +62,11 @@ export default {
       ],
       data: dates,
       plotURL:
-        window.location.protocol +
-        '//' +
-        window.location.host +
-        '/api/obstacleplot/default.png'
+        window.location.protocol + '//' + window.location.host + '/api/obstacleplot/default.png'
     }
   },
   methods: {
-    updatePlot () {
+    updatePlot() {
       const new_url =
         window.location.protocol +
         '//' +
@@ -84,18 +81,13 @@ export default {
         this.plotURL = new_url
       }
     },
-    loaded_img () {
+    loaded_img() {
       this.$store.commit('stop_progress')
-      document
-        .getElementById('stats_image')
-        .scrollIntoView({ behavior: 'smooth' })
+      document.getElementById('stats_image').scrollIntoView({ behavior: 'smooth' })
     },
-    replaceByDefault () {
+    replaceByDefault() {
       this.plotURL =
-        window.location.protocol +
-        '//' +
-        window.location.host +
-        '/api/obstacleplot/default.png'
+        window.location.protocol + '//' + window.location.host + '/api/obstacleplot/default.png'
     }
   }
 }

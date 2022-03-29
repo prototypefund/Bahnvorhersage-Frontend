@@ -2,7 +2,7 @@
   <div class="dropdown flex-fill">
     <input
       class="form-control"
-      :class="{'is-invalid': is_invalid}"
+      :class="{ 'is-invalid': is_invalid }"
       type="text"
       autocomplete="off"
       :placeholder="placeholder"
@@ -19,7 +19,7 @@
     <ul
       class="dropdown-menu dropdown-menu-dark"
       v-bind:class="{ show: open_suggestions }"
-      style="width:100%"
+      style="width: 100%"
     >
       <li
         v-for="(suggestion, index) in matches"
@@ -27,12 +27,9 @@
         @click="suggestion_click(index)"
         @mousedown="mousedown_prevent"
       >
-        <a
-          class="dropdown-item"
-          v-bind:class="{ active: index === current }"
-          href="#"
-          >{{ suggestion }}</a
-        >
+        <a class="dropdown-item" v-bind:class="{ active: index === current }" href="#">{{
+          suggestion
+        }}</a>
       </li>
     </ul>
   </div>
@@ -62,7 +59,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       open: false,
       current: 0,
@@ -77,7 +74,7 @@ export default {
   },
 
   computed: {
-    matches () {
+    matches() {
       return this.stations.filter(
         function (item) {
           if (this.search && this.count < 20 && item.toLowerCase().indexOf(this.search) >= 0) {
@@ -90,18 +87,14 @@ export default {
       )
     },
 
-    open_suggestions () {
-      return (
-        this.internal_value !== '' &&
-        this.matches.length !== 0 &&
-        this.open === true
-      )
+    open_suggestions() {
+      return this.internal_value !== '' && this.matches.length !== 0 && this.open === true
     },
     ...mapState(['stations'])
   },
 
   methods: {
-    enter (event) {
+    enter(event) {
       if (this.open) {
         event.preventDefault()
         this.internal_value = this.matches[this.current]
@@ -110,19 +103,19 @@ export default {
       }
     },
 
-    up () {
+    up() {
       if (this.current > 0) this.current--
     },
 
-    down () {
+    down() {
       if (this.current < this.matches.length - 1) this.current++
     },
 
-    is_active (index) {
+    is_active(index) {
       return index === this.current
     },
 
-    change () {
+    change() {
       if (this.open === false) {
         this.open = true
         this.current = 0
@@ -130,7 +123,7 @@ export default {
       this.$emit('input', this.internal_value)
     },
 
-    tab (event) {
+    tab(event) {
       if (this.open) {
         event.preventDefault()
         if (this.current < this.matches.length - 1) this.current++
@@ -138,17 +131,17 @@ export default {
       }
     },
 
-    mousedown_prevent (event) {
+    mousedown_prevent(event) {
       // clicking on a suggestion should not trigger blur
       event.preventDefault()
     },
 
-    loose_focus () {
+    loose_focus() {
       this.open = false
       this.$emit('input', this.internal_value)
     },
 
-    suggestion_click (index) {
+    suggestion_click(index) {
       this.internal_value = this.matches[index]
       this.open = false
       this.$emit('input', this.internal_value)

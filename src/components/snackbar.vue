@@ -2,12 +2,18 @@
   <transition name="fade">
     <div v-if="show" class="snackbar-center">
       <div id="snackbar" class="">
-        <div class="shadow rounded snack-content" :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
+        <div
+          class="shadow rounded snack-content"
+          :class="[
+            { 'layout small': layout === 'small', 'layout multiline': layout === 'multiline' },
+            style_class
+          ]"
+        >
           <div>
             <slot></slot>
           </div>
           <slot v-if="timeout === -1" name="action">
-            <div class="click_text text-right" @click="show=false">SCHLIESSEN</div>
+            <div class="click_text text-right" @click="show = false">SCHLIESSEN</div>
           </slot>
         </div>
       </div>
@@ -42,17 +48,26 @@ export default Vue.extend({
       show: true
     }
   },
-  updated () {
+  updated() {
     if (this.timeout !== -1) {
-      setTimeout(function () { this.show = false }.bind(this), this.timeout)
+      setTimeout(
+        function () {
+          this.show = false
+        }.bind(this),
+        this.timeout
+      )
     }
   },
-  mounted () {
+  mounted() {
     if (this.timeout !== -1) {
-      setTimeout(function () { this.show = false }.bind(this), this.timeout)
+      setTimeout(
+        function () {
+          this.show = false
+        }.bind(this),
+        this.timeout
+      )
     }
   }
-
 })
 </script>
 
@@ -99,7 +114,7 @@ export default Vue.extend({
 }
 
 .click_text:hover {
-  color: lighten($page_accent, 10)
+  color: lighten($page_accent, 10);
 }
 
 .click_text:active {
@@ -107,10 +122,12 @@ export default Vue.extend({
   top: 1px;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

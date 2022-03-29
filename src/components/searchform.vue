@@ -1,7 +1,7 @@
 <template>
   <form v-on:submit="get_connections" class="bg-dark">
     <!-- Heading -->
-    <h3 style="text-align: center;">
+    <h3 style="text-align: center">
       <strong>Verbindungen bewerten</strong>
     </h3>
 
@@ -9,12 +9,7 @@
     <label for="start" class="form-label">Von</label>
     <div class="input-group mb-3 flex-nowrap">
       <span class="input-group-text"><i class="tcp-train"></i></span>
-      <autosuggest
-        name="start"
-        placeholder="Bahnhof"
-        v-model="start"
-        :is_invalid="start_invalid"
-      >
+      <autosuggest name="start" placeholder="Bahnhof" v-model="start" :is_invalid="start_invalid">
       </autosuggest>
     </div>
 
@@ -44,18 +39,16 @@
         name="datetime"
       >
       </flat-pickr>
-      <toggleSwitch class="align-self-center" style="padding: 6px 12px;" v-model="search_for_arrival"></toggleSwitch>
+      <toggleSwitch
+        class="align-self-center"
+        style="padding: 6px 12px"
+        v-model="search_for_arrival"
+      ></toggleSwitch>
     </div>
 
     <!-- Submit Button -->
     <div class="text-center">
-      <input
-        class="btn btn-primary"
-        id=""
-        name="submit"
-        type="submit"
-        value="SUCHEN"
-      />
+      <input class="btn btn-primary" id="" name="submit" type="submit" value="SUCHEN" />
     </div>
   </form>
 </template>
@@ -90,15 +83,15 @@ export default {
       search_for_arrival: false
     }
   },
-  created () {
+  created() {
     fetch(window.location.protocol + '//' + window.location.host + '/api/connect', {
       type: 'GET',
       data: null,
       dataType: 'json'
     })
-      .then(response => this.$parent.display_fetch_error(response))
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => response.json())
+      .then((data) => {
         this.$store.commit('set_stations', data.stations)
         // this.stations = data.stations
       })
@@ -107,10 +100,7 @@ export default {
     get_connections: function (event) {
       event.preventDefault() // prevent page reload
 
-      if (
-        this.stations.includes(this.start) &&
-        this.stations.includes(this.destination)
-      ) {
+      if (this.stations.includes(this.start) && this.stations.includes(this.destination)) {
         this.start_invalid = false
         this.destination_invalid = false
         this.$parent.get_connections({
@@ -128,14 +118,14 @@ export default {
         }
       }
     },
-    update_start (station) {
+    update_start(station) {
       this.start = station
     },
-    update_destination (station) {
+    update_destination(station) {
       this.destination = station
     },
-    swap_stations () {
-      [this.start, this.destination] = [this.destination, this.start]
+    swap_stations() {
+      ;[this.start, this.destination] = [this.destination, this.start]
     }
   },
   computed: {
