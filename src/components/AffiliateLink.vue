@@ -16,18 +16,19 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'affiliateLink',
-  props: ['date', 'time', 'start', 'destination', 'price'],
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "AffiliateLink",
+  props: ["date", "time", "start", "destination", "price"],
   computed: {
     link: function () {
       return `https://reiseauskunft.bahn.de//bin/query.exe/dn?dbkanal_003=L01_S01_D001_KAF0001_Linkgenerator_individuelle_Verbindungen-!!!affid!!!_LZ01&S=${encodeURIComponent(
         this.start
       )}&Z=${encodeURIComponent(this.destination)}&date=${this.date.format(
-        'DD.MM.YYYY'
-      )}&time=${this.time.format('HH:mm')}&timesel=depart&start=1&l=d`
-    }
-  }
-}
+        "DD.MM.YYYY"
+      )}&time=${this.time.format("HH:mm")}&timesel=depart&start=1&l=d`;
+    },
+  },
+});
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div class="my-5">
     <h1 v-if="connections.length !== 0" class="text-center">
-      {{ connections[0].summary['dp_station_display_name'] }} nach
-      {{ connections[0].summary['ar_station_display_name'] }}
+      {{ connections[0].summary["dp_station_display_name"] }} nach
+      {{ connections[0].summary["ar_station_display_name"] }}
     </h1>
     <div v-else>
-      Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um Zugverbindungen zu
-      bewerten
+      Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um
+      Zugverbindungen zu bewerten
     </div>
     <div v-if="connections.length !== 0" class="custom_card">
       <div class="connections_header">
@@ -61,69 +61,78 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex'
-import connection from '../components/connection.vue'
+<script lang="ts">
+import { defineComponent } from "vue";
+import { mapState } from "vuex";
+import connection from "../components/ConnectionHeader.vue";
 
-export default {
-  name: 'connectionDisplay',
+// type connectionSortKey = 'dp_ct' | 'ar_ct' | 'duration' | 'transfers' | 'score' | 'price'
+
+export default defineComponent({
+  name: "ConnectionDisplay",
   computed: {
-    ...mapState(['connections'])
+    ...mapState(["connections"]),
   },
   components: {
-    connection
+    connection,
   },
   data: function () {
     return {
-      last_time_key: 'dp_ct',
-      last_sort: 'dp_ct',
+      last_time_key: "dp_ct",
+      last_sort: "dp_ct",
       asc_sort: {
         dp_ct: true,
         ar_ct: false,
         duration: false,
         trasfers: true,
         score: true,
-        price: false
-      }
-    }
+        price: false,
+      },
+    } as any;
   },
   methods: {
     sort_time: function () {
-      if (this.last_time_key === 'dp_ct' && !this.asc_sort[this.last_time_key]) {
-        this.last_time_key = 'ar_ct'
-        this.sort_by_key(this.last_time_key)
-        this.asc_sort[this.last_time_key] = true
-      } else if (this.last_time_key === 'ar_ct' && !this.asc_sort[this.last_time_key]) {
-        this.last_time_key = 'dp_ct'
-        this.sort_by_key(this.last_time_key)
-        this.asc_sort[this.last_time_key] = true
+      if (
+        this.last_time_key === "dp_ct" &&
+        !this.asc_sort[this.last_time_key]
+      ) {
+        this.last_time_key = "ar_ct";
+        this.sort_by_key(this.last_time_key);
+        this.asc_sort[this.last_time_key] = true;
+      } else if (
+        this.last_time_key === "ar_ct" &&
+        !this.asc_sort[this.last_time_key]
+      ) {
+        this.last_time_key = "dp_ct";
+        this.sort_by_key(this.last_time_key);
+        this.asc_sort[this.last_time_key] = true;
       } else {
-        this.sort_by_key(this.last_time_key)
+        this.sort_by_key(this.last_time_key);
       }
     },
-    sort_by_key: function (key) {
-      this.last_sort = key
+    sort_by_key: function (key: any) {
+      this.last_sort = key;
       // switch sort oder
-      this.asc_sort[key] = !this.asc_sort[key]
+      this.asc_sort[key] = !this.asc_sort[key];
       if (this.asc_sort[key]) {
         // sort ascending
-        this.connections.sort(function (a, b) {
-          const x = a.summary[key]
-          const y = b.summary[key]
-          return x < y ? -1 : x > y ? 1 : 0
-        })
+        this.connections.sort(function (a: any, b: any) {
+          const x = a.summary[key];
+          const y = b.summary[key];
+          return x < y ? -1 : x > y ? 1 : 0;
+        });
       } else if (!this.asc_sort[key]) {
         // sort descending
-        this.connections.sort(function (a, b) {
-          const x = a.summary[key]
-          const y = b.summary[key]
-          return x < y ? 1 : x > y ? -1 : 0
-        })
+        this.connections.sort(function (a: any, b: any) {
+          const x = a.summary[key];
+          const y = b.summary[key];
+          return x < y ? 1 : x > y ? -1 : 0;
+        });
       }
-      this.$store.commit('set_connections', this.connections)
-    }
-  }
-}
+      this.$store.commit("set_connections", this.connections);
+    },
+  },
+});
 </script>
 
 <style lang="scss">

@@ -8,16 +8,15 @@
 stages:
   - test
   - build
-# - push
 sast:
   stage: test
 include:
   - template: Security/SAST.gitlab-ci.yml
 
-image: docker:19.03.12
+image: docker:20.10.14
 
 services:
-  - docker:19.03.12-dind
+  - docker:20.10.14-dind
 
 before_script:
   - echo -n $CI_REGISTRY_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
@@ -28,22 +27,3 @@ Build:
     - docker pull $CI_REGISTRY_IMAGE || true
     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE --tag $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-# # Tag the "master" branch as "latest"
-# Push latest:
-#   stage: push
-#   only:
-#     - master
-#   script:
-#     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-#     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
-#     - docker push $CI_REGISTRY_IMAGE:latest
-
-# Docker tag any Git tag
-# Push tag:
-#   stage: push
-#   only:
-#     - tags
-#   script:
-#     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-#     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-#     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
