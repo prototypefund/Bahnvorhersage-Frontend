@@ -1,24 +1,39 @@
 <template>
   <body>
-    <navbar></navbar>
+    <NavBar></NavBar>
     <div id="intro" class="container-md">
-      <div class="d-flex justify-content-center align-items-center" style="height: 100%">
+      <div
+        class="d-flex justify-content-center align-items-center"
+        style="height: 100%"
+      >
         <div class="hero-layout">
-          <div v-if="'rebrand' in this.$route.query && this.$route.query['rebrand'] === 'true'" class="slogan d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-if="
+              'rebrand' in this.$route.query &&
+              this.$route.query['rebrand'] === 'true'
+            "
+            class="slogan d-flex flex-column justify-content-center align-items-center"
+          >
             <h6 class="display-6 fw-bold">TrAIn_Connection_Prediction</h6>
             <h6 class="display-6">heißt jetzt</h6>
             <h1 class="display-4 fw-bold">Bahn-Vorhersage</h1>
           </div>
-          <div v-else class="slogan d-flex flex-column justify-content-center align-items-center">
+          <div
+            v-else
+            class="slogan d-flex flex-column justify-content-center align-items-center"
+          >
             <h6 class="display-6">Verspätungen vermeiden</h6>
             <h6 class="display-6">mit</h6>
             <h1 class="display-4 fw-bold">Bahn-Vorhersage</h1>
           </div>
-          <searchform id="search" class="search hover shadow rounded"> </searchform>
+          <SearchForm id="search" class="search hover shadow rounded">
+          </SearchForm>
         </div>
       </div>
     </div>
-    <div class="container-fluid d-flex flex-column align-items-center py-5 main_background">
+    <div
+      class="container-fluid d-flex flex-column align-items-center py-5 main_background"
+    >
       <main>
         <router-view id="content" />
       </main>
@@ -30,23 +45,30 @@
       </div>
       <br />
       <span
-        >© 2022 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in keiner Verbindung mit der
-        Deutschen Bahn und ihren Tochter-Unternehmen.
+        >© 2022 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
+        keiner Verbindung mit der Deutschen Bahn und ihren Tochter-Unternehmen.
       </span>
     </footer>
     <!-- Update Service worker -->
-    <snackbar v-if="updateExists">
+    <SnackBar v-if="updateExists">
       Ein Update ist verfügbar
       <template v-slot:action>
         <div @click="refreshApp" class="click_text">UPDATE</div>
       </template>
-    </snackbar>
+    </SnackBar>
     <!-- Error box -->
-    <snackbar v-if="error" :timeout="15000" :layout="'multiline'" class="text-dark" :style_class="'bg-danger'">
+    <SnackBar
+      v-if="error"
+      :timeout="15000"
+      :layout="'multiline'"
+      class="text-dark"
+      :style_class="'bg-danger'"
+    >
       <div>
         <div><b>Holy Guacamole!</b> {{ error.toString() }}</div>
         <div>
-          Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen Bugreport auf
+          Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen
+          Bugreport auf
           <a
             href="https://gitlab.com/bahnvorhersage/bahnvorhersage/-/issues?sort=created_date&state=opened"
             class="link-dark fw-bold"
@@ -56,47 +78,51 @@
           >
         </div>
       </div>
-    </snackbar>
+    </SnackBar>
   </body>
 </template>
 
-<script>
-import navbar from './components/navbar.vue'
-import searchform from './components/searchform.vue'
-import update from './assets/js/update.js'
-import snackbar from './components/snackbar.vue'
-const dayjs = require('dayjs')
+<script lang="ts">
+import { defineComponent } from "vue";
+import NavBar from "./components/NavBar.vue";
+import SearchForm from "./components/SearchForm.vue";
+import update from "./assets/js/update";
+import SnackBar from "./components/SnackBar.vue";
+import { default as dayjs } from "dayjs";
 
-export default {
-  name: 'App',
+export default defineComponent({
+  name: "App",
   data: function () {
     return {
       connections: [],
-      error: null
-    }
+      error: null,
+    };
   },
   components: {
-    searchform, snackbar, navbar
+    SearchForm,
+    SnackBar,
+    NavBar,
   },
   mixins: [update],
-  mounted () {
+  mounted() {
     const styles = {
-      light_grey: 'color: #e5e5e5;',
-      light_grey_bg_black: 'color: #e5e5e5;background-color: #000;font-weight: bold;',
-      light_grey_bg_red: 'color: #e5e5e5;background-color: #b43836;',
-      dark_grey: 'color: #666666;'
-    }
+      light_grey: "color: #e5e5e5;",
+      light_grey_bg_black:
+        "color: #e5e5e5;background-color: #000;font-weight: bold;",
+      light_grey_bg_red: "color: #e5e5e5;background-color: #b43836;",
+      dark_grey: "color: #666666;",
+    };
     console.log(
-      '%c████████████████████████████████████▇▆▅▃▁\n' +
-      '%c       Bahn-Vorhersage      ███████▙  ▜' +
-      '%c██▆▁\n' +
-      '%c███████████████████████████████████████████▃\n' +
-      '%c▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀' +
-      '%c█████▄' +
-      '%c▖\n' +
-      '%c█████████████████████████████████████████████\n' +
-      '%c ▜█▀▀▜█▘                       ▜█▀▀▜█▘' +
-      '%c   ▀▀▀',
+      "%c████████████████████████████████████▇▆▅▃▁\n" +
+        "%c       Bahn-Vorhersage      ███████▙  ▜" +
+        "%c██▆▁\n" +
+        "%c███████████████████████████████████████████▃\n" +
+        "%c▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" +
+        "%c█████▄" +
+        "%c▖\n" +
+        "%c█████████████████████████████████████████████\n" +
+        "%c ▜█▀▀▜█▘                       ▜█▀▀▜█▘" +
+        "%c   ▀▀▀",
       styles.light_grey,
       styles.light_grey_bg_black,
       styles.light_grey,
@@ -107,74 +133,89 @@ export default {
       styles.light_grey,
       styles.dark_grey,
       styles.light_grey
-    )
+    );
   },
   methods: {
     display_fetch_error: function (response) {
       if (!response.ok) {
-        this.$store.commit('stop_progress')
+        this.$store.commit("stop_progress");
         if (response.status === 429) {
-          this.error = Error('Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut.')
+          this.error = Error(
+            "Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut."
+          );
         } else {
-          this.error = Error(response.statusText)
+          this.error = Error(response.statusText);
         }
-        console.log(response.url)
-        console.log(this.error)
+        console.log(response.url);
+        console.log(this.error);
       }
-      return response
+      return response;
     },
     display_img_load_error: function (event) {
-      this.$store.commit('stop_progress')
-      this.error = Error('Failed to load image')
-      console.log(event)
-      console.log(this.error)
+      this.$store.commit("stop_progress");
+      this.error = Error("Failed to load image");
+      console.log(event);
+      console.log(this.error);
     },
     parse_datetimes: function (connections) {
       for (let i = 0; i < connections.length; i++) {
-        connections[i].summary.dp_pt = dayjs(connections[i].summary.dp_pt)
-        connections[i].summary.ar_pt = dayjs(connections[i].summary.ar_pt)
+        connections[i].summary.dp_pt = dayjs(connections[i].summary.dp_pt);
+        connections[i].summary.ar_pt = dayjs(connections[i].summary.ar_pt);
 
-        connections[i].summary.dp_ct = dayjs(connections[i].summary.dp_ct)
-        connections[i].summary.ar_ct = dayjs(connections[i].summary.ar_ct)
+        connections[i].summary.dp_ct = dayjs(connections[i].summary.dp_ct);
+        connections[i].summary.ar_ct = dayjs(connections[i].summary.ar_ct);
 
         for (let u = 0; u < connections[i].segments.length; u++) {
-          connections[i].segments[u].dp_pt = dayjs(connections[i].segments[u].dp_pt)
-          connections[i].segments[u].ar_pt = dayjs(connections[i].segments[u].ar_pt)
+          connections[i].segments[u].dp_pt = dayjs(
+            connections[i].segments[u].dp_pt
+          );
+          connections[i].segments[u].ar_pt = dayjs(
+            connections[i].segments[u].ar_pt
+          );
 
-          connections[i].segments[u].dp_ct = dayjs(connections[i].segments[u].dp_ct)
-          connections[i].segments[u].ar_ct = dayjs(connections[i].segments[u].ar_ct)
+          connections[i].segments[u].dp_ct = dayjs(
+            connections[i].segments[u].dp_ct
+          );
+          connections[i].segments[u].ar_ct = dayjs(
+            connections[i].segments[u].ar_ct
+          );
         }
       }
-      return connections
+      return connections;
     },
     get_connections: function (search_data) {
       // remove current connections
-      this.$store.commit('set_connections', [])
-      this.$store.commit('start_progress')
+      this.$store.commit("set_connections", []);
+      this.$store.commit("start_progress");
 
-      fetch(window.location.protocol + '//' + window.location.host + '/api/trip', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(search_data)
-      })
+      fetch(
+        window.location.protocol + "//" + window.location.host + "/api/trip",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(search_data),
+        }
+      )
         .then((response) => this.display_fetch_error(response))
         .then((response) => response.json())
         .then((connections) => this.parse_datetimes(connections))
         .then((connections) => {
-          this.$store.commit('set_connections', connections)
-          this.$store.commit('stop_progress')
-          if (this.$route.path !== '/connections') {
-            this.$router.push('/connections')
+          this.$store.commit("set_connections", connections);
+          this.$store.commit("stop_progress");
+          if (this.$route.path !== "/connections") {
+            this.$router.push("/connections");
           }
           this.$nextTick(() => {
-            document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'center' })
-          })
-        })
-    }
-  }
-}
+            document
+              .getElementById("content")
+              .scrollIntoView({ behavior: "smooth", block: "center" });
+          });
+        });
+    },
+  },
+});
 </script>
 
 <style lang="scss">
@@ -274,8 +315,9 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content;
-  grid-template-areas: "slogan"
-                       "search";
+  grid-template-areas:
+    "slogan"
+    "search";
   grid-gap: 20px;
   margin: 0 auto;
   width: 100%;
@@ -295,7 +337,7 @@ body {
 }
 
 @include media-breakpoint-up(sm) {
-  .search{
+  .search {
     padding: 3em;
   }
 }

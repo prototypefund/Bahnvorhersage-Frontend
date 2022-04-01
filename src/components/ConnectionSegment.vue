@@ -7,30 +7,46 @@
       <div class="station">
         {{ segment.dp_station_display_name }}
       </div>
-      <div class="time" v-if="segment.dp_pt.isSame(segment.dp_ct)">ab {{ segment.dp_ct.format('HH:mm') }}</div>
-      <div class="time" v-else>
-        ab {{ segment.dp_ct.format('HH:mm') }} <del class="outdated">{{ segment.dp_pt.format('HH:mm') }}</del>
+      <div class="time" v-if="segment.dp_pt.isSame(segment.dp_ct)">
+        ab {{ segment.dp_ct.format("HH:mm") }}
       </div>
-      <div class="platform" v-if="segment.dp_pp == segment.dp_cp">von Gl. {{ segment.dp_cp }}</div>
+      <div class="time" v-else>
+        ab {{ segment.dp_ct.format("HH:mm") }}
+        <del class="outdated">{{ segment.dp_pt.format("HH:mm") }}</del>
+      </div>
+      <div class="platform" v-if="segment.dp_pp == segment.dp_cp">
+        von Gl. {{ segment.dp_cp }}
+      </div>
       <div class="platform" v-else>
-        von Gl. {{ segment.dp_cp }} <del class="outdated">{{ segment.dp_pp }}</del>
+        von Gl. {{ segment.dp_cp }}
+        <del class="outdated">{{ segment.dp_pp }}</del>
       </div>
 
       <div class="train">
-        <img v-if="segment.dp_c in train_icons" v-bind:src="train_icons[segment.dp_c]" height="20px" />
+        <img
+          v-if="segment.dp_c in train_icons"
+          v-bind:src="train_icons[segment.dp_c]"
+          height="20px"
+        />
         {{ segment.train_name }} nach {{ segment.train_destination }}
       </div>
 
       <div class="station">
         {{ segment.ar_station_display_name }}
       </div>
-      <div class="time" v-if="segment.ar_pt.isSame(segment.ar_ct)">an {{ segment.ar_ct.format('HH:mm') }}</div>
-      <div class="time" v-else>
-        an {{ segment.ar_ct.format('HH:mm') }} <del class="outdated">{{ segment.ar_pt.format('HH:mm') }}</del>
+      <div class="time" v-if="segment.ar_pt.isSame(segment.ar_ct)">
+        an {{ segment.ar_ct.format("HH:mm") }}
       </div>
-      <div class="platform" v-if="segment.ar_pp == segment.ar_cp">an Gl. {{ segment.ar_cp }}</div>
+      <div class="time" v-else>
+        an {{ segment.ar_ct.format("HH:mm") }}
+        <del class="outdated">{{ segment.ar_pt.format("HH:mm") }}</del>
+      </div>
+      <div class="platform" v-if="segment.ar_pp == segment.ar_cp">
+        an Gl. {{ segment.ar_cp }}
+      </div>
       <div class="platform" v-else>
-        an Gl. {{ segment.ar_cp }} <del class="outdated">{{ segment.ar_pp }}</del>
+        an Gl. {{ segment.ar_cp }}
+        <del class="outdated">{{ segment.ar_pp }}</del>
       </div>
     </div>
     <div v-if="'transfer_time' in segment" style="display: contents">
@@ -38,7 +54,9 @@
         Verbindungs-Score:
         <span v-bind:style="text_color">{{ segment.score }}%</span>
       </div>
-      <div class="transfer" v-bind:style="transfer_style">Umsteigezeit: {{ segment.transfer_time }} Min.</div>
+      <div class="transfer" v-bind:style="transfer_style">
+        Umsteigezeit: {{ segment.transfer_time }} Min.
+      </div>
       <div v-if="segment.walk" class="walk" v-bind:style="transfer_style">
         <div style="display: contents">
           <i class="tcp-pedestrian" style="font-size: 1.2rem"></i>
@@ -48,47 +66,58 @@
     </div>
   </div>
 </template>
-<script>
-import { rdylgr_colormap } from '../assets/js/colormap.js'
+<script lang="ts">
+import { defineComponent } from "vue";
+import { rdylgr_colormap } from "../assets/js/colormap";
 
-export default {
-  name: 'segment',
-  props: ['segment', 'con_score'],
+export default defineComponent({
+  name: "ConnectionSegment",
+  props: ["segment", "con_score"],
   data: function () {
     return {
       show_details: false,
       dp_station_style: {
-        'background-color': rdylgr_colormap(this.segment.dp_delay, 0.2, 0.8, 200)
+        "background-color": rdylgr_colormap(
+          this.segment.dp_delay,
+          0.2,
+          0.8,
+          200
+        ),
       },
       ar_station_style: {
-        'background-color': rdylgr_colormap(this.segment.ar_delay, 0.2, 0.8, 200)
+        "background-color": rdylgr_colormap(
+          this.segment.ar_delay,
+          0.2,
+          0.8,
+          200
+        ),
       },
       transfer_style: {
-        'background-color': '#212529'
+        "background-color": "#212529",
       },
       text_color: {
-        color: rdylgr_colormap(this.segment.score, 50, 100, 200)
+        color: rdylgr_colormap(this.segment.score, 50, 100, 200),
       },
       gradient_line: {
-        'background-image':
-          'linear-gradient(' +
+        "background-image":
+          "linear-gradient(" +
           rdylgr_colormap(this.segment.dp_delay, 0.2, 0.8, 200) +
-          ', ' +
+          ", " +
           rdylgr_colormap(this.segment.ar_delay, 0.2, 0.8, 200) +
-          ')'
+          ")",
       },
       train_icons: {
-        ICE: require('../assets/img/ICE.svg'),
-        IC: require('../assets/img/IC.svg'),
-        EC: require('../assets/img/IC.svg'),
-        RE: require('../assets/img/RE.svg'),
-        IRE: require('../assets/img/RE.svg'),
-        S: require('../assets/img/S.svg'),
-        RB: require('../assets/img/RB.svg')
-      }
-    }
-  }
-}
+        ICE: require("../assets/img/ICE.svg"),
+        IC: require("../assets/img/IC.svg"),
+        EC: require("../assets/img/IC.svg"),
+        RE: require("../assets/img/RE.svg"),
+        IRE: require("../assets/img/RE.svg"),
+        S: require("../assets/img/S.svg"),
+        RB: require("../assets/img/RB.svg"),
+      },
+    };
+  },
+});
 </script>
 
 <style lang="scss">
@@ -104,7 +133,10 @@ export default {
 .leg {
   @include border-radius;
   display: inline-grid;
-  grid-template-columns: minmax(max-content, auto) minmax(max-content, auto) minmax(max-content, auto);
+  grid-template-columns: minmax(max-content, auto) minmax(max-content, auto) minmax(
+      max-content,
+      auto
+    );
   background-color: $page_lighter_gray;
 }
 

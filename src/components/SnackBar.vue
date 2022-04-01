@@ -2,12 +2,23 @@
   <transition name="fade">
     <div v-if="show" class="snackbar-center">
       <div id="snackbar" class="">
-        <div class="shadow rounded snack-content" :class="[{ 'layout small': layout === 'small', 'layout multiline': layout === 'multiline'}, style_class ]">
+        <div
+          class="shadow rounded snack-content"
+          :class="[
+            {
+              'layout small': layout === 'small',
+              'layout multiline': layout === 'multiline',
+            },
+            style_class,
+          ]"
+        >
           <div>
             <slot></slot>
           </div>
           <slot v-if="timeout === -1" name="action">
-            <div class="click_text text-right" @click="show=false">SCHLIESSEN</div>
+            <div class="click_text text-right" @click="show = false">
+              SCHLIESSEN
+            </div>
           </slot>
         </div>
       </div>
@@ -16,44 +27,52 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-
-export default Vue.extend({
-  name: 'snackbar',
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "SnackBar",
   props: {
     layout: {
       type: String,
-      default: 'small',
-      validator: function (value) {
-        return ['small', 'multiline'].indexOf(value) !== -1
-      }
+      default: "small",
+      validator: function (value: any) {
+        return ["small", "multiline"].indexOf(value) !== -1;
+      },
     },
     timeout: {
       type: Number,
-      default: -1
+      default: -1,
     },
     style_class: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
   data: function () {
     return {
-      show: true
+      show: true,
+    };
+  },
+  updated() {
+    if (this.timeout !== -1) {
+      setTimeout(
+        function () {
+          this.show = false;
+        }.bind(this),
+        this.timeout
+      );
     }
   },
-  updated () {
+  mounted() {
     if (this.timeout !== -1) {
-      setTimeout(function () { this.show = false }.bind(this), this.timeout)
+      setTimeout(
+        function () {
+          this.show = false;
+        }.bind(this),
+        this.timeout
+      );
     }
   },
-  mounted () {
-    if (this.timeout !== -1) {
-      setTimeout(function () { this.show = false }.bind(this), this.timeout)
-    }
-  }
-
-})
+});
 </script>
 
 <style lang="scss">
@@ -99,7 +118,7 @@ export default Vue.extend({
 }
 
 .click_text:hover {
-  color: lighten($page_accent, 10)
+  color: lighten($page_accent, 10);
 }
 
 .click_text:active {
@@ -107,10 +126,12 @@ export default Vue.extend({
   top: 1px;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
