@@ -1,7 +1,7 @@
 <template>
   <form v-on:submit="get_connections" class="bg-dark">
     <!-- Heading -->
-    <h3 style="text-align: center;">
+    <h3 style="text-align: center">
       <strong>Verbindungen bewerten</strong>
     </h3>
 
@@ -29,7 +29,9 @@
         :is_invalid="destination_invalid"
       >
       </autosuggest>
-      <span class="btn btn-primary" @click="swap_stations"><i class="tcp-swap"></i></span>
+      <span class="btn btn-primary" @click="swap_stations"
+        ><i class="tcp-swap"></i
+      ></span>
     </div>
 
     <!-- Date Form -->
@@ -44,7 +46,11 @@
         name="datetime"
       >
       </flat-pickr>
-      <toggleSwitch class="align-self-center" style="padding: 6px 12px;" v-model="search_for_arrival"></toggleSwitch>
+      <toggleSwitch
+        class="align-self-center"
+        style="padding: 6px 12px"
+        v-model="search_for_arrival"
+      ></toggleSwitch>
     </div>
 
     <!-- Submit Button -->
@@ -60,93 +66,91 @@
   </form>
 </template>
 
-<script>
-import { mapState } from 'vuex'
-import flatpickr from 'flatpickr'
-import flatPickr from 'vue-flatpickr-component'
-import 'flatpickr/dist/flatpickr.css'
+<script lang="ts">
+import { defineComponent } from "vue";
+import { mapState } from "vuex";
+import flatpickr from "flatpickr";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
-import autosuggest from './autosuggest.vue'
-import toggleSwitch from './toggle_switch.vue'
+import autosuggest from "./AutoSuggest.vue";
+import ToggleSwitch from "./ToggleSwitch.vue";
 
-require('flatpickr/dist/themes/dark.css')
+require("flatpickr/dist/themes/dark.css");
 
-export default {
-  name: 'searchform',
+export default defineComponent({
+  name: "SearchForm",
   data: function () {
     return {
-      start: '',
+      start: "",
       start_invalid: false,
-      destination: '',
+      destination: "",
       destination_invalid: false,
-      date: flatpickr.formatDate(new Date(), 'd.m.Y H:i'),
+      date: flatpickr.formatDate(new Date(), "d.m.Y H:i"),
       // Get more from https://flatpickr.js.org/options/
       config: {
         enableTime: true,
         time_24hr: true,
-        dateFormat: 'd.m.Y H:i',
-        altFormat: 'd.m.Y H:i'
+        dateFormat: "d.m.Y H:i",
+        altFormat: "d.m.Y H:i",
       },
-      search_for_arrival: false
-    }
+      search_for_arrival: false,
+    };
   },
-  created () {
-    fetch(window.location.protocol + '//' + window.location.host + '/api/connect', {
-      type: 'GET',
-      data: null,
-      dataType: 'json'
-    })
-      .then(response => this.$parent.display_fetch_error(response))
-      .then(response => response.json())
-      .then(data => {
-        this.$store.commit('set_stations', data.stations)
-        // this.stations = data.stations
-      })
+  created() {
+    fetch(
+      window.location.protocol + "//" + window.location.host + "/api/connect"
+    )
+      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => response.json())
+      .then((data) => {
+        this.$store.commit("set_stations", data.stations);
+      });
   },
   methods: {
     get_connections: function (event) {
-      event.preventDefault() // prevent page reload
+      event.preventDefault(); // prevent page reload
 
       if (
         this.stations.includes(this.start) &&
         this.stations.includes(this.destination)
       ) {
-        this.start_invalid = false
-        this.destination_invalid = false
+        this.start_invalid = false;
+        this.destination_invalid = false;
         this.$parent.get_connections({
           start: this.start,
           destination: this.destination,
           date: this.date, // flatpickr.formatDate(new Date(this.date), "d.m.Y H:i")
-          search_for_departure: !this.search_for_arrival
-        })
+          search_for_departure: !this.search_for_arrival,
+        });
       } else {
         if (!this.stations.includes(this.start)) {
-          this.start_invalid = true
+          this.start_invalid = true;
         }
         if (!this.stations.includes(this.destination)) {
-          this.destination_invalid = true
+          this.destination_invalid = true;
         }
       }
     },
-    update_start (station) {
-      this.start = station
+    update_start(station) {
+      this.start = station;
     },
-    update_destination (station) {
-      this.destination = station
+    update_destination(station) {
+      this.destination = station;
     },
-    swap_stations () {
-      [this.start, this.destination] = [this.destination, this.start]
-    }
+    swap_stations() {
+      [this.start, this.destination] = [this.destination, this.start];
+    },
   },
   computed: {
-    ...mapState(['stations'])
+    ...mapState(["stations"]),
   },
   components: {
     flatPickr,
     autosuggest,
-    toggleSwitch
-  }
-}
+    ToggleSwitch,
+  },
+});
 </script>
 
 <style lang="scss">

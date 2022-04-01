@@ -4,12 +4,16 @@
       <div class="text_content">
         <h1 class="text-center">Stations- / Bahnhofsdaten</h1>
         <p>
-          Unsere Stationsdaten kommen in erster Linie vom IRIS (<b>I</b>nternes <b>R</b>eisenden<b>i</b>nformations<b>s</b>ystem). Diese werden mit Koordinaten aus Hafas und DB OpenData
-          angereichert. Da sich z.B. Bahnhofsnamen hin und wieder ändern, hat jeder Datenpunkt einen
-          <pre class="d-inline">valid_from</pre> und einen <pre class="d-inline">valid_to</pre> tag.
+          Unsere Stationsdaten kommen in erster Linie vom IRIS (<b>I</b>nternes
+          <b>R</b>eisenden<b>i</b>nformations<b>s</b>ystem). Diese werden mit
+          Koordinaten aus Hafas und DB OpenData angereichert. Da sich z.B.
+          Bahnhofsnamen hin und wieder ändern, hat jeder Datenpunkt einen
+          <span class="d-font-monospace">valid_from</span> und einen
+          <span class="font-monospace">valid_to</span> tag.
         </p>
         <p>
-          Den vollen Datensatz gibt es hier: <a href="api/stations.json" target="_blank">stations.json</a>
+          Den vollen Datensatz gibt es hier:
+          <a href="api/stations.json" target="_blank">stations.json</a>
         </p>
       </div>
       <div class="text-center">
@@ -27,7 +31,11 @@
           <pre class="header">db</pre>
           <pre class="header">iris</pre>
 
-          <div style="display: contents" v-for="station in stations" :key="station.index">
+          <div
+            style="display: contents"
+            v-for="station in stations"
+            :key="station.index"
+          >
             <pre>{{ station.index }}</pre>
             <pre>{{ station.name }}</pre>
             <pre>{{ station.eva }}</pre>
@@ -36,7 +44,9 @@
             <pre>{{ new Date(station.valid_to).toISOString() }}</pre>
             <pre>{{ station.lat }}</pre>
             <pre>{{ station.lon }}</pre>
-            <pre>{{ (station.meta === null) ? "" : station.meta.join(", ") }}</pre>
+            <pre>{{
+              station.meta === null ? "" : station.meta.join(", ")
+            }}</pre>
             <pre>{{ station.platform }}</pre>
             <pre>{{ station.db }}</pre>
             <pre>{{ station.iris }}</pre>
@@ -47,31 +57,33 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   data: function () {
     return {
       stations: [],
-      show: false
-    }
+      show: false,
+    };
   },
-  created () {
-    this.$store.commit('start_progress')
-    fetch(window.location.protocol + '//' + window.location.host + '/api/stations.json', {
-      type: 'GET',
-      data: null,
-      dataType: 'json'
-    })
+  created() {
+    this.$store.commit("start_progress");
+    fetch(
+      window.location.protocol +
+        "//" +
+        window.location.host +
+        "/api/stations.json"
+    )
       .then((response) => this.$parent.display_fetch_error(response))
       .then((response) => response.json())
       .then((response) => {
-        this.stations = response.slice(0, 100)
-        this.show = true
-        this.$store.commit('stop_progress')
-      })
+        this.stations = response.slice(0, 100);
+        this.show = true;
+        this.$store.commit("stop_progress");
+      });
   },
-  methods: {}
-}
+  methods: {},
+});
 </script>
 
 <style lang="scss">

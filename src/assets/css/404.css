@@ -14,7 +14,8 @@
   fill: #709abf;
 }
 
-.st4, .st6 {
+.st4,
+.st6 {
   fill: #fff;
   stroke: #b3dcdf;
   stroke-miterlimit: 10;
@@ -25,7 +26,9 @@
   stroke-width: 2;
 }
 
-.st7, .st8, .st9 {
+.st7,
+.st8,
+.st9 {
   stroke: #709abf;
   stroke-miterlimit: 10;
 }
@@ -36,7 +39,8 @@
   fill: none;
 }
 
-.st8, .st9 {
+.st8,
+.st9 {
   fill: #fff;
 }
 
@@ -157,7 +161,8 @@
   }
 }
 
-#bracefront, #braceback {
+#bracefront,
+#braceback {
   animation: braces 1s linear infinite;
 }
 
@@ -178,4 +183,3 @@
     transform: translateX(-2px);
   }
 }
-

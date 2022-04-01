@@ -3,8 +3,9 @@
     <div v-if="show" class="text_content">
       <div>
         <h1>Übersicht über die verwendeten Daten</h1>
-        Unser Machine Learning System wird auf echten Verspätungsinformationen trainiert. Diese Daten werden rund um die
-        Uhr von uns aktualisiert. Hier gibt es eine Übersicht über den Datensatz.
+        Unser Machine Learning System wird auf echten Verspätungsinformationen
+        trainiert. Diese Daten werden rund um die Uhr von uns aktualisiert. Hier
+        gibt es eine Übersicht über den Datensatz.
       </div>
       <div class="text-center">
         Letzte Aktuallisierung der Statistik: {{ stats.time }}
@@ -20,42 +21,50 @@
           </div>
           <div class="stat header">Anzahl an Halten</div>
           <div class="arrival">
-            <span>{{ stats.all_num_ar_data.toLocaleString('de-DE') }}</span>
+            <span>{{ stats.all_num_ar_data.toLocaleString("de-DE") }}</span>
           </div>
           <div class="departure">
-            <span>{{ stats.all_num_dp_data.toLocaleString('de-DE') }}</span>
+            <span>{{ stats.all_num_dp_data.toLocaleString("de-DE") }}</span>
           </div>
 
           <div class="stat header">Maximale Verspätung</div>
           <div class="arrival">
-            <span>{{ stats.all_max_ar_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.all_max_ar_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
           <div class="departure">
-            <span>{{ stats.all_max_dp_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.all_max_dp_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
 
           <div class="stat header">Ø Verspätung</div>
           <div class="arrival">
-            <span>{{ stats.all_avg_ar_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.all_avg_ar_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
           <div class="departure">
-            <span>{{ stats.all_avg_dp_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.all_avg_dp_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
 
           <div class="stat header">Prozent an Verspätungen</div>
           <div class="arrival">
-            <span>{{ stats.all_perc_ar_delay.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.all_perc_ar_delay.toLocaleString("de-DE") }}%</span>
           </div>
           <div class="departure">
-            <span>{{ stats.all_perc_dp_delay.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.all_perc_dp_delay.toLocaleString("de-DE") }}%</span>
           </div>
 
           <div class="stat header">Prozent an Ausfällen</div>
           <div class="arrival">
-            <span>{{ stats.all_perc_ar_cancel.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.all_perc_ar_cancel.toLocaleString("de-DE") }}%</span>
           </div>
           <div class="departure">
-            <span>{{ stats.all_perc_dp_cancel.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.all_perc_dp_cancel.toLocaleString("de-DE") }}%</span>
           </div>
 
           <div class="rowspan divider"></div>
@@ -66,42 +75,50 @@
           </div>
           <div class="stat header">Anzahl an Halten</div>
           <div class="arrival">
-            <span>{{ stats.new_num_ar_data.toLocaleString('de-DE') }}</span>
+            <span>{{ stats.new_num_ar_data.toLocaleString("de-DE") }}</span>
           </div>
           <div class="departure">
-            <span>{{ stats.new_num_dp_data.toLocaleString('de-DE') }}</span>
+            <span>{{ stats.new_num_dp_data.toLocaleString("de-DE") }}</span>
           </div>
 
           <div class="stat header">Maximale Verspätung</div>
           <div class="arrival">
-            <span>{{ stats.new_max_ar_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.new_max_ar_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
           <div class="departure">
-            <span>{{ stats.new_max_dp_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.new_max_dp_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
 
           <div class="stat header">Ø Verspätung</div>
           <div class="arrival">
-            <span>{{ stats.new_avg_ar_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.new_avg_ar_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
           <div class="departure">
-            <span>{{ stats.new_avg_dp_delay.toLocaleString('de-DE') }} min</span>
+            <span
+              >{{ stats.new_avg_dp_delay.toLocaleString("de-DE") }} min</span
+            >
           </div>
 
           <div class="stat header">Prozent an Verspätungen</div>
           <div class="arrival">
-            <span>{{ stats.new_perc_ar_delay.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.new_perc_ar_delay.toLocaleString("de-DE") }}%</span>
           </div>
           <div class="departure">
-            <span>{{ stats.new_perc_dp_delay.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.new_perc_dp_delay.toLocaleString("de-DE") }}%</span>
           </div>
 
           <div class="stat header">Prozent an Ausfällen</div>
           <div class="arrival">
-            <span>{{ stats.new_perc_ar_cancel.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.new_perc_ar_cancel.toLocaleString("de-DE") }}%</span>
           </div>
           <div class="departure">
-            <span>{{ stats.new_perc_dp_cancel.toLocaleString('de-DE') }}%</span>
+            <span>{{ stats.new_perc_dp_cancel.toLocaleString("de-DE") }}%</span>
           </div>
         </div>
       </div>
@@ -109,29 +126,26 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   data: function () {
     return {
       stats: {},
-      show: false
-    }
+      show: false,
+    };
   },
-  created () {
-    fetch(window.location.protocol + '//' + window.location.host + '/api/stats', {
-      type: 'GET',
-      data: null,
-      dataType: 'json'
-    })
+  created() {
+    fetch(window.location.protocol + "//" + window.location.host + "/api/stats")
       .then((response) => this.$parent.display_fetch_error(response))
       .then((response) => response.json())
       .then((response) => {
-        this.stats = response
-        this.show = true
-      })
+        this.stats = response;
+        this.show = true;
+      });
   },
-  methods: {}
-}
+  methods: {},
+});
 </script>
 
 <style lang="scss">

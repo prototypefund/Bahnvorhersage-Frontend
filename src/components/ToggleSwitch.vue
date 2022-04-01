@@ -7,16 +7,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'toggleSwitch',
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "ToggleSwitch",
   props: {
     value: {
       type: Boolean,
-      default: false
-    }
-  }
-})
+      default: false,
+    },
+  },
+});
 </script>
 
 <style lang="scss">
@@ -48,7 +48,7 @@ export default Vue.extend({
 }
 
 .toggler::after {
-  content: '';
+  content: "";
   width: 1.3rem;
   height: 1.3rem;
   display: inline-block;

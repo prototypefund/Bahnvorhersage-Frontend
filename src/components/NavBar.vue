@@ -14,13 +14,27 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <router-link class="navbar-brand" to="#search"><img src="../assets/img/IC.svg" height="24" width="32" alt="bahnvorhersage logo"></router-link>
+          <router-link class="navbar-brand" to="#search"
+            ><img
+              src="../assets/img/IC.svg"
+              height="24"
+              width="32"
+              alt="bahnvorhersage logo"
+          /></router-link>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link class="nav-link" :to="{ path: '/connections', hash: '#content' }">Verbindungen</router-link>
+              <router-link
+                class="nav-link"
+                :to="{ path: '/connections', hash: '#content' }"
+                >Verbindungen</router-link
+              >
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" :to="{ path: '/about', hash: '#content' }">Über uns</router-link>
+              <router-link
+                class="nav-link"
+                :to="{ path: '/about', hash: '#content' }"
+                >Über uns</router-link
+              >
             </li>
             <li class="nav-item dropdown">
               <router-link
@@ -31,12 +45,16 @@
               >
               <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
                 <li>
-                  <router-link class="nav-link" :to="{ path: '/stats/overview', hash: '#content' }"
+                  <router-link
+                    class="nav-link"
+                    :to="{ path: '/stats/overview', hash: '#content' }"
                     >Übersicht</router-link
                   >
                 </li>
                 <li>
-                  <router-link class="nav-link" :to="{ path: '/stats/stations', hash: '#content' }"
+                  <router-link
+                    class="nav-link"
+                    :to="{ path: '/stats/stations', hash: '#content' }"
                     >Bahnhöfe</router-link
                   >
                 </li>
@@ -51,7 +69,9 @@
               >
               <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
                 <li>
-                  <router-link class="nav-link" :to="{ path: '/stationviewer', hash: '#content' }"
+                  <router-link
+                    class="nav-link"
+                    :to="{ path: '/stationviewer', hash: '#content' }"
                     >Stationsdaten</router-link
                   >
                 </li>
@@ -75,51 +95,60 @@
   </div>
 </template>
 
-<script>
-import installButton from './installButton.vue'
-import update from '../assets/js/update.js'
-import { mapState } from 'vuex'
-const ProgressBar = require('progressbar.js')
+<script lang="ts">
+import { defineComponent } from "vue";
+import installButton from "./InstallButton.vue";
+import update from "../assets/js/update";
+import { mapState } from "vuex";
+import { default as ProgressBar } from "progressbar.js";
+// import ProgressBar = require("progressbar.js");
 
-export default {
-  name: 'navbar',
+export default defineComponent({
+  name: "NavBar",
   components: { installButton },
   data: function () {
     return {
-      progress: null
-    }
+      progress: null,
+    };
   },
   computed: {
-    ...mapState(['progressing'])
+    ...mapState(["progressing"]),
   },
   mounted: function () {
-    if (window.location.hostname.indexOf('next.trainconnectionprediction.de') !== -1) {
-      update.methods.clearCache()
-      window.location.href = 'https://next.bahnvorhersage.de/?rebrand=true'
-    } else if (window.location.hostname.indexOf('trainconnectionprediction.de') !== -1) {
-      update.methods.clearCache()
-      window.location.href = 'https://bahnvorhersage.de/?rebrand=true'
-    } else if (window.location.hostname.indexOf('trainconnectionprediction.de') !== -1) {
-      update.methods.clearCache()
-      window.location.href = 'https://bahnvorhersage.de/?rebrand=true'
+    if (
+      window.location.hostname.indexOf("next.trainconnectionprediction.de") !==
+      -1
+    ) {
+      update.methods.clearCache();
+      window.location.href = "https://next.bahnvorhersage.de/?rebrand=true";
+    } else if (
+      window.location.hostname.indexOf("trainconnectionprediction.de") !== -1
+    ) {
+      update.methods.clearCache();
+      window.location.href = "https://bahnvorhersage.de/?rebrand=true";
+    } else if (
+      window.location.hostname.indexOf("trainconnectionprediction.de") !== -1
+    ) {
+      update.methods.clearCache();
+      window.location.href = "https://bahnvorhersage.de/?rebrand=true";
     }
-    this.progress = new ProgressBar.Line('#pgr_bar', {
+    this.progress = new ProgressBar.Line("#pgr_bar", {
       strokeWidth: 0.8,
-      color: '#3f51b5',
-      trailColor: 'transparent',
-      trailWidth: 0
-    })
+      color: "#3f51b5",
+      trailColor: "transparent",
+      trailWidth: 0,
+    });
   },
   watch: {
     progressing: function (val) {
       if (val) {
-        this.progress.animate(600, { duration: 300000, easing: 'linear' })
+        this.progress.animate(600, { duration: 300000, easing: "linear" });
       } else {
-        this.progress.animate(0, { duration: 10, easing: 'linear' })
+        this.progress.animate(0, { duration: 10, easing: "linear" });
       }
-    }
-  }
-}
+    },
+  },
+});
 </script>
 
 <style lang="scss">
