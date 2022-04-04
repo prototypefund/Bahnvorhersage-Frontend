@@ -74,7 +74,7 @@ export default defineComponent({
         window.location.host +
         "/api/stations.json"
     )
-      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => this.$root.display_fetch_error(response))
       .then((response) => response.json())
       .then((response) => {
         this.stations = response.slice(0, 100);

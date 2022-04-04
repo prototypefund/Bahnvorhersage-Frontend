@@ -137,7 +137,7 @@ export default defineComponent({
   },
   created() {
     fetch(window.location.protocol + "//" + window.location.host + "/api/stats")
-      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => this.$root.display_fetch_error(response))
       .then((response) => response.json())
       .then((response) => {
         this.stats = response;

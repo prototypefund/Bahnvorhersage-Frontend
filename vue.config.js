@@ -1,26 +1,10 @@
 module.exports = {
-  // chainWebpack: config => {
-  //   config.resolve.alias.set('vue', '@vue/compat')
-
-  //   config.module
-  //     .rule('vue')
-  //     .use('vue-loader')
-  //     .tap(options => {
-  //       return {
-  //         ...options,
-  //         compilerOptions: {
-  //           compatConfig: {
-  //             MODE: 2
-  //           }
-  //         }
-  //       }
-  //     })
-  // },
   runtimeCompiler: true,
   devServer: {
     proxy: {
       "/api": {
         target: "http://localhost:5000",
+        // target: "https://next.bahnvorhersage.de",
       },
     },
   },
@@ -44,6 +28,6 @@ module.exports = {
       background_color: "#212121",
       short_name: "Bahn-Vorhersage",
     },
-    assetsVersion: "0.3.1",
+    assetsVersion: "0.4.0",
   },
 };

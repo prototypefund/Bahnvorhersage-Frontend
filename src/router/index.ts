@@ -74,7 +74,6 @@ const router = createRouter({
   scrollBehavior(to): any {
     if (to.hash) {
       nextTick(() => {
-        console.log("router_next_tick");
         document
           ?.getElementById(to.hash.substring(1))
           ?.scrollIntoView({ behavior: "smooth", block: "center" });

@@ -10,7 +10,7 @@
     </div>
     <div v-if="connections.length !== 0" class="custom_card">
       <div class="connections_header">
-        <div class="col1 sort_col" @click="sort_time()">
+        <div class="col1 sort_col rounded-start" @click="sort_time()">
           Zeit
           <span v-if="last_sort === 'dp_ct' || last_sort === 'ar_ct'">
             <span v-if="last_sort === 'dp_ct'">Ab </span>
@@ -41,7 +41,7 @@
             <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
           </span>
         </div>
-        <div class="col6 sort_col" @click="sort_by_key('price')">
+        <div class="col6 sort_col rounded-end" @click="sort_by_key('price')">
           Ticket
           <span v-if="last_sort === 'price'">
             <i v-if="asc_sort[last_sort]" class="arrow up"></i>
@@ -78,8 +78,8 @@ export default defineComponent({
   },
   data: function () {
     return {
-      last_time_key: "dp_ct",
-      last_sort: "dp_ct",
+      last_time_key: "dp_ct" as string,
+      last_sort: "dp_ct" as string,
       asc_sort: {
         dp_ct: true,
         ar_ct: false,
@@ -110,7 +110,7 @@ export default defineComponent({
         this.sort_by_key(this.last_time_key);
       }
     },
-    sort_by_key: function (key: any) {
+    sort_by_key: function (key: string) {
       this.last_sort = key;
       // switch sort oder
       this.asc_sort[key] = !this.asc_sort[key];
@@ -143,7 +143,7 @@ export default defineComponent({
 .custom_card {
   @include border-radius;
   background-color: $page_gray;
-  overflow: hidden;
+  // overflow: hidden;
   margin-bottom: 5px;
   color: $text_color;
 }
@@ -217,6 +217,7 @@ export default defineComponent({
 
 .connections_header {
   @extend .card_header;
+  overflow: unset;
   border-left: 10px solid transparent;
 
   div {
@@ -258,7 +259,7 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.open-enter,
+.open-enter-from,
 .open-leave-to {
   display: block;
   max-height: 0px;
@@ -274,22 +275,22 @@ export default defineComponent({
 
 .right {
   transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
+  // -webkit-transform: rotate(-45deg);
 }
 
 .left {
   transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
+  // -webkit-transform: rotate(135deg);
 }
 
 .up {
   transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
+  // -webkit-transform: rotate(-135deg);
 }
 
 .down {
   transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+  // -webkit-transform: rotate(45deg);
 }
 
 .sort_col {

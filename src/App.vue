@@ -59,8 +59,8 @@
     <!-- Error box -->
     <SnackBar
       v-if="error"
-      :timeout="15000"
       :layout="'multiline'"
+      :timeout="15000"
       class="text-dark"
       :style_class="'bg-danger'"
     >
@@ -148,6 +148,9 @@ export default defineComponent({
         }
         console.log(response.url);
         console.log(this.error);
+        setTimeout(() => {
+          this.error = null;
+        }, 15000);
       }
       return response;
     },
@@ -206,12 +209,13 @@ export default defineComponent({
           this.$store.commit("stop_progress");
           if (this.$route.path !== "/connections") {
             this.$router.push("/connections");
+          } else {
+            this.$nextTick(() => {
+              document
+                .getElementById("content")
+                .scrollIntoView({ behavior: "smooth", block: "center" });
+            });
           }
-          this.$nextTick(() => {
-            document
-              .getElementById("content")
-              .scrollIntoView({ behavior: "smooth", block: "center" });
-          });
         });
     },
   },

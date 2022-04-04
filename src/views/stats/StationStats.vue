@@ -21,7 +21,7 @@
       id="stats_image"
       v-if="plotURL"
       :src="plotURL"
-      @error="$parent.display_img_load_error"
+      @error="$root.display_img_load_error"
       @load="loaded_img()"
     />
   </div>
@@ -62,7 +62,7 @@ export default defineComponent({
         },
       }
     )
-      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => this.$root.display_fetch_error(response))
       .then((response) => response.json())
       .then((limits) => {
         limits.min = dayjs(limits.min, "YYYY-MM-DD");

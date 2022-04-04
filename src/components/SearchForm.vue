@@ -101,7 +101,7 @@ export default defineComponent({
     fetch(
       window.location.protocol + "//" + window.location.host + "/api/connect"
     )
-      .then((response) => this.$parent.display_fetch_error(response))
+      .then((response) => this.$root.display_fetch_error(response))
       .then((response) => response.json())
       .then((data) => {
         this.$store.commit("set_stations", data.stations);
@@ -117,7 +117,7 @@ export default defineComponent({
       ) {
         this.start_invalid = false;
         this.destination_invalid = false;
-        this.$parent.get_connections({
+        this.$root.get_connections({
           start: this.start,
           destination: this.destination,
           date: this.date, // flatpickr.formatDate(new Date(this.date), "d.m.Y H:i")
