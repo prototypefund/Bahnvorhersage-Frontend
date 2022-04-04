@@ -26,7 +26,6 @@
         <img
           v-if="segment.dp_c in train_icons"
           v-bind:src="train_icons[segment.dp_c]"
-          height="20px"
         />
         {{ segment.train_name }} nach {{ segment.train_destination }}
       </div>
@@ -158,6 +157,10 @@ export default defineComponent({
 .train {
   margin: 10px;
   grid-column-start: span 3;
+
+  img {
+    height: 20px;
+  }
 }
 
 .score {
