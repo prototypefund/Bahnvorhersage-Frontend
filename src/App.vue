@@ -208,14 +208,9 @@ export default defineComponent({
           this.$store.commit("set_connections", connections);
           this.$store.commit("stop_progress");
           if (this.$route.path !== "/connections") {
-            this.$router.push("/connections");
-          } else {
-            this.$nextTick(() => {
-              document
-                .getElementById("content")
-                .scrollIntoView({ behavior: "smooth", block: "center" });
-            });
+            this.$router.push({ path: "/connections", hash: "#content" });
           }
+          this.$router.push({ hash: "#content" });
         });
     },
   },

@@ -50,7 +50,7 @@ export default defineComponent({
   },
   computed: {
     merge: function () {
-      return 400 / (this.dates.length || 1) * 100;
+      return (400 / (this.dates.length || 1)) * 100;
     },
   },
   created() {
