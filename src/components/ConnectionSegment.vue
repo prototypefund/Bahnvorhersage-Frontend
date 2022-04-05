@@ -123,10 +123,8 @@ export default defineComponent({
 .details_grid {
   margin: 20px;
   display: inline-grid;
-  // grid-template-columns: 20px minmax(max-content, auto) minmax(max-content, auto) minmax(max-content, auto);
   grid-template-columns: 15px minmax(max-content, auto);
   width: calc(100% - 40px);
-  // background-color: $page_lighter_gray;
 }
 
 .leg {

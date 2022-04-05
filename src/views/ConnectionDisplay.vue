@@ -301,7 +301,7 @@ export default defineComponent({
 }
 
 .sort_col:hover {
-  outline: solid 1px $page_accent;
+  outline: solid 1px $primary;
   z-index: 1;
 }
 

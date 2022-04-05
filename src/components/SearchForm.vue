@@ -181,7 +181,7 @@ span.flatpickr-weekday,
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: $page_accent;
-  border-color: $page_accent;
+  background: $primary;
+  border-color: $primary;
 }
 </style>

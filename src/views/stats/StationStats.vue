@@ -2,13 +2,15 @@
   <div id="stats" class="stations shadow-xxxl p-5 bg-black">
     <h1 class="text-center">Verspätungen in Deutschland</h1>
     <div class="stats-picker">
-      <vue-slider
+      <Slider
+        class="slider"
+        v-if="values.length"
         v-model="values"
-        :data="dates"
-        :tooltipPlacement="['top', 'bottom']"
-        :lazy="true"
-        :tooltip="'always'"
-      ></vue-slider>
+        :merge="merge"
+        :max="dates.length - 1"
+        :format="format"
+        style="width: 200px"
+      />
       <input
         class="btn btn-primary"
         type="button"
@@ -29,24 +31,27 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
+import Slider from "@vueform/slider";
 import { default as dayjs } from "dayjs";
 
 export default defineComponent({
   components: {
-    VueSlider,
+    Slider,
   },
   data: function () {
     return {
-      values: [] as any,
-      dates: [] as any,
-      plotURL:
-        window.location.protocol +
+      values: [] as number[],
+      dates: [] as string[],
+      plotURL: (window.location.protocol +
         "//" +
         window.location.host +
-        "/api/stationplot/default.webp",
+        "/api/stationplot/default.webp") as string,
     };
+  },
+  computed: {
+    merge: function () {
+      return 400 / (this.dates.length || 1) * 100;
+    },
   },
   created() {
     this.$store.commit("start_progress");
@@ -68,15 +73,12 @@ export default defineComponent({
         limits.min = dayjs(limits.min, "YYYY-MM-DD");
         limits.max = dayjs(limits.max, "YYYY-MM-DD");
 
-        const dates = [limits.min];
+        const dates = [limits.min] as dayjs.Dayjs[];
         while (dates[dates.length - 1].isBefore(limits.max)) {
           dates.push(dates[dates.length - 1].add(limits.freq, "hours"));
         }
-        for (let i = 0; i < dates.length; i++) {
-          dates[i] = dates[i].format("DD.MM.YYYY");
-        }
-        this.dates = dates;
-        this.values = [dates[0], dates[dates.length - 1]];
+        this.dates = dates.map((date) => date.format("DD.MM.YYYY"));
+        this.values = [0, this.dates.length - 1];
       });
   },
   methods: {
@@ -86,9 +88,9 @@ export default defineComponent({
         "//" +
         window.location.host +
         "/api/stationplot/" +
-        this.values[0].replace(/,/g, "") +
+        this.dates[this.values[0]] +
         "-" +
-        this.values[1].replace(/,/g, "") +
+        this.dates[this.values[1]] +
         ".webp";
       if (new_url !== this.plotURL) {
         this.$store.commit("start_progress");
@@ -109,6 +111,13 @@ export default defineComponent({
         "/api/stationplot/default.webp";
       this.$store.commit("start_progress");
     },
+    format(index: number) {
+      return this.dates[index];
+    },
   },
 });
 </script>
+
+<style>
+@import "@vueform/slider/themes/default.css";
+</style>

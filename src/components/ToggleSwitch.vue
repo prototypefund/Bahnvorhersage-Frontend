@@ -52,7 +52,7 @@ export default defineComponent({
   width: 1.3rem;
   height: 1.3rem;
   display: inline-block;
-  background-color: $page_accent;
+  background-color: $primary;
   border-radius: 100px;
   position: absolute;
   top: -0.2rem;

@@ -245,6 +245,10 @@ body,
   height: 100%;
 }
 
+main {
+  max-width: 100%;
+}
+
 body {
   background-image: url(./assets/img/background_bold_blur.webp);
   background-position-x: center;
@@ -258,7 +262,7 @@ body {
 }
 
 .dropdown-item.active {
-  background-color: $page_accent !important;
+  background-color: $primary !important;
 }
 
 .text_content {
@@ -280,13 +284,20 @@ body {
   justify-content: space-around;
   margin: auto;
   width: 100%;
-  gap: 20px;
+  gap: 60px;
   align-items: center;
+  height: max-content;
+  margin-top: 3em;
+
+  .slider {
+    width: max-content;
+    flex-grow: 1;
+  }
 }
 
 .stats-image {
   max-height: 70vh;
-  max-width: 50em;
+  max-width: 100%;
   margin: auto;
   display: block;
 }
@@ -295,20 +306,6 @@ body {
   .stats-picker {
     flex-wrap: wrap;
   }
-}
-
-.vue-slider-process {
-  background-color: $page_accent !important;
-}
-
-.vue-slider-dot-tooltip-inner {
-  border-color: $page_accent !important;
-  background-color: $page_accent !important;
-}
-
-.vue-slider {
-  margin: 50px 0;
-  width: 100% !important;
 }
 
 .light_text {

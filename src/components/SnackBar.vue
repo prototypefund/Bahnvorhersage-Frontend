@@ -114,11 +114,11 @@ export default defineComponent({
   font-size: 1.3em;
   font-weight: bold;
   cursor: pointer;
-  color: $page_accent;
+  color: $primary;
 }
 
 .click_text:hover {
-  color: lighten($page_accent, 10);
+  color: lighten($primary, 10);
 }
 
 .click_text:active {
