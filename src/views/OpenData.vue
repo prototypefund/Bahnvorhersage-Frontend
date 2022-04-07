@@ -2,7 +2,7 @@
   <div id="impressum" class="text_content">
     <h1 class="text-center">Open Data</h1>
     <p>
-      Für dieses Projekt haben wir viele Daten gesammelt und kombinieren. Damit
+      Für dieses Projekt haben wir viele Daten gesammelt und kombiniert. Damit
       auch andere etwas von unserer Arbeit haben, stellen wir einige dieser
       Daten öffentlich zur Verfügung. Dies beinhaltet bislang:
     </p>
