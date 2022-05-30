@@ -8,36 +8,38 @@
     <!-- Start Bhf Form-->
     <label for="start" class="form-label">Von</label>
     <div class="input-group mb-3 flex-nowrap">
-      <span class="input-group-text"><i class="tcp-train"></i></span>
-      <autosuggest
+      <span class="input-group-text"><i class="icon icon-train"></i></span>
+      <auto-suggest
         name="start"
+        class="form-control p-0"
         placeholder="Bahnhof"
         v-model="start"
         :is_invalid="start_invalid"
       >
-      </autosuggest>
+      </auto-suggest>
     </div>
 
     <!-- End Bhf Form -->
     <label for="destination" class="form-label">Nach</label>
     <div class="input-group mb-3 flex-nowrap">
-      <span class="input-group-text"><i class="tcp-train"></i></span>
-      <autosuggest
+      <span class="input-group-text"><i class="icon icon-train"></i></span>
+      <auto-suggest
         name="destination"
+        class="form-control p-0"
         placeholder="Bahnhof"
         v-model="destination"
         :is_invalid="destination_invalid"
       >
-      </autosuggest>
+      </auto-suggest>
       <span class="btn btn-primary" @click="swap_stations"
-        ><i class="tcp-swap"></i
+        ><i class="icon icon-arrow-down-up" style="vertical-align: middle"></i
       ></span>
     </div>
 
     <!-- Date Form -->
     <label for="datetime" class="form-label">Datum und Uhrzeit</label>
     <div class="input-group mb-3">
-      <span class="input-group-text"><i class="tcp-calendar"></i></span>
+      <span class="input-group-text"><i class="icon icon-calendar"></i></span>
       <flat-pickr
         v-model="date"
         :config="config"
@@ -46,11 +48,30 @@
         name="datetime"
       >
       </flat-pickr>
-      <toggleSwitch
+      <toggle-switch
         class="align-self-center"
         style="padding: 6px 12px"
         v-model="search_for_arrival"
-      ></toggleSwitch>
+      ></toggle-switch>
+    </div>
+
+    <div class="d-flex justify-content-around flex-wrap">
+      <!-- Only regional checkbox -->
+      <check-box
+        class="mb-3"
+        v-model="only_regional"
+        id="only_regional"
+        label="Nur Nahverkehr"
+        :inline="true"
+      ></check-box>
+      <!-- Bike checkbox -->
+      <check-box
+        class="mb-3"
+        v-model="bike"
+        id="bike"
+        label="Fahrradmitnahme"
+        :inline="true"
+      ></check-box>
     </div>
 
     <!-- Submit Button -->
@@ -73,8 +94,9 @@ import flatpickr from "flatpickr";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 
-import autosuggest from "./AutoSuggest.vue";
+import AutoSuggest from "./AutoSuggest.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
+import CheckBox from "./CheckBox.vue";
 
 require("flatpickr/dist/themes/dark.css");
 
@@ -95,6 +117,8 @@ export default defineComponent({
         altFormat: "d.m.Y H:i",
       },
       search_for_arrival: false,
+      only_regional: false,
+      bike: false,
     };
   },
   created() {
@@ -122,6 +146,8 @@ export default defineComponent({
           destination: this.destination,
           date: this.date, // flatpickr.formatDate(new Date(this.date), "d.m.Y H:i")
           search_for_departure: !this.search_for_arrival,
+          only_regional: this.only_regional,
+          bike: this.bike,
         });
       } else {
         if (!this.stations.includes(this.start)) {
@@ -147,8 +173,9 @@ export default defineComponent({
   },
   components: {
     flatPickr,
-    autosuggest,
+    AutoSuggest,
     ToggleSwitch,
+    CheckBox,
   },
 });
 </script>
