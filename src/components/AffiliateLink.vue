@@ -1,18 +1,17 @@
 <template>
-  <div>
-    <div style="margin: auto">
-      <div v-if="price === -1"></div>
-      <a
-        v-else
-        v-bind:href="link"
-        target="_blank"
-        rel="noopener"
-        v-on:click.stop
-        class="btn btn-primary text-nowrap"
-        style="margin: 10px; display: block"
-        >{{ (price / 100).toFixed(2) }}€</a
+  <div class="mt-auto mb-auto">
+    <a :href="link" target="_blank" rel="noopener" @click.stop>
+      <span
+        class="btn btn-primary text-nowrap d-block m-2"
+        v-if="price === -1"
+        data-bs-toggle="tooltip"
+        title="Wir können für diese Verbindung leider keinen Preis ermitteln. Vielleicht kann die Bahn den Preis angeben"
+        >Preis ermitteln</span
       >
-    </div>
+      <span class="btn btn-primary text-nowrap d-block m-2" v-else
+        >{{ price.toFixed(2) }}€</span
+      >
+    </a>
   </div>
 </template>
 

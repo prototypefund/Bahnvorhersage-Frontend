@@ -1,8 +1,11 @@
 <template>
-  <div class="toggle_container" @click="$emit('input', !value)">
-    <span :class="{ text: true, inactive: value }">Ab</span>
-    <span class="toggler" :class="{ on: value }"></span>
-    <span :class="{ text: true, inactive: !value }">An</span>
+  <div
+    class="toggle_container"
+    @click="$emit('update:modelValue', !modelValue)"
+  >
+    <span class="form-check-label" :class="{ inactive: modelValue }">Ab</span>
+    <span class="toggler" :class="{ on: modelValue }"></span>
+    <span class="form-check-label" :class="{ inactive: !modelValue }">An</span>
   </div>
 </template>
 
@@ -10,9 +13,11 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "ToggleSwitch",
+  emits: ["update:modelValue"],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
+      required: true,
       default: false,
     },
   },
@@ -22,14 +27,6 @@ export default defineComponent({
 <style lang="scss">
 .toggle_container {
   min-width: max-content;
-
-  .text {
-    font-weight: bold;
-    transition: color 0.1s;
-  }
-  .text.inactive {
-    color: $page_gray_text;
-  }
 }
 
 .toggler {

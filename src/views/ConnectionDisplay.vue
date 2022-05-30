@@ -1,8 +1,8 @@
 <template>
   <div class="my-5">
     <h1 v-if="connections.length !== 0" class="text-center">
-      {{ connections[0].summary["dp_station_display_name"] }} nach
-      {{ connections[0].summary["ar_station_display_name"] }}
+      {{ connections[0].legs[0].origin.name }} nach
+      {{ connections[0].legs.at(-1).destination.name }}
     </h1>
     <div v-else>
       Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um
@@ -12,9 +12,9 @@
       <div class="connections_header">
         <div class="col1 sort_col rounded-start" @click="sort_time()">
           Zeit
-          <span v-if="last_sort === 'dp_ct' || last_sort === 'ar_ct'">
-            <span v-if="last_sort === 'dp_ct'">Ab </span>
-            <span v-if="last_sort === 'ar_ct'">An </span>
+          <span v-if="last_sort === 'departure' || last_sort === 'arrival'">
+            <span v-if="last_sort === 'departure'">Ab </span>
+            <span v-if="last_sort === 'arrival'">An </span>
             <i v-if="asc_sort[last_sort]" class="arrow up"></i>
             <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
           </span>
@@ -34,9 +34,9 @@
           </span>
         </div>
         <div class="col4">Produkte</div>
-        <div class="col5 sort_col" @click="sort_by_key('score')">
+        <div class="col5 sort_col" @click="sort_by_key('connectionScore')">
           Score
-          <span v-if="last_sort === 'score'">
+          <span v-if="last_sort === 'connectionScore'">
             <i v-if="asc_sort[last_sort]" class="arrow up"></i>
             <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
           </span>
@@ -51,12 +51,9 @@
       </div>
     </div>
     <transition-group name="connections" tag="div">
-      <connection
-        v-for="connection in connections"
-        :key="connection.id"
-        :summary="connection.summary"
-        :segments="connection.segments"
-      ></connection>
+      <div v-for="connection in connections" :key="connection.id">
+        <connection-header :connection="connection"></connection-header>
+      </div>
     </transition-group>
   </div>
 </template>
@@ -64,9 +61,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import connection from "../components/ConnectionHeader.vue";
-
-// type connectionSortKey = 'dp_ct' | 'ar_ct' | 'duration' | 'transfers' | 'score' | 'price'
+import ConnectionHeader from "../components/ConnectionHeader.vue";
 
 export default defineComponent({
   name: "ConnectionDisplay",
@@ -74,18 +69,18 @@ export default defineComponent({
     ...mapState(["connections"]),
   },
   components: {
-    connection,
+    ConnectionHeader,
   },
   data: function () {
     return {
-      last_time_key: "dp_ct" as string,
-      last_sort: "dp_ct" as string,
+      last_time_key: "departure" as string,
+      last_sort: "departure" as string,
       asc_sort: {
-        dp_ct: true,
-        ar_ct: false,
+        departure: true,
+        arrival: false,
         duration: false,
-        trasfers: true,
-        score: true,
+        transfers: true,
+        connectionScore: true,
         price: false,
       },
     } as any;
@@ -93,17 +88,17 @@ export default defineComponent({
   methods: {
     sort_time: function () {
       if (
-        this.last_time_key === "dp_ct" &&
+        this.last_time_key === "departure" &&
         !this.asc_sort[this.last_time_key]
       ) {
-        this.last_time_key = "ar_ct";
+        this.last_time_key = "arrival";
         this.sort_by_key(this.last_time_key);
         this.asc_sort[this.last_time_key] = true;
       } else if (
-        this.last_time_key === "ar_ct" &&
+        this.last_time_key === "arrival" &&
         !this.asc_sort[this.last_time_key]
       ) {
-        this.last_time_key = "dp_ct";
+        this.last_time_key = "departure";
         this.sort_by_key(this.last_time_key);
         this.asc_sort[this.last_time_key] = true;
       } else {
@@ -111,25 +106,26 @@ export default defineComponent({
       }
     },
     sort_by_key: function (key: string) {
+      let connections = [...this.connections];
       this.last_sort = key;
       // switch sort oder
       this.asc_sort[key] = !this.asc_sort[key];
       if (this.asc_sort[key]) {
         // sort ascending
-        this.connections.sort(function (a: any, b: any) {
-          const x = a.summary[key];
-          const y = b.summary[key];
+        connections.sort(function (a: any, b: any) {
+          const x = a[key];
+          const y = b[key];
           return x < y ? -1 : x > y ? 1 : 0;
         });
       } else if (!this.asc_sort[key]) {
         // sort descending
-        this.connections.sort(function (a: any, b: any) {
-          const x = a.summary[key];
-          const y = b.summary[key];
+        connections.sort(function (a: any, b: any) {
+          const x = a[key];
+          const y = b[key];
           return x < y ? 1 : x > y ? -1 : 0;
         });
       }
-      this.$store.commit("set_connections", this.connections);
+      this.$store.commit("set_connections", connections);
     },
   },
 });

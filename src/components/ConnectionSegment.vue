@@ -1,65 +1,89 @@
 <template>
   <div style="display: contents">
-    <div class="station_delay_line_container">
-      <div v-bind:style="gradient_line" class="station_delay_line"></div>
-    </div>
-    <div class="leg">
-      <div class="station">
-        {{ segment.dp_station_display_name }}
-      </div>
-      <div class="time" v-if="segment.dp_pt.isSame(segment.dp_ct)">
-        ab {{ segment.dp_ct.format("HH:mm") }}
-      </div>
-      <div class="time" v-else>
-        ab {{ segment.dp_ct.format("HH:mm") }}
-        <del class="outdated">{{ segment.dp_pt.format("HH:mm") }}</del>
-      </div>
-      <div class="platform" v-if="segment.dp_pp == segment.dp_cp">
-        von Gl. {{ segment.dp_cp }}
-      </div>
-      <div class="platform" v-else>
-        von Gl. {{ segment.dp_cp }}
-        <del class="outdated">{{ segment.dp_pp }}</del>
-      </div>
-
-      <div class="train">
-        <img
-          v-if="segment.dp_c in train_icons"
-          v-bind:src="train_icons[segment.dp_c]"
-        />
-        {{ segment.train_name }} nach {{ segment.train_destination }}
-      </div>
-
-      <div class="station">
-        {{ segment.ar_station_display_name }}
-      </div>
-      <div class="time" v-if="segment.ar_pt.isSame(segment.ar_ct)">
-        an {{ segment.ar_ct.format("HH:mm") }}
-      </div>
-      <div class="time" v-else>
-        an {{ segment.ar_ct.format("HH:mm") }}
-        <del class="outdated">{{ segment.ar_pt.format("HH:mm") }}</del>
-      </div>
-      <div class="platform" v-if="segment.ar_pp == segment.ar_cp">
-        an Gl. {{ segment.ar_cp }}
-      </div>
-      <div class="platform" v-else>
-        an Gl. {{ segment.ar_cp }}
-        <del class="outdated">{{ segment.ar_pp }}</del>
+    <div
+      v-if="'walking' in segment && segment.walking"
+      class="walk"
+      v-bind:style="transfer_style"
+    >
+      <div style="display: contents">
+        <i class="icon icon-person-walking-solid"></i>
+        davon {{ segment.arrival.diff(segment.departure, "m") }} Min und
+        {{ segment.distance }} m Fußweg
       </div>
     </div>
-    <div v-if="'transfer_time' in segment" style="display: contents">
-      <div class="score" v-bind:style="transfer_style">
-        Verbindungs-Score:
-        <span v-bind:style="text_color">{{ segment.score }}%</span>
+    <div v-else style="display: contents">
+      <div class="station_delay_line_container">
+        <div v-bind:style="gradient_line" class="station_delay_line"></div>
       </div>
-      <div class="transfer" v-bind:style="transfer_style">
-        Umsteigezeit: {{ segment.transfer_time }} Min.
+      <div class="leg">
+        <div class="station">
+          {{ segment.origin.name }}
+        </div>
+
+        <div class="time">
+          {{ segment.departure.format("HH:mm") }}
+          <del
+            v-if="!segment.departure.isSame(segment.plannedDeparture)"
+            class="outdated"
+          >
+            {{ segment.plannedDeparture.format("HH:mm") }}
+          </del>
+        </div>
+
+        <div class="platform">
+          <span v-if="segment.departurePlatform">
+            von Gl. {{ segment.departurePlatform }}
+            <del
+              v-if="
+                segment.departurePlatform !== segment.plannedDeparturePlatform
+              "
+              class="outdated"
+              >{{ segment.plannedDeparturePlatform }}</del
+            >
+          </span>
+        </div>
+
+        <div class="train">
+          <img
+            v-if="segment.line.productName in train_icons"
+            v-bind:src="train_icons[segment.line.productName]"
+          />
+          {{ segment.line.name }} nach {{ segment.direction }}
+        </div>
+
+        <div class="station">
+          {{ segment.destination.name }}
+        </div>
+
+        <div class="time">
+          {{ segment.arrival.format("HH:mm") }}
+          <del
+            v-if="!segment.arrival.isSame(segment.plannedArrival)"
+            class="outdated"
+          >
+            {{ segment.plannedArrival.format("HH:mm") }}
+          </del>
+        </div>
+
+        <div class="platform">
+          <span v-if="segment.arrivalPlatform">
+            von Gl. {{ segment.arrivalPlatform }}
+            <del
+              v-if="segment.arrivalPlatform !== segment.plannedArrivalPlatform"
+              class="outdated"
+              >{{ segment.plannedArrivalPlatform }}</del
+            >
+          </span>
+        </div>
       </div>
-      <div v-if="segment.walk" class="walk" v-bind:style="transfer_style">
-        <div style="display: contents">
-          <i class="tcp-pedestrian" style="font-size: 1.2rem"></i>
-          davon {{ segment.walk }} Min. Fußweg
+
+      <div v-if="'transferTime' in segment" style="display: contents">
+        <div class="score" v-bind:style="transfer_style">
+          Verbindungs-Score:
+          <span v-bind:style="text_color">{{ segment.transferScore }}%</span>
+        </div>
+        <div class="transfer" v-bind:style="transfer_style">
+          Umsteigezeit: {{ segment.transferTime }} Min.
         </div>
       </div>
     </div>
@@ -77,7 +101,7 @@ export default defineComponent({
       show_details: false,
       dp_station_style: {
         "background-color": rdylgr_colormap(
-          this.segment.dp_delay,
+          this.segment.departurePrediction,
           0.2,
           0.8,
           200
@@ -85,7 +109,7 @@ export default defineComponent({
       },
       ar_station_style: {
         "background-color": rdylgr_colormap(
-          this.segment.ar_delay,
+          this.segment.arrivalPrediction,
           0.2,
           0.8,
           200
@@ -95,14 +119,14 @@ export default defineComponent({
         "background-color": "#212529",
       },
       text_color: {
-        color: rdylgr_colormap(this.segment.score, 50, 100, 200),
+        color: rdylgr_colormap(this.segment.transferScore, 50, 100, 200),
       },
       gradient_line: {
         "background-image":
           "linear-gradient(" +
-          rdylgr_colormap(this.segment.dp_delay, 0.2, 0.8, 200) +
+          rdylgr_colormap(this.segment.departurePrediction, 0.2, 0.8, 200) +
           ", " +
-          rdylgr_colormap(this.segment.ar_delay, 0.2, 0.8, 200) +
+          rdylgr_colormap(this.segment.arrivalPrediction, 0.2, 0.8, 200) +
           ")",
       },
       train_icons: {
@@ -130,9 +154,9 @@ export default defineComponent({
 .leg {
   @include border-radius;
   display: inline-grid;
-  grid-template-columns: minmax(max-content, auto) minmax(max-content, auto) minmax(
+  grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1fr) minmax(
       max-content,
-      auto
+      1fr
     );
   background-color: $page_lighter_gray;
 }
@@ -196,7 +220,7 @@ export default defineComponent({
   }
 
   .leg {
-    grid-template-columns: minmax(max-content, auto) minmax(max-content, auto);
+    grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1fr);
   }
 
   .station {
