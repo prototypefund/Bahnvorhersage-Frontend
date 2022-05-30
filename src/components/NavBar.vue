@@ -85,7 +85,7 @@
               href="https://gitlab.com/bahnvorhersage/bahnvorhersage"
               target="_blank"
               rel="noopener"
-              ><i class="tcp-gitlab"></i> Projekt auf GitLab</a
+              ><i class="icon icon-gitlab"></i> Projekt auf GitLab</a
             >
           </div>
         </div>

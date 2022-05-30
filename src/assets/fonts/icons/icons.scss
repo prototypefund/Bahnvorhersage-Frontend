@@ -1,0 +1,59 @@
+$icons-font: "icons";
+
+@font-face {
+    font-family: $icons-font;
+    src: url("assets/fonts/icons/icons.eot?1e2aad5ced93e92d12ce57a30ae0817c#iefix") format("embedded-opentype"),
+url("assets/fonts/icons/icons.woff2?1e2aad5ced93e92d12ce57a30ae0817c") format("woff2"),
+url("assets/fonts/icons/icons.woff?1e2aad5ced93e92d12ce57a30ae0817c") format("woff");
+}
+
+i[class^="icon-"]:before, i[class*=" icon-"]:before {
+    font-family: icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+$icons-map: (
+    "arrow-down-up": "\f101",
+    "calendar": "\f102",
+    "check": "\f103",
+    "github": "\f104",
+    "gitlab": "\f105",
+    "pedestrian": "\f106",
+    "person-walking-solid": "\f107",
+    "swap": "\f108",
+    "train": "\f109",
+);
+
+.icon-arrow-down-up:before {
+    content: map-get($icons-map, "arrow-down-up");
+}
+.icon-calendar:before {
+    content: map-get($icons-map, "calendar");
+}
+.icon-check:before {
+    content: map-get($icons-map, "check");
+}
+.icon-github:before {
+    content: map-get($icons-map, "github");
+}
+.icon-gitlab:before {
+    content: map-get($icons-map, "gitlab");
+}
+.icon-pedestrian:before {
+    content: map-get($icons-map, "pedestrian");
+}
+.icon-person-walking-solid:before {
+    content: map-get($icons-map, "person-walking-solid");
+}
+.icon-swap:before {
+    content: map-get($icons-map, "swap");
+}
+.icon-train:before {
+    content: map-get($icons-map, "train");
+}

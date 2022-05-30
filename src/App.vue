@@ -162,25 +162,31 @@ export default defineComponent({
     },
     parse_datetimes: function (connections) {
       for (let i = 0; i < connections.length; i++) {
-        connections[i].summary.dp_pt = dayjs(connections[i].summary.dp_pt);
-        connections[i].summary.ar_pt = dayjs(connections[i].summary.ar_pt);
+        connections[i].plannedDeparture = dayjs(
+          connections[i].plannedDeparture
+        );
+        connections[i].plannedArrival = dayjs(connections[i].plannedArrival);
 
-        connections[i].summary.dp_ct = dayjs(connections[i].summary.dp_ct);
-        connections[i].summary.ar_ct = dayjs(connections[i].summary.ar_ct);
+        connections[i].departure = dayjs(connections[i].departure);
+        connections[i].arrival = dayjs(connections[i].arrival);
+        connections[i].duration = dayjs.unix(connections[i].duration);
+        connections[i].plannedDuration = dayjs.unix(
+          connections[i].plannedDuration
+        );
 
-        for (let u = 0; u < connections[i].segments.length; u++) {
-          connections[i].segments[u].dp_pt = dayjs(
-            connections[i].segments[u].dp_pt
+        for (let u = 0; u < connections[i].legs.length; u++) {
+          connections[i].legs[u].plannedDeparture = dayjs(
+            connections[i].legs[u].plannedDeparture
           );
-          connections[i].segments[u].ar_pt = dayjs(
-            connections[i].segments[u].ar_pt
+          connections[i].legs[u].plannedArrival = dayjs(
+            connections[i].legs[u].plannedArrival
           );
 
-          connections[i].segments[u].dp_ct = dayjs(
-            connections[i].segments[u].dp_ct
+          connections[i].legs[u].departure = dayjs(
+            connections[i].legs[u].departure
           );
-          connections[i].segments[u].ar_ct = dayjs(
-            connections[i].segments[u].ar_ct
+          connections[i].legs[u].arrival = dayjs(
+            connections[i].legs[u].arrival
           );
         }
       }
@@ -219,7 +225,21 @@ export default defineComponent({
 
 <style lang="scss">
 @import "~bootstrap/scss/bootstrap";
-@import "src/assets/scss/font.scss";
+@import "src/assets/fonts/icons/icons.scss";
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "icons" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 #intro {
   min-height: 800px;
@@ -254,10 +274,6 @@ body {
   background-color: $page_background;
   overflow: auto;
   color: $text_color;
-}
-
-.dropdown-item.active {
-  background-color: $primary !important;
 }
 
 .text_content {
@@ -344,5 +360,14 @@ body {
     grid-template-rows: 1fr;
     grid-template-areas: "slogan search";
   }
+}
+
+.form-check-label {
+  text-shadow: 0px 0px 1px $text_color;
+  transition: color 0.1s;
+}
+
+.form-check-label.inactive {
+  text-shadow: none;
 }
 </style>

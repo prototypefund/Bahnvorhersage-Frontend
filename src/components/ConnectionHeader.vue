@@ -3,49 +3,61 @@
   <div v-bind:style="[background_color, border_style]" class="custom_card">
     <div v-on:click="show_details = !show_details" class="card_header">
       <div class="p-3 col1">
-        <div v-if="summary.dp_ct.isSame(summary.dp_pt)">
-          {{ summary.dp_ct.format("HH:mm") }}
-        </div>
-        <div v-else>
-          {{ summary.dp_ct.format("HH:mm") }}
-          <del class="outdated">{{ summary.dp_pt.format("HH:mm") }}</del>
+        <div>
+          {{ connection.departure.format("HH:mm") }}
+          <del
+            v-show="!connection.departure.isSame(connection.plannedDeparture)"
+            class="outdated"
+          >
+            {{ connection.plannedDeparture.format("HH:mm") }}
+          </del>
         </div>
 
-        <div v-if="summary.ar_ct.isSame(summary.ar_pt)">
-          {{ summary.ar_ct.format("HH:mm") }}
-        </div>
-        <div v-else>
-          {{ summary.ar_ct.format("HH:mm") }}
-          <del class="outdated">{{ summary.ar_pt.format("HH:mm") }}</del>
+        <div>
+          {{ connection.arrival.format("HH:mm") }}
+          <del
+            v-show="!connection.arrival.isSame(connection.plannedArrival)"
+            class="outdated"
+          >
+            {{ connection.plannedArrival.format("HH:mm") }}
+          </del>
         </div>
       </div>
-      <div class="p-3 col2">{{ summary.duration }}</div>
-      <div class="p-3 col3">{{ summary.transfers }}</div>
+      <div class="p-3 col2">
+        {{ connection.duration.format("H:mm")
+        }}<del
+          v-show="!connection.duration.isSame(connection.plannedDuration)"
+          class="outdated"
+        >
+          {{ connection.plannedDuration.format("HH:mm") }}
+        </del>
+      </div>
+      <div class="p-3 col3">{{ connection.transfers }}</div>
       <div class="p-3 col4">
-        {{ summary.train_categories.join(", ") }}
+        {{ connection.trainCategories.join(", ") }}
       </div>
       <div class="p-3 col5" v-bind:style="[text_color]">
-        {{ summary.score }}%
+        {{ connection.connectionScore }}%
       </div>
       <AffiliateLink
         class="col6"
-        :date="summary.dp_ct"
-        :time="summary.dp_ct"
-        :price="summary.price"
-        :start="summary.dp_station_display_name"
-        :destination="summary.ar_station_display_name"
+        :date="connection.departure"
+        :time="connection.departure"
+        :price="connection.price"
+        :start="connection.legs[0].origin.name"
+        :destination="connection.legs.at(-1).destination.name"
       ></AffiliateLink>
     </div>
     <!-- segments -->
     <transition name="open">
-      <div v-if="show_details" class="card_contents">
+      <div v-show="show_details" class="card_contents">
         <div>
           <div class="details_grid">
             <ConnectionSegment
-              v-for="(segment, index) in segments"
+              v-for="(segment, index) in connection.legs"
               v-bind:key="index"
               v-bind:segment="segment"
-              v-bind:con_score="summary.score"
+              v-bind:con_score="connection.connectionScore"
             ></ConnectionSegment>
           </div>
         </div>
@@ -66,7 +78,7 @@ export default defineComponent({
     ConnectionSegment,
     AffiliateLink,
   },
-  props: ["summary", "segments"],
+  props: ["connection"],
   data: function () {
     return {
       show_details: false,
@@ -75,10 +87,11 @@ export default defineComponent({
       },
       border_style: {
         "border-left":
-          "10px solid " + rdylgr_colormap(this.summary.score, 50, 100, 200),
+          "10px solid " +
+          rdylgr_colormap(this.connection.connectionScore, 50, 100, 200),
       },
       text_color: {
-        color: rdylgr_colormap(this.summary.score, 50, 100, 200),
+        color: rdylgr_colormap(this.connection.connectionScore, 50, 100, 200),
       },
     };
   },

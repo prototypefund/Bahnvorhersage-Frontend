@@ -1,3 +1,5 @@
+$border-radius: .375rem;
+
 $page_background: black;
 $page_gray: #212529;
 $page_lighter_gray: #2d2f31;
@@ -61,6 +63,9 @@ $display-font-sizes: (
   5: 2.5rem,
   6: 2rem
 );
+
+$form-check-input-width: 1.5em;
+$form-check-input-border-radius: $border-radius;
 
 
 :root {

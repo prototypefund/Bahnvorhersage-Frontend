@@ -28,6 +28,6 @@ module.exports = {
       background_color: "#212121",
       short_name: "Bahn-Vorhersage",
     },
-    assetsVersion: "0.4.1",
+    assetsVersion: "0.4.2",
   },
 };
