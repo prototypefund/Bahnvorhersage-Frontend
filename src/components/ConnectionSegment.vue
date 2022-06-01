@@ -67,7 +67,7 @@
 
         <div class="platform">
           <span v-if="segment.arrivalPlatform">
-            von Gl. {{ segment.arrivalPlatform }}
+            an Gl. {{ segment.arrivalPlatform }}
             <del
               v-if="segment.arrivalPlatform !== segment.plannedArrivalPlatform"
               class="outdated"
