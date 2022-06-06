@@ -26,10 +26,10 @@
       <div class="p-3 col2">
         {{ connection.duration.format("H:mm")
         }}<del
-          v-show="!connection.duration.isSame(connection.plannedDuration)"
+          v-show="!connection.duration.asSeconds() === connection.plannedDuration.asSeconds()"
           class="outdated"
         >
-          {{ connection.plannedDuration.format("HH:mm") }}
+          {{ connection.plannedDuration.format("H:mm") }}
         </del>
       </div>
       <div class="p-3 col3">{{ connection.transfers }}</div>
