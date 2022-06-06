@@ -26,7 +26,10 @@
       <div class="p-3 col2">
         {{ connection.duration.format("H:mm")
         }}<del
-          v-show="!connection.duration.asSeconds() === connection.plannedDuration.asSeconds()"
+          v-show="
+            !connection.duration.asSeconds() ===
+            connection.plannedDuration.asSeconds()
+          "
           class="outdated"
         >
           {{ connection.plannedDuration.format("H:mm") }}

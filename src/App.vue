@@ -90,7 +90,7 @@ import update from "./assets/js/update";
 import SnackBar from "./components/SnackBar.vue";
 import { default as dayjs } from "dayjs";
 import { default as duration } from "dayjs/plugin/duration";
-dayjs.extend(duration)
+dayjs.extend(duration);
 
 export default defineComponent({
   name: "App",
@@ -171,8 +171,14 @@ export default defineComponent({
 
         connections[i].departure = dayjs(connections[i].departure);
         connections[i].arrival = dayjs(connections[i].arrival);
-        connections[i].duration = dayjs.duration(connections[i].duration, 'seconds');
-        connections[i].plannedDuration = dayjs.duration(connections[i].plannedDuration, 'seconds');
+        connections[i].duration = dayjs.duration(
+          connections[i].duration,
+          "seconds"
+        );
+        connections[i].plannedDuration = dayjs.duration(
+          connections[i].plannedDuration,
+          "seconds"
+        );
 
         for (let u = 0; u < connections[i].legs.length; u++) {
           connections[i].legs[u].plannedDeparture = dayjs(
