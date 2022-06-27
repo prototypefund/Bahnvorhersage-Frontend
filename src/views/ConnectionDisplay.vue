@@ -8,9 +8,9 @@
       Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um
       Zugverbindungen zu bewerten
     </div>
-    <div v-if="connections.length !== 0" class="custom_card">
+    <div v-if="connections.length !== 0" class="custom_card rounded overflow-hidden">
       <div class="connections_header">
-        <div class="col1 sort_col rounded-start" @click="sort_time()">
+        <div class="col1 sort_col" @click="sort_time()">
           Zeit
           <span v-if="last_sort === 'departure' || last_sort === 'arrival'">
             <span v-if="last_sort === 'departure'">Ab </span>
@@ -41,7 +41,7 @@
             <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
           </span>
         </div>
-        <div class="col6 sort_col rounded-end" @click="sort_by_key('price')">
+        <div class="col6 sort_col" @click="sort_by_key('price')">
           Ticket
           <span v-if="last_sort === 'price'">
             <i v-if="asc_sort[last_sort]" class="arrow up"></i>
@@ -138,14 +138,13 @@ export default defineComponent({
 
 .custom_card {
   @include border-radius;
+  overflow: hidden;
   background-color: $page_gray;
-  // overflow: hidden;
   margin-bottom: 5px;
   color: $text_color;
 }
 
 .card_header {
-  @include border-radius;
   background-color: $page_gray;
   overflow: hidden;
   height: max-content;
@@ -185,6 +184,7 @@ export default defineComponent({
 
 @media (max-width: 450px) {
   .card_header {
+    background-color: $page_lighter_gray;
     grid-template-columns: 1fr minmax(190px, 1fr);
 
     .col1,
@@ -207,6 +207,7 @@ export default defineComponent({
 
 @media (max-width: 350px) {
   .card_header {
+    background-color: $page_gray;
     grid-template-columns: minmax(190px, 1fr);
   }
 }
@@ -271,22 +272,18 @@ export default defineComponent({
 
 .right {
   transform: rotate(-45deg);
-  // -webkit-transform: rotate(-45deg);
 }
 
 .left {
   transform: rotate(135deg);
-  // -webkit-transform: rotate(135deg);
 }
 
 .up {
   transform: rotate(-135deg);
-  // -webkit-transform: rotate(-135deg);
 }
 
 .down {
   transform: rotate(45deg);
-  // -webkit-transform: rotate(45deg);
 }
 
 .sort_col {
