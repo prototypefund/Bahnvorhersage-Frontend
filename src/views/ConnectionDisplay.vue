@@ -8,7 +8,10 @@
       Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um
       Zugverbindungen zu bewerten
     </div>
-    <div v-if="connections.length !== 0" class="custom_card rounded overflow-hidden">
+    <div
+      v-if="connections.length !== 0"
+      class="custom_card rounded overflow-hidden"
+    >
       <div class="connections_header">
         <div class="col1 sort_col" @click="sort_time()">
           Zeit

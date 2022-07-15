@@ -50,7 +50,13 @@ export default defineComponent({
   },
   computed: {
     merge: function () {
-      return (400 / (this.dates.length || 1)) * 100;
+      /*
+       * When the slider ends are this many ticks apart, merge their labels
+       */
+      const default_slider_length = 400;
+      const distance_to_merge = 120;
+      const n_ticks = this.dates.length || 1;
+      return Math.ceil((distance_to_merge * n_ticks) / default_slider_length);
     },
   },
   created() {
