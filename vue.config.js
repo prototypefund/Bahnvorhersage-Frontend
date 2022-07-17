@@ -13,6 +13,7 @@ module.exports = {
     loaderOptions: {
       sass: {
         additionalData: `
+          @use 'sass:color';
           @import 'src/assets/scss/variables';
           @import 'bootstrap/scss/_functions.scss'; @import 'bootstrap/scss/_variables.scss'; @import 'bootstrap/scss/_mixins.scss';
         `,

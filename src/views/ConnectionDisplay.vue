@@ -113,7 +113,22 @@ export default defineComponent({
       this.last_sort = key;
       // switch sort oder
       this.asc_sort[key] = !this.asc_sort[key];
-      if (this.asc_sort[key]) {
+
+      if (key === 'duration' && this.asc_sort[key]) {
+        // sort ascending
+        connections.sort(function (a: any, b: any) {
+          const x = a[key].$ms;
+          const y = b[key].$ms;
+          return x < y ? -1 : x > y ? 1 : 0;
+        });
+      } else if (key === 'duration' && !this.asc_sort[key]) {
+        // sort descending
+        connections.sort(function (a: any, b: any) {
+          const x = a[key].$ms;
+          const y = b[key].$ms;
+          return x < y ? 1 : x > y ? -1 : 0;
+        });
+      } else if (this.asc_sort[key]) {
         // sort ascending
         connections.sort(function (a: any, b: any) {
           const x = a[key];
@@ -165,6 +180,18 @@ export default defineComponent({
   .col4 {
     background-color: $page_lighter_gray;
   }
+
+  .col1.sort_col:hover,
+  .col3.sort_col:hover,
+  .col5.sort_col:hover,
+  .col6.sort_col:hover {
+    background-color: color.scale($page_gray, $lightness: -20%);
+  }
+
+  .col2.sort_col:hover,
+  .col4.sort_col:hover {
+    background-color: color.scale($page_lighter_gray, $lightness: -20%);
+  }
 }
 
 @media (max-width: 1000px) {
@@ -181,6 +208,18 @@ export default defineComponent({
     .col2,
     .col5 {
       background-color: $page_lighter_gray;
+    }
+
+    .col1.sort_col:hover,
+    .col3.sort_col:hover,
+    .col4.sort_col:hover,
+    .col6.sort_col:hover {
+      background-color: color.scale($page_gray, $lightness: -20%);
+    }
+
+    .col2.sort_col:hover,
+    .col5.sort_col:hover {
+      background-color: color.scale($page_lighter_gray, $lightness: -20%);
     }
   }
 }
@@ -200,6 +239,18 @@ export default defineComponent({
     .col4,
     .col6 {
       background-color: $page_gray;
+    }
+
+    .col1.sort_col:hover,
+    .col3.sort_col:hover,
+    .col5.sort_col:hover {
+      background-color: color.scale($page_gray, $lightness: -20%);
+    }
+
+    .col2.sort_col:hover,
+    .col4.sort_col:hover,
+    .col6.sort_col:hover {
+      background-color: color.scale($page_lighter_gray, $lightness: -20%);
     }
   }
 
@@ -297,12 +348,11 @@ export default defineComponent({
 }
 
 .sort_col:hover {
-  outline: solid 1px $primary;
+  color: #fff;
   z-index: 1;
 }
 
 .sort_col:active {
-  position: relative;
-  top: 2px;
+  transform: scale(0.95);
 }
 </style>
