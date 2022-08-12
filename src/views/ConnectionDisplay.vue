@@ -114,14 +114,14 @@ export default defineComponent({
       // switch sort oder
       this.asc_sort[key] = !this.asc_sort[key];
 
-      if (key === 'duration' && this.asc_sort[key]) {
+      if (key === "duration" && this.asc_sort[key]) {
         // sort ascending
         connections.sort(function (a: any, b: any) {
           const x = a[key].$ms;
           const y = b[key].$ms;
           return x < y ? -1 : x > y ? 1 : 0;
         });
-      } else if (key === 'duration' && !this.asc_sort[key]) {
+      } else if (key === "duration" && !this.asc_sort[key]) {
         // sort descending
         connections.sort(function (a: any, b: any) {
           const x = a[key].$ms;
