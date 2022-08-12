@@ -56,29 +56,7 @@
         <div @click="refreshApp" class="click_text">UPDATE</div>
       </template>
     </SnackBar>
-    <!-- Error box -->
-    <SnackBar
-      v-if="error"
-      :layout="'multiline'"
-      :timeout="15000"
-      class="text-dark"
-      :style_class="'bg-danger'"
-    >
-      <div>
-        <div><b>Holy Guacamole!</b> {{ error.toString() }}</div>
-        <div>
-          Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen
-          Bugreport auf
-          <a
-            href="https://gitlab.com/bahnvorhersage/bahnvorhersage/-/issues?sort=created_date&state=opened"
-            class="link-dark fw-bold"
-            target="_blank"
-            rel="noopener"
-            >GitLab</a
-          >
-        </div>
-      </div>
-    </SnackBar>
+    <ErrorDisplay></ErrorDisplay>
   </body>
 </template>
 
@@ -88,22 +66,20 @@ import NavBar from "./components/NavBar.vue";
 import SearchForm from "./components/SearchForm.vue";
 import update from "./assets/js/update";
 import SnackBar from "./components/SnackBar.vue";
-import { default as dayjs } from "dayjs";
-import { default as duration } from "dayjs/plugin/duration";
-dayjs.extend(duration);
+import ErrorDisplay from "./components/ErrorDisplay.vue";
 
 export default defineComponent({
   name: "App",
   data: function () {
     return {
       connections: [],
-      error: null,
     };
   },
   components: {
     SearchForm,
     SnackBar,
     NavBar,
+    ErrorDisplay,
   },
   mixins: [update],
   mounted() {
@@ -137,95 +113,7 @@ export default defineComponent({
       styles.light_grey
     );
   },
-  methods: {
-    display_fetch_error: function (response) {
-      if (!response.ok) {
-        this.$store.commit("stop_progress");
-        if (response.status === 429) {
-          this.error = Error(
-            "Du hast zu viele Anfragen an unseren Server gesendet. Bitte warte ein paar Minuten und versuche es erneut."
-          );
-        } else {
-          this.error = Error(response.statusText);
-        }
-        console.log(response.url);
-        console.log(this.error);
-        setTimeout(() => {
-          this.error = null;
-        }, 15000);
-      }
-      return response;
-    },
-    display_img_load_error: function (event) {
-      this.$store.commit("stop_progress");
-      this.error = Error("Failed to load image");
-      console.log(event);
-      console.log(this.error);
-    },
-    parse_datetimes: function (connections) {
-      for (let i = 0; i < connections.length; i++) {
-        connections[i].plannedDeparture = dayjs(
-          connections[i].plannedDeparture
-        );
-        connections[i].plannedArrival = dayjs(connections[i].plannedArrival);
-
-        connections[i].departure = dayjs(connections[i].departure);
-        connections[i].arrival = dayjs(connections[i].arrival);
-        connections[i].duration = dayjs.duration(
-          connections[i].duration,
-          "seconds"
-        );
-        connections[i].plannedDuration = dayjs.duration(
-          connections[i].plannedDuration,
-          "seconds"
-        );
-
-        for (let u = 0; u < connections[i].legs.length; u++) {
-          connections[i].legs[u].plannedDeparture = dayjs(
-            connections[i].legs[u].plannedDeparture
-          );
-          connections[i].legs[u].plannedArrival = dayjs(
-            connections[i].legs[u].plannedArrival
-          );
-
-          connections[i].legs[u].departure = dayjs(
-            connections[i].legs[u].departure
-          );
-          connections[i].legs[u].arrival = dayjs(
-            connections[i].legs[u].arrival
-          );
-        }
-      }
-      return connections;
-    },
-    get_connections: function (search_data) {
-      // remove current connections
-      this.$store.commit("set_connections", []);
-      this.$store.commit("start_progress");
-
-      fetch(
-        window.location.protocol + "//" + window.location.host + "/api/trip",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(search_data),
-        }
-      )
-        .then((response) => this.display_fetch_error(response))
-        .then((response) => response.json())
-        .then((connections) => this.parse_datetimes(connections))
-        .then((connections) => {
-          this.$store.commit("set_connections", connections);
-          this.$store.commit("stop_progress");
-          if (this.$route.path !== "/") {
-            this.$router.push({ path: "/", hash: "#content" });
-          }
-          this.$router.push({ hash: "#content" });
-        });
-    },
-  },
+  methods: {},
 });
 </script>
 

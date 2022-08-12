@@ -90,7 +90,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
-import flatpickr from "flatpickr";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 
@@ -104,9 +103,6 @@ export default defineComponent({
   name: "SearchForm",
   data: function () {
     return {
-      start: "",
-      destination: "",
-      date: flatpickr.formatDate(new Date(), "d.m.Y H:i"),
       // Get more from https://flatpickr.js.org/options/
       config: {
         enableTime: true,
@@ -114,9 +110,6 @@ export default defineComponent({
         dateFormat: "d.m.Y H:i",
         altFormat: "d.m.Y H:i",
       },
-      search_for_arrival: false,
-      only_regional: false,
-      bike: false,
       check_form_validity: false,
     };
   },
@@ -124,17 +117,12 @@ export default defineComponent({
     this.$router.isReady().then(() => {
       this.read_settings_from_query();
     });
-    fetch(
-      window.location.protocol + "//" + window.location.host + "/api/connect"
-    )
-      .then((response) => this.$root.display_fetch_error(response))
-      .then((response) => response.json())
-      .then((data) => {
-        this.$store.commit("set_stations", data.stations);
-        if (this.start && this.destination) {
-          this.get_connections();
-        }
-      });
+
+    this.$store.dispatch("fetch_stations").then(() => {
+      if (this.start && this.destination) {
+        this.get_connections();
+      }
+    });
   },
   methods: {
     read_settings_from_query() {
@@ -153,24 +141,26 @@ export default defineComponent({
           : this.only_regional;
       this.bike = "bike" in query ? query.bike === "true" : this.bike;
     },
+
     get_connections: function () {
       this.check_form_validity = true;
       if (this.start_valid && this.destination_valid) {
-        this.$root.get_connections({
-          start: this.start,
-          destination: this.destination,
-          date: this.date,
-          search_for_departure: !this.search_for_arrival,
-          only_regional: this.only_regional,
-          bike: this.bike,
-        });
+        this.$store
+          .dispatch("get_connections", {
+            start: this.start,
+            destination: this.destination,
+            date: this.date,
+            search_for_arrival: this.search_for_arrival,
+            only_regional: this.only_regional,
+            bike: this.bike,
+          })
+          .then(() => {
+            if (this.$route.path !== "/") {
+              this.$router.push({ path: "/", hash: "#content" });
+            }
+            this.$router.push({ hash: "#content" });
+          });
       }
-    },
-    update_start(station) {
-      this.start = station;
-    },
-    update_destination(station) {
-      this.destination = station;
     },
     swap_stations() {
       [this.start, this.destination] = [this.destination, this.start];
@@ -185,6 +175,54 @@ export default defineComponent({
       return (
         !this.check_form_validity || this.stations.includes(this.destination)
       );
+    },
+    start: {
+      get () {
+        return this.$store.state.search_params.start;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'start', "value": value});
+      }
+    },
+    destination: {
+      get () {
+        return this.$store.state.search_params.destination;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'destination', "value": value});
+      }
+    },
+    date: {
+      get () {
+        return this.$store.state.search_params.date;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'date', "value": value});
+      }
+    },
+    search_for_arrival: {
+      get () {
+        return this.$store.state.search_params.search_for_arrival;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'search_for_arrival', "value": value});
+      }
+    },
+    only_regional: {
+      get () {
+        return this.$store.state.search_params.only_regional;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'only_regional', "value": value});
+      }
+    },
+    bike: {
+      get () {
+        return this.$store.state.search_params.bike;
+      },
+      set (value) {
+        this.$store.commit('set_search_param', {"key":'bike', "value": value});
+      }
     },
   },
   components: {
