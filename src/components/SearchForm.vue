@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit="get_connections" class="bg-dark">
+  <form @submit.prevent="get_connections" class="bg-dark">
     <!-- Heading -->
     <h3 style="text-align: center">
       <strong>Verbindungen bewerten</strong>
@@ -14,7 +14,7 @@
         class="form-control p-0"
         placeholder="Bahnhof"
         v-model="start"
-        :is_invalid="start_invalid"
+        :is_invalid="!start_valid"
       >
       </auto-suggest>
     </div>
@@ -28,7 +28,7 @@
         class="form-control p-0"
         placeholder="Bahnhof"
         v-model="destination"
-        :is_invalid="destination_invalid"
+        :is_invalid="!destination_valid"
       >
       </auto-suggest>
       <span class="btn btn-primary" @click="swap_stations"
@@ -105,9 +105,7 @@ export default defineComponent({
   data: function () {
     return {
       start: "",
-      start_invalid: false,
       destination: "",
-      destination_invalid: false,
       date: flatpickr.formatDate(new Date(), "d.m.Y H:i"),
       // Get more from https://flatpickr.js.org/options/
       config: {
@@ -119,9 +117,13 @@ export default defineComponent({
       search_for_arrival: false,
       only_regional: false,
       bike: false,
+      check_form_validity: false,
     };
   },
   created() {
+    this.$router.isReady().then(() => {
+      this.read_settings_from_query();
+    });
     fetch(
       window.location.protocol + "//" + window.location.host + "/api/connect"
     )
@@ -129,33 +131,39 @@ export default defineComponent({
       .then((response) => response.json())
       .then((data) => {
         this.$store.commit("set_stations", data.stations);
+        if (this.start && this.destination) {
+          this.get_connections();
+        }
       });
   },
   methods: {
-    get_connections: function (event) {
-      event.preventDefault(); // prevent page reload
-
-      if (
-        this.stations.includes(this.start) &&
-        this.stations.includes(this.destination)
-      ) {
-        this.start_invalid = false;
-        this.destination_invalid = false;
+    read_settings_from_query() {
+      const query = Object.assign({}, this.$route.query);
+      this.start = "start" in query ? query.start : this.start;
+      this.destination =
+        "destination" in query ? query.destination : this.destination;
+      this.date = "date" in query ? query.date : this.date;
+      this.search_for_arrival =
+        "search_for_arrival" in query
+          ? query.search_for_arrival === "true"
+          : this.search_for_arrival;
+      this.only_regional =
+        "only_regional" in query
+          ? query.only_regional === "true"
+          : this.only_regional;
+      this.bike = "bike" in query ? query.bike === "true" : this.bike;
+    },
+    get_connections: function () {
+      this.check_form_validity = true;
+      if (this.start_valid && this.destination_valid) {
         this.$root.get_connections({
           start: this.start,
           destination: this.destination,
-          date: this.date, // flatpickr.formatDate(new Date(this.date), "d.m.Y H:i")
+          date: this.date,
           search_for_departure: !this.search_for_arrival,
           only_regional: this.only_regional,
           bike: this.bike,
         });
-      } else {
-        if (!this.stations.includes(this.start)) {
-          this.start_invalid = true;
-        }
-        if (!this.stations.includes(this.destination)) {
-          this.destination_invalid = true;
-        }
       }
     },
     update_start(station) {
@@ -170,6 +178,14 @@ export default defineComponent({
   },
   computed: {
     ...mapState(["stations"]),
+    start_valid() {
+      return !this.check_form_validity || this.stations.includes(this.start);
+    },
+    destination_valid() {
+      return (
+        !this.check_form_validity || this.stations.includes(this.destination)
+      );
+    },
   },
   components: {
     flatPickr,
