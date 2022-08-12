@@ -23,7 +23,7 @@
       id="stats_image"
       v-if="plotURL"
       :src="plotURL"
-      @error="$root.display_img_load_error"
+      @error="on_error"
       @load="loaded_img()"
     />
   </div>
@@ -73,7 +73,7 @@ export default defineComponent({
         },
       }
     )
-      .then((response) => this.$root.display_fetch_error(response))
+      .then((response) => this.$store.dispatch("display_fetch_error", response))
       .then((response) => response.json())
       .then((limits) => {
         limits.min = dayjs(limits.min, "YYYY-MM-DD");
@@ -120,6 +120,9 @@ export default defineComponent({
     format(index: number) {
       return this.dates[index];
     },
+    on_error(event) {
+      this.$store.dispatch("display_img_load_error", event);
+    }
   },
 });
 </script>
