@@ -1,8 +1,9 @@
 <template>
   <div class="my-5">
+    
     <h1 v-if="connections.length !== 0" class="text-center">
-      {{ connections[0].legs[0].origin.name }} nach
-      {{ connections[0].legs.at(-1).destination.name }}
+      {{ $store.state.search_params.start }} nach
+      {{ $store.state.search_params.destination }}
     </h1>
     <div v-else>
       Bitte benutze die <router-link to="#search">Suchfunktion</router-link> um
@@ -58,6 +59,9 @@
         <connection-header :connection="connection"></connection-header>
       </div>
     </transition-group>
+    <div class="d-flex justify-content-center">
+      <ConnectionsSearchShareButton />
+    </div>
   </div>
 </template>
 
@@ -65,6 +69,7 @@
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import ConnectionHeader from "../components/ConnectionHeader.vue";
+import ConnectionsSearchShareButton from "../components/ConnectionsSearchShareButton.vue";
 
 export default defineComponent({
   name: "ConnectionDisplay",
@@ -73,7 +78,8 @@ export default defineComponent({
   },
   components: {
     ConnectionHeader,
-  },
+    ConnectionsSearchShareButton,
+},
   data: function () {
     return {
       last_time_key: "departure" as string,
