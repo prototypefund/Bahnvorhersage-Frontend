@@ -269,7 +269,7 @@ export default defineComponent({
 .connections_header {
   @extend .card_header;
   overflow: unset;
-  border-left: 10px solid transparent;
+  border-left: 7px solid transparent;
 
   div {
     padding: 5px 20px;
