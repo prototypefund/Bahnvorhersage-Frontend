@@ -219,8 +219,8 @@ export default defineComponent({
         .then((connections) => {
           this.$store.commit("set_connections", connections);
           this.$store.commit("stop_progress");
-          if (this.$route.path !== "/connections") {
-            this.$router.push({ path: "/connections", hash: "#content" });
+          if (this.$route.path !== "/") {
+            this.$router.push({ path: "/", hash: "#content" });
           }
           this.$router.push({ hash: "#content" });
         });
