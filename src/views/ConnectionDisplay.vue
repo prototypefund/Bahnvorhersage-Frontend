@@ -59,7 +59,7 @@
         <connection-header :connection="connection"></connection-header>
       </div>
     </transition-group>
-    <div class="d-flex justify-content-center">
+    <div v-if="connections.length !== 0" class="d-flex justify-content-center">
       <ConnectionsSearchShareButton />
     </div>
   </div>
