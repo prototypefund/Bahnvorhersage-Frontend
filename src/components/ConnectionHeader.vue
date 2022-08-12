@@ -90,7 +90,7 @@ export default defineComponent({
       },
       border_style: {
         "border-left":
-          "10px solid " +
+          "7px solid " +
           rdylgr_colormap(this.connection.connectionScore, 50, 100, 200),
       },
       text_color: {
