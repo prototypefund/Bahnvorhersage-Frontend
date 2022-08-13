@@ -140,6 +140,11 @@ export default defineComponent({
           ? query.only_regional === "true"
           : this.only_regional;
       this.bike = "bike" in query ? query.bike === "true" : this.bike;
+      this.$store.dispatch("fetch_stations").then(() => {
+        if (this.start && this.destination) {
+          this.get_connections();
+        }
+      });
     },
 
     get_connections: function () {
@@ -166,6 +171,13 @@ export default defineComponent({
       [this.start, this.destination] = [this.destination, this.start];
     },
   },
+  watch: {
+    "$route.query": {
+      handler() {
+        this.read_settings_from_query();
+      },
+    },
+  },
   computed: {
     ...mapState(["stations"]),
     start_valid() {
@@ -177,52 +189,61 @@ export default defineComponent({
       );
     },
     start: {
-      get () {
+      get() {
         return this.$store.state.search_params.start;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'start', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", { key: "start", value: value });
+      },
     },
     destination: {
-      get () {
+      get() {
         return this.$store.state.search_params.destination;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'destination', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", {
+          key: "destination",
+          value: value,
+        });
+      },
     },
     date: {
-      get () {
+      get() {
         return this.$store.state.search_params.date;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'date', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", { key: "date", value: value });
+      },
     },
     search_for_arrival: {
-      get () {
+      get() {
         return this.$store.state.search_params.search_for_arrival;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'search_for_arrival', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", {
+          key: "search_for_arrival",
+          value: value,
+        });
+      },
     },
     only_regional: {
-      get () {
+      get() {
         return this.$store.state.search_params.only_regional;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'only_regional', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", {
+          key: "only_regional",
+          value: value,
+        });
+      },
     },
     bike: {
-      get () {
+      get() {
         return this.$store.state.search_params.bike;
       },
-      set (value) {
-        this.$store.commit('set_search_param', {"key":'bike', "value": value});
-      }
+      set(value) {
+        this.$store.commit("set_search_param", { key: "bike", value: value });
+      },
     },
   },
   components: {

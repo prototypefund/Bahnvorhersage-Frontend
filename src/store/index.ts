@@ -15,7 +15,7 @@ export default createStore({
       search_for_arrival: false,
       only_regional: false,
       bike: false,
-    }
+    },
   },
   mutations: {
     set_stations(state, stations) {
@@ -66,10 +66,12 @@ export default createStore({
       console.log(error);
     },
     async fetch_stations(context) {
-      let response = await fetch("/api/station_list.json");
-      response = await context.dispatch("display_fetch_error", response);
-      const stations = (await response.json()).stations;
-      context.commit("set_stations", stations);
+      if (!(context.state.stations.length > 0)) {
+        let response = await fetch("/api/station_list.json");
+        response = await context.dispatch("display_fetch_error", response);
+        const stations = (await response.json()).stations;
+        context.commit("set_stations", stations);
+      }
     },
     async get_connections(context, search_data) {
       // remove current connections
