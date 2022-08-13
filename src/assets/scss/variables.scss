@@ -67,6 +67,9 @@ $display-font-sizes: (
 $form-check-input-width: 1.5em;
 $form-check-input-border-radius: $border-radius;
 
+$card-bg: $page_lighter_gray;
+$card-color: $text_color;
+
 
 :root {
   --slider-connect-bg: #{$primary};

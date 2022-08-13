@@ -35,7 +35,7 @@ export default defineComponent({
         path: "/",
         hash: "#search",
         query: query,
-      })
+      });
       navigator.clipboard.writeText(window.location.origin + path.href);
       this.link_copied = true;
       setTimeout(() => {
