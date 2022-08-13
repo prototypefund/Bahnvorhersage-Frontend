@@ -122,7 +122,7 @@ export default defineComponent({
     },
     on_error(event) {
       this.$store.dispatch("display_img_load_error", event);
-    }
+    },
   },
 });
 </script>
