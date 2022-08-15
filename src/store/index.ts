@@ -2,20 +2,25 @@ import { createStore } from "vuex";
 import parse_datetimes from "../assets/js/parse_datetimes";
 import flatpickr from "flatpickr";
 
+/**
+ * https://stackoverflow.com/a/59806829/7246401
+ */
+export class SearchParams {
+  start = "";
+  destination = "";
+  date = flatpickr.formatDate(new Date(), "d.m.Y H:i");
+  search_for_arrival = false;
+  only_regional = false;
+  bike = false;
+}
+
 export default createStore({
   state: {
     stations: [],
     connections: [],
     progressing: false,
     error: null as ErrorConstructor | null,
-    search_params: {
-      start: "",
-      destination: "",
-      date: flatpickr.formatDate(new Date(), "d.m.Y H:i"),
-      search_for_arrival: false,
-      only_regional: false,
-      bike: false,
-    },
+    search_params: new SearchParams(),
   },
   mutations: {
     set_stations(state, stations) {
@@ -73,7 +78,7 @@ export default createStore({
         context.commit("set_stations", stations);
       }
     },
-    async get_connections(context, search_data) {
+    async get_connections(context, search_data: SearchParams) {
       // remove current connections
       context.commit("set_connections", []);
       context.commit("start_progress");

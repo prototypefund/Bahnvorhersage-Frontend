@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import travelDestination from "./TravelDestination.vue";
+import travelDestination from "../components/TravelDestination.vue";
 
 export default defineComponent({
   name: "TravelDestinationsDisplay",

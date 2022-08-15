@@ -4,9 +4,6 @@
       {{ $store.state.search_params.start }} nach
       {{ $store.state.search_params.destination }}
     </h1>
-    <div v-else>
-      <TravelDestinationsDisplay></TravelDestinationsDisplay>
-    </div>
     <div
       v-if="connections.length !== 0"
       class="custom_card rounded overflow-hidden"
@@ -68,7 +65,6 @@ import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import ConnectionHeader from "../components/ConnectionHeader.vue";
 import ConnectionsSearchShareButton from "../components/ConnectionsSearchShareButton.vue";
-import TravelDestinationsDisplay from "@/components/TravelDestinationsDisplay.vue";
 
 export default defineComponent({
   name: "ConnectionDisplay",
@@ -78,7 +74,6 @@ export default defineComponent({
   components: {
     ConnectionHeader,
     ConnectionsSearchShareButton,
-    TravelDestinationsDisplay,
   },
   data: function () {
     return {

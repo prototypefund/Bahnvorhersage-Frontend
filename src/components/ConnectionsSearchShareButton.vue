@@ -23,20 +23,7 @@ export default defineComponent({
   },
   methods: {
     async copy_link_to_clipboard() {
-      const query = {};
-      query.start = this.$store.state.search_params.start;
-      query.destination = this.$store.state.search_params.destination;
-      query.date = this.$store.state.search_params.date;
-      query.search_for_arrival =
-        this.$store.state.search_params.search_for_arrival;
-      query.only_regional = this.$store.state.search_params.only_regional;
-      query.bike = this.$store.state.search_params.bike;
-      const path = this.$router.resolve({
-        path: "/",
-        hash: "#search",
-        query: query,
-      });
-      navigator.clipboard.writeText(window.location.origin + path.href);
+      navigator.clipboard.writeText(window.location);
       this.link_copied = true;
       setTimeout(() => {
         this.link_copied = false;

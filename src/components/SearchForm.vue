@@ -96,6 +96,7 @@ import "flatpickr/dist/flatpickr.css";
 import AutoSuggest from "./AutoSuggest.vue";
 import ToggleSwitch from "./ToggleSwitch.vue";
 import CheckBox from "./CheckBox.vue";
+import { SearchParams } from "../store";
 
 require("flatpickr/dist/themes/dark.css");
 
@@ -114,58 +115,34 @@ export default defineComponent({
     };
   },
   created() {
-    this.$router.isReady().then(() => {
-      this.read_settings_from_query();
-    });
-
-    this.$store.dispatch("fetch_stations").then(() => {
-      if (this.start && this.destination) {
-        this.get_connections();
-      }
-    });
+    this.$store.dispatch("fetch_stations");
   },
   methods: {
-    read_settings_from_query() {
-      const query = Object.assign({}, this.$route.query);
-      this.start = "start" in query ? query.start : this.start;
-      this.destination =
-        "destination" in query ? query.destination : this.destination;
-      this.date = "date" in query ? query.date : this.date;
-      this.search_for_arrival =
-        "search_for_arrival" in query
-          ? query.search_for_arrival === "true"
-          : this.search_for_arrival;
-      this.only_regional =
-        "only_regional" in query
-          ? query.only_regional === "true"
-          : this.only_regional;
-      this.bike = "bike" in query ? query.bike === "true" : this.bike;
-      this.$store.dispatch("fetch_stations").then(() => {
-        if (this.start && this.destination) {
-          this.get_connections();
-        }
-      });
-    },
-
-    get_connections: function () {
+    get_connections() {
       this.check_form_validity = true;
       if (this.start_valid && this.destination_valid) {
-        this.$store
-          .dispatch("get_connections", {
-            start: this.start,
-            destination: this.destination,
-            date: this.date,
-            search_for_arrival: this.search_for_arrival,
-            only_regional: this.only_regional,
-            bike: this.bike,
-          })
-          .then(() => {
-            if (this.$route.path !== "/") {
-              this.$router.push({ path: "/", hash: "#content" });
-            }
-            this.$router.push({ hash: "#content" });
+        console.log("quering");
+        const query = {
+          start: this.start,
+          destination: this.destination,
+          date: this.date,
+          search_for_arrival: this.search_for_arrival,
+          only_regional: this.only_regional,
+          bike: this.bike,
+        };
+        this.$store.dispatch("get_connections", query).then(() => {
+          this.$router.push({
+            path: "/search",
+            hash: "#content",
+            query: this.get_query_params(query),
           });
+        });
       }
+    },
+    get_query_params(query: any) {
+      return Object.fromEntries(
+        Object.entries(query).map(([k, v]) => [k, String(v)])
+      );
     },
     swap_stations() {
       [this.start, this.destination] = [this.destination, this.start];
@@ -173,9 +150,29 @@ export default defineComponent({
   },
   watch: {
     "$route.query": {
-      handler() {
-        this.read_settings_from_query();
+      handler(query) {
+        // Convert string values to right values and check if the values have changed
+        const hasChanged = Object.entries(new SearchParams()).reduce(
+          (result, [key, value]) => {
+            if (query[key]) {
+              const newValue = value.constructor(query[key]);
+              if (newValue !== this[key]) {
+                this[key] = newValue;
+                result = true;
+              }
+            }
+            return result;
+          },
+          false
+        );
+        if (hasChanged && this.$route.path === "/search") {
+          console.log("getting connecitons");
+          this.$store.dispatch("fetch_stations").then(() => {
+            this.get_connections();
+          });
+        }
       },
+      deep: true,
     },
   },
   computed: {
@@ -188,63 +185,20 @@ export default defineComponent({
         !this.check_form_validity || this.stations.includes(this.destination)
       );
     },
-    start: {
-      get() {
-        return this.$store.state.search_params.start;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", { key: "start", value: value });
-      },
-    },
-    destination: {
-      get() {
-        return this.$store.state.search_params.destination;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", {
-          key: "destination",
-          value: value,
-        });
-      },
-    },
-    date: {
-      get() {
-        return this.$store.state.search_params.date;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", { key: "date", value: value });
-      },
-    },
-    search_for_arrival: {
-      get() {
-        return this.$store.state.search_params.search_for_arrival;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", {
-          key: "search_for_arrival",
-          value: value,
-        });
-      },
-    },
-    only_regional: {
-      get() {
-        return this.$store.state.search_params.only_regional;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", {
-          key: "only_regional",
-          value: value,
-        });
-      },
-    },
-    bike: {
-      get() {
-        return this.$store.state.search_params.bike;
-      },
-      set(value) {
-        this.$store.commit("set_search_param", { key: "bike", value: value });
-      },
-    },
+    ...Object.keys(new SearchParams()).reduce((result, key) => {
+      result[key] = {
+        get() {
+          return this.$store.state.search_params[key];
+        },
+        set(value: any) {
+          this.$store.commit("set_search_param", {
+            key: key,
+            value: value,
+          });
+        },
+      };
+      return result;
+    }, {}),
   },
   components: {
     flatPickr,
