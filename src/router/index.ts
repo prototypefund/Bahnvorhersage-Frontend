@@ -110,7 +110,6 @@ function extract_search_query(query: LocationQuery): LocationQuery {
 }
 
 router.beforeEach((to, from, next) => {
-  console.log(new SearchParams());
   const old_query_params = extract_search_query(from.query);
   const new_query_params = extract_search_query(to.query);
   if (Object.keys(new_query_params).length === 0) {

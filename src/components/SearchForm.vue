@@ -121,15 +121,9 @@ export default defineComponent({
     get_connections() {
       this.check_form_validity = true;
       if (this.start_valid && this.destination_valid) {
-        console.log("quering");
-        const query = {
-          start: this.start,
-          destination: this.destination,
-          date: this.date,
-          search_for_arrival: this.search_for_arrival,
-          only_regional: this.only_regional,
-          bike: this.bike,
-        };
+        const query = Object.fromEntries(
+          Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
+        );
         this.$store.dispatch("get_connections", query).then(() => {
           this.$router.push({
             path: "/search",
@@ -166,7 +160,6 @@ export default defineComponent({
           false
         );
         if (hasChanged && this.$route.path === "/search") {
-          console.log("getting connecitons");
           this.$store.dispatch("fetch_stations").then(() => {
             this.get_connections();
           });
