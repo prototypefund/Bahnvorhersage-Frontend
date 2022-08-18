@@ -124,12 +124,10 @@ export default defineComponent({
         const query = Object.fromEntries(
           Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
         );
-        this.$store.dispatch("get_connections", query).then(() => {
-          this.$router.push({
-            path: "/search",
-            hash: "#content",
-            query: this.get_query_params(query),
-          });
+        this.$router.push({
+          path: "/search",
+          hash: "#content",
+          query: this.get_query_params(query),
         });
       }
     },
@@ -144,24 +142,23 @@ export default defineComponent({
   },
   watch: {
     "$route.query": {
-      handler(query) {
-        // Convert string values to right values and check if the values have changed
-        const hasChanged = Object.entries(new SearchParams()).reduce(
-          (result, [key, value]) => {
-            if (query[key]) {
-              const newValue = value.constructor(query[key]);
-              if (newValue !== this[key]) {
-                this[key] = newValue;
-                result = true;
-              }
-            }
-            return result;
-          },
-          false
-        );
-        if (hasChanged && this.$route.path === "/search") {
+      handler(new_query, old_query) {
+        if (
+          JSON.stringify(new_query) === JSON.stringify(old_query) ||
+          Object.keys(new_query).length === 0
+        ) {
+          return;
+        }
+        // Convert string values to right values and overwrite the local ones
+        Object.entries(new SearchParams()).map(([key, value]) => {
+          if (new_query[key]) {
+            this[key] = value.constructor(new_query[key]);
+          }
+        });
+
+        if (this.$route.path === "/search") {
           this.$store.dispatch("fetch_stations").then(() => {
-            this.get_connections();
+            this.$store.dispatch("get_connections", new_query);
           });
         }
       },

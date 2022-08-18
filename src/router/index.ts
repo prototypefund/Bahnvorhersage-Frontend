@@ -109,13 +109,14 @@ function extract_search_query(query: LocationQuery): LocationQuery {
   }, <LocationQuery>{});
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const old_query_params = extract_search_query(from.query);
   const new_query_params = extract_search_query(to.query);
-  if (Object.keys(new_query_params).length === 0) {
-    next({ ...to, query: old_query_params });
-  } else {
-    next();
+  if (
+    Object.keys(new_query_params).length === 0 &&
+    Object.keys(old_query_params).length > 0
+  ) {
+    return { ...to, query: old_query_params };
   }
 });
 

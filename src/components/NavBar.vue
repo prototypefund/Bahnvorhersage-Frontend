@@ -25,7 +25,7 @@
             <li class="nav-item">
               <router-link
                 class="nav-link"
-                :to="{ path: '/', hash: '#content' }"
+                :to="{ path: '/search', hash: '#content' }"
                 >Verbindungen</router-link
               >
             </li>
