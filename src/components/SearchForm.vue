@@ -152,7 +152,11 @@ export default defineComponent({
         // Convert string values to right values and overwrite the local ones
         Object.entries(new SearchParams()).map(([key, value]) => {
           if (new_query[key]) {
-            this[key] = value.constructor(new_query[key]);
+            if (typeof value == "boolean") {
+              this[key] = new_query[key] === "true";
+            } else {
+              this[key] = value.constructor(new_query[key]);
+            }
           }
         });
 
