@@ -150,19 +150,23 @@ export default defineComponent({
           return;
         }
         // Convert string values to right values and overwrite the local ones
-        Object.entries(new SearchParams()).map(([key, value]) => {
-          if (new_query[key]) {
-            if (typeof value == "boolean") {
-              this[key] = new_query[key] === "true";
-            } else {
-              this[key] = value.constructor(new_query[key]);
+        const search_params = Object.fromEntries(
+          Object.entries(new SearchParams()).map(([key, value]) => {
+            if (new_query[key]) {
+              if (typeof value == "boolean") {
+                // Booleans need to be parsed seperatly
+                this[key] = new_query[key] === "true";
+              } else {
+                this[key] = value.constructor(new_query[key]);
+              }
+              return [key, this[key]];
             }
-          }
-        });
+          })
+        );
 
         if (this.$route.path === "/search") {
           this.$store.dispatch("fetch_stations").then(() => {
-            this.$store.dispatch("get_connections", new_query);
+            this.$store.dispatch("get_connections", search_params);
           });
         }
       },
