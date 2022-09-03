@@ -7,7 +7,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Start Seite",
     component: () =>
       import(
-        /* webpackChunkName: "connection" */ "../views/TravelDestinationsDisplay.vue"
+        /* webpackChunkName: "start" */ "../views/TravelDestinationsDisplay.vue"
       ),
   },
   {

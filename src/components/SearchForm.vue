@@ -115,7 +115,26 @@ export default defineComponent({
     };
   },
   created() {
-    this.$store.dispatch("fetch_stations");
+    this.$store
+      .dispatch("fetch_stations")
+      .then(() => {
+        const query = this.$route.query;
+        Object.entries(new SearchParams()).map(([key, value]) => {
+          if (query[key]) {
+            if (typeof value == "boolean") {
+              // Booleans need to be parsed seperatly
+              this[key] = query[key] === "true";
+            } else {
+              this[key] = value.constructor(query[key]);
+            }
+          }
+        });
+      })
+      .then(() => {
+        if (this.$route.path === "/search") {
+          this.get_connections();
+        }
+      });
   },
   methods: {
     get_connections() {
@@ -124,16 +143,18 @@ export default defineComponent({
         const query = Object.fromEntries(
           Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
         );
+        this.$store.dispatch("fetch_stations").then(() => {
+          this.$store.dispatch("get_connections", query);
+        });
         this.$router.push({
-          path: "/search",
-          hash: "#content",
-          query: this.get_query_params(query),
+          ...this.$route,
+          query: this.convert_values_to_string(query),
         });
       }
     },
-    get_query_params(query: any) {
+    convert_values_to_string(object: any) {
       return Object.fromEntries(
-        Object.entries(query).map(([k, v]) => [k, String(v)])
+        Object.entries(object).map(([k, v]) => [k, String(v)])
       );
     },
     swap_stations() {
@@ -141,36 +162,8 @@ export default defineComponent({
     },
   },
   watch: {
-    "$route.query": {
-      handler(new_query, old_query) {
-        if (
-          JSON.stringify(new_query) === JSON.stringify(old_query) ||
-          Object.keys(new_query).length === 0
-        ) {
-          return;
-        }
-        // Convert string values to right values and overwrite the local ones
-        const search_params = Object.fromEntries(
-          Object.entries(new SearchParams()).map(([key, value]) => {
-            if (new_query[key]) {
-              if (typeof value == "boolean") {
-                // Booleans need to be parsed seperatly
-                this[key] = new_query[key] === "true";
-              } else {
-                this[key] = value.constructor(new_query[key]);
-              }
-              return [key, this[key]];
-            }
-          })
-        );
-
-        if (this.$route.path === "/search") {
-          this.$store.dispatch("fetch_stations").then(() => {
-            this.$store.dispatch("get_connections", search_params);
-          });
-        }
-      },
-      deep: true,
+    "$route.state.search_params"() {
+      this.$forceUpdate();
     },
   },
   computed: {

@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import parse_datetimes from "../assets/js/parse_datetimes";
 import flatpickr from "flatpickr";
+import router from "../router";
 
 /**
  * https://stackoverflow.com/a/59806829/7246401
@@ -93,6 +94,11 @@ export default createStore({
       response = await context.dispatch("display_fetch_error", response);
       let connections = await response.json();
       connections = parse_datetimes(connections);
+
+      router.push({
+        path: "/search",
+        hash: "#content",
+      });
 
       context.commit("set_connections", connections);
       context.commit("stop_progress");
