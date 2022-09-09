@@ -4,14 +4,14 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Start Seite",
+    name: "Home",
     component: () =>
       import(
-        /* webpackChunkName: "start" */ "../views/TravelDestinationsDisplay.vue"
+        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
       ),
   },
   {
-    path: "/search",
+    path: "/connections",
     name: "Verbindungen",
     component: () =>
       import(

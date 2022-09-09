@@ -96,7 +96,7 @@ export default createStore({
       connections = parse_datetimes(connections);
 
       router.push({
-        path: "/search",
+        path: "/connections",
         hash: "#content",
       });
 

@@ -115,42 +115,23 @@ export default defineComponent({
     };
   },
   created() {
-    this.$store
-      .dispatch("fetch_stations")
-      .then(() => {
-        const query = this.$route.query;
-        Object.entries(new SearchParams()).map(([key, value]) => {
-          if (query[key]) {
-            if (typeof value == "boolean") {
-              // Booleans need to be parsed seperatly
-              this[key] = query[key] === "true";
-            } else {
-              this[key] = value.constructor(query[key]);
-            }
-          }
-        });
-      })
-      .then(() => {
-        if (this.$route.path === "/search") {
-          this.get_connections();
-        }
-      });
+    this.$store.dispatch("fetch_stations");
   },
   methods: {
     get_connections() {
       this.check_form_validity = true;
-      if (this.start_valid && this.destination_valid) {
-        const query = Object.fromEntries(
-          Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
-        );
-        this.$store.dispatch("fetch_stations").then(() => {
+      this.$store.dispatch("fetch_stations").then(() => {
+        if (this.start_valid && this.destination_valid) {
+          const query = Object.fromEntries(
+            Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
+          );
           this.$store.dispatch("get_connections", query);
-        });
-        this.$router.push({
-          ...this.$route,
-          query: this.convert_values_to_string(query),
-        });
-      }
+          this.$router.push({
+            ...this.$route,
+            query: this.convert_values_to_string(query),
+          });
+        }
+      });
     },
     convert_values_to_string(object: any) {
       return Object.fromEntries(
@@ -162,8 +143,32 @@ export default defineComponent({
     },
   },
   watch: {
-    "$route.state.search_params"() {
-      this.$forceUpdate();
+    "$route.query"() {
+      console.log("route changed");
+      let changed = false;
+      const query = this.$route.query;
+      Object.entries(new SearchParams()).map(([key, value]) => {
+        if (query[key]) {
+          if (typeof value == "boolean") {
+            // Booleans need to be parsed seperatly
+            if (this[key] !== (query[key] === "true")) {
+              changed = true;
+              this[key] = query[key] === "true";
+            }
+          } else {
+            if (this[key] !== value.constructor(query[key])) {
+              changed = true;
+              this[key] = value.constructor(query[key]);
+            }
+          }
+        }
+      });
+      console.log(changed);
+      console.log(this["start"] && this["destination"] && changed);
+
+      if (this["start"] && this["destination"] && changed) {
+        this.get_connections();
+      }
     },
   },
   computed: {
