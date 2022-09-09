@@ -10,14 +10,13 @@ $text_color: lightgray;
 $page_gray_text: gray;
 $page_dark_text: black;
 $page_outdated_text: #686868;
-$page_warning: #bb0000;
 
 $primary: #3f51b5;
 // $secondary: ;
 // $success: ;
 $info: $page_gray_text;
 // $warning: ;
-$danger: $page_warning;
+$danger: #bb0000;
 $light: $text_color;
 $dark: $page_gray;
 
@@ -44,13 +43,7 @@ $input-padding-x: $btn-padding-x;
 
 $input-focus-box-shadow: none;
 $input-focus-border-color: $primary;
-// $input-focus-box-shadow: 0 0 0 1px $primary;;
 
-$input-group-addon-size: 2rem;
-
-.input-group-text {
-  font-size: $input-group-addon-size;
-}
 $input-group-addon-bg: $page_lighter_gray;
 $input-group-addon-padding-x: 0.3rem;
 $input-group-addon-padding-y: $input-group-addon-padding-x;

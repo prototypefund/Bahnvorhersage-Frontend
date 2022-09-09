@@ -121,6 +121,10 @@ export default defineComponent({
 @import "~bootstrap/scss/bootstrap";
 @import "src/assets/fonts/icons/icons.scss";
 
+.input-group-text {
+  font-size: 2rem;
+}
+
 i {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "icons" !important;
@@ -129,10 +133,6 @@ i {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 #intro {
