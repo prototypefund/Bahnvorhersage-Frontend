@@ -1,12 +1,22 @@
 import { nextTick } from "vue";
-import ConnectionDisplay from "../views/ConnectionDisplay.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    name: "Home",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
+      ),
+  },
+  {
+    path: "/connections",
     name: "Verbindungen",
-    component: ConnectionDisplay,
+    component: () =>
+      import(
+        /* webpackChunkName: "connection" */ "../views/ConnectionDisplay.vue"
+      ),
   },
   {
     path: "/about",
@@ -85,6 +95,29 @@ const router = createRouter({
       };
     }
   },
+});
+
+type LocationQuery = import("vue-router").LocationQuery;
+import { SearchParams } from "../store";
+
+function extract_search_query(query: LocationQuery): LocationQuery {
+  return Object.keys(new SearchParams()).reduce((result, key) => {
+    if (query[key]) {
+      result[key] = query[key];
+    }
+    return result;
+  }, <LocationQuery>{});
+}
+
+router.beforeEach((to, from) => {
+  const old_query_params = extract_search_query(from.query);
+  const new_query_params = extract_search_query(to.query);
+  if (
+    Object.keys(new_query_params).length === 0 &&
+    Object.keys(old_query_params).length > 0
+  ) {
+    return { ...to, query: old_query_params };
+  }
 });
 
 export default router;
