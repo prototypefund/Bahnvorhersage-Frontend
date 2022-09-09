@@ -144,7 +144,6 @@ export default defineComponent({
   },
   watch: {
     "$route.query"() {
-      console.log("route changed");
       let changed = false;
       const query = this.$route.query;
       Object.entries(new SearchParams()).map(([key, value]) => {
@@ -163,8 +162,6 @@ export default defineComponent({
           }
         }
       });
-      console.log(changed);
-      console.log(this["start"] && this["destination"] && changed);
 
       if (this["start"] && this["destination"] && changed) {
         this.get_connections();
