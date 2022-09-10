@@ -1,6 +1,19 @@
 import { createStore } from "vuex";
 import parse_datetimes from "../assets/js/parse_datetimes";
 import flatpickr from "flatpickr";
+import router from "../router";
+
+/**
+ * https://stackoverflow.com/a/59806829/7246401
+ */
+export class SearchParams {
+  start = "";
+  destination = "";
+  date = flatpickr.formatDate(new Date(), "d.m.Y H:i");
+  search_for_arrival = false;
+  only_regional = false;
+  bike = false;
+}
 
 export default createStore({
   state: {
@@ -8,14 +21,7 @@ export default createStore({
     connections: [],
     progressing: false,
     error: null as ErrorConstructor | null,
-    search_params: {
-      start: "",
-      destination: "",
-      date: flatpickr.formatDate(new Date(), "d.m.Y H:i"),
-      search_for_arrival: false,
-      only_regional: false,
-      bike: false,
-    }
+    search_params: new SearchParams(),
   },
   mutations: {
     set_stations(state, stations) {
@@ -66,12 +72,14 @@ export default createStore({
       console.log(error);
     },
     async fetch_stations(context) {
-      let response = await fetch("/api/station_list.json");
-      response = await context.dispatch("display_fetch_error", response);
-      const stations = (await response.json()).stations;
-      context.commit("set_stations", stations);
+      if (!(context.state.stations.length > 0)) {
+        let response = await fetch("/api/station_list.json");
+        response = await context.dispatch("display_fetch_error", response);
+        const stations = (await response.json()).stations;
+        context.commit("set_stations", stations);
+      }
     },
-    async get_connections(context, search_data) {
+    async get_connections(context, search_data: SearchParams) {
       // remove current connections
       context.commit("set_connections", []);
       context.commit("start_progress");
@@ -86,6 +94,11 @@ export default createStore({
       response = await context.dispatch("display_fetch_error", response);
       let connections = await response.json();
       connections = parse_datetimes(connections);
+
+      router.push({
+        path: "/connections",
+        hash: "#content",
+      });
 
       context.commit("set_connections", connections);
       context.commit("stop_progress");
