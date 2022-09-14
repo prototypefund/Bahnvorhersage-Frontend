@@ -126,17 +126,8 @@ export default defineComponent({
             Object.entries(new SearchParams()).map(([key]) => [key, this[key]])
           );
           this.$store.dispatch("get_connections", query);
-          this.$router.push({
-            ...this.$route,
-            query: this.convert_values_to_string(query),
-          });
         }
       });
-    },
-    convert_values_to_string(object: any) {
-      return Object.fromEntries(
-        Object.entries(object).map(([k, v]) => [k, String(v)])
-      );
     },
     swap_stations() {
       [this.start, this.destination] = [this.destination, this.start];

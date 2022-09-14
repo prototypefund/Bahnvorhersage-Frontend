@@ -3,6 +3,12 @@ import parse_datetimes from "../assets/js/parse_datetimes";
 import flatpickr from "flatpickr";
 import router from "../router";
 
+function convert_values_to_string(object: any) {
+  return Object.fromEntries(
+    Object.entries(object).map(([k, v]) => [k, String(v)])
+  );
+}
+
 /**
  * https://stackoverflow.com/a/59806829/7246401
  */
@@ -83,6 +89,10 @@ export default createStore({
       // remove current connections
       context.commit("set_connections", []);
       context.commit("start_progress");
+      router.push({
+        path: "/connections",
+        query: convert_values_to_string(search_data),
+      });
 
       let response = await fetch("/api/trip", {
         method: "POST",
