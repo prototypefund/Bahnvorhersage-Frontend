@@ -8,7 +8,7 @@
           <b>R</b>eisenden<b>i</b>nformations<b>s</b>ystem). Diese werden mit
           Koordinaten aus Hafas und DB OpenData angereichert. Da sich z.B.
           Bahnhofsnamen hin und wieder ändern, hat jeder Datenpunkt einen
-          <span class="d-font-monospace">valid_from</span> und einen
+          <span class="font-monospace">valid_from</span> und einen
           <span class="font-monospace">valid_to</span> tag.
         </p>
         <p>
