@@ -14,7 +14,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <router-link class="navbar-brand" to="#search"
+          <router-link class="navbar-brand" :to="{ path: '/' }"
             ><img
               src="../assets/img/IC.svg"
               height="24"

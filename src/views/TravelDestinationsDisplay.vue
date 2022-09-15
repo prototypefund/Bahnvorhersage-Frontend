@@ -57,7 +57,7 @@
         title="Tübingen - Köln"
         :image="require('@/assets/img/köln.jpg')"
         :url="{
-          path: '/',
+          path: '/connections',
           hash: '#search',
           query: { destination: 'Köln Hbf', start: 'Tübingen Hbf' },
         }"
