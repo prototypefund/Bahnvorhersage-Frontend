@@ -3,12 +3,6 @@ import parse_datetimes from "../assets/js/parse_datetimes";
 import flatpickr from "flatpickr";
 import router from "../router";
 
-function convert_values_to_string(object: any) {
-  return Object.fromEntries(
-    Object.entries(object).map(([k, v]) => [k, String(v)])
-  );
-}
-
 /**
  * https://stackoverflow.com/a/59806829/7246401
  */
@@ -44,6 +38,9 @@ export default createStore({
     },
     set_search_param(state, { key, value }) {
       state.search_params[key] = value;
+    },
+    set_search_params(state, search_params: SearchParams) {
+      state.search_params = search_params;
     },
     start_progress(state) {
       state.progressing = true;
@@ -85,32 +82,31 @@ export default createStore({
         context.commit("set_stations", stations);
       }
     },
-    async get_connections(context, search_data: SearchParams) {
+    async get_connections(context) {
       // remove current connections
       context.commit("set_connections", []);
       context.commit("start_progress");
-      router.push({
-        path: "/connections",
-        query: convert_values_to_string(search_data),
-      });
-
-      let response = await fetch("/api/trip", {
+      const response = await fetch("/api/trip", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(search_data),
+        body: JSON.stringify(context.state.search_params),
       });
-      response = await context.dispatch("display_fetch_error", response);
-      let connections = await response.json();
-      connections = parse_datetimes(connections);
+      let connections = await context
+        .dispatch("display_fetch_error", response)
+        .then((r) => r.json());
+      if (connections) {
+        connections = parse_datetimes(connections);
 
-      router.push({
-        path: "/connections",
-        hash: "#content",
-      });
+        router.replace({
+          path: "/connections",
+          hash: "#content",
+        });
 
-      context.commit("set_connections", connections);
+        context.commit("set_connections", connections);
+      }
+
       context.commit("stop_progress");
     },
   },

@@ -99,8 +99,9 @@ const router = createRouter({
 
 type LocationQuery = import("vue-router").LocationQuery;
 import { SearchParams } from "../store";
+import store from "../store";
 
-function extract_search_query(query: LocationQuery): LocationQuery {
+function extract_search_params(query: LocationQuery): LocationQuery {
   return Object.keys(new SearchParams()).reduce((result, key) => {
     if (query[key]) {
       result[key] = query[key];
@@ -109,13 +110,54 @@ function extract_search_query(query: LocationQuery): LocationQuery {
   }, <LocationQuery>{});
 }
 
-router.beforeEach((to, from) => {
-  const old_query_params = extract_search_query(from.query);
-  const new_query_params = extract_search_query(to.query);
+function search_params_from_location_query(query: LocationQuery): SearchParams {
+  return Object.entries(new SearchParams()).reduce((result, [key, value]) => {
+    if (query[key]) {
+      if (typeof value == "boolean") {
+        // Booleans need to be parsed seperatly
+        result[key] = query[key] === "true";
+      } else {
+        result[key] = value.constructor(query[key]);
+      }
+    }
+    return result;
+  }, <SearchParams>{});
+}
+
+router.beforeEach(async (to, from) => {
+  const old_query_params = extract_search_params(from.query);
+  const new_query_params = extract_search_params(to.query);
+  const new_query_params_parsed =
+    search_params_from_location_query(new_query_params);
   if (
+    Object.keys(new_query_params).length > 0 &&
+    JSON.stringify(new_query_params) !== JSON.stringify(old_query_params) &&
+    JSON.stringify(new_query_params_parsed) !==
+      JSON.stringify(store.state.search_params)
+  ) {
+    // newer params in the query
+    store.commit("set_search_params", new_query_params_parsed);
+    if (to.path === "/connections") {
+      // do an await here in order to make it possible to return a different hash
+      store.dispatch("fetch_stations").then(() => {
+        if (
+          store.state.stations.includes(store.state.search_params.start) &&
+          store.state.stations.includes(store.state.search_params.destination)
+        ) {
+          store.dispatch("get_connections");
+        } else {
+          router.push({
+            ...to,
+            hash: "#search",
+          });
+        }
+      });
+    }
+  } else if (
     Object.keys(new_query_params).length === 0 &&
     Object.keys(old_query_params).length > 0
   ) {
+    // preserve query
     return { ...to, query: old_query_params };
   }
 });
