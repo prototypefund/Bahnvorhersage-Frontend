@@ -2,12 +2,12 @@
   <div class="dropdown flex-fill">
     <input
       class="form-control"
-      :class="{ 'is-invalid': is_invalid }"
+      :class="{ 'is-invalid': show_error }"
       type="text"
       autocomplete="off"
       :placeholder="placeholder"
       :name="name"
-      v-model="value"
+      v-model="_value"
       @keydown.enter="enter"
       @keydown.down="down"
       @keydown.up="up"
@@ -27,26 +27,30 @@
         @click="suggestion_click(index)"
         @mousedown="mousedown_prevent"
       >
-        <a
-          class="dropdown-item"
-          v-bind:class="{ active: index === current }"
-          href="#"
-          >{{ suggestion }}</a
-        >
+        <a class="dropdown-item" v-bind:class="{ active: index === current }">{{
+          suggestion
+        }}</a>
       </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
+import { PropType, defineComponent } from "vue";
 
 export default defineComponent({
   name: "AutoSuggest",
   props: {
-    modelValue: {
+    value: {
       type: String,
+      required: true,
+    },
+    is_valid: {
+      type: Boolean,
+      required: false,
+    },
+    values: {
+      type: Array as PropType<string[]>,
       required: true,
     },
     placeholder: {
@@ -57,13 +61,11 @@ export default defineComponent({
       type: String,
       required: false,
     },
-    is_invalid: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   },
-  emits: ["update:modelValue"],
+  emits: ["update:value", "update:is_valid"],
+  mounted() {
+    this.update_is_valid();
+  },
   data() {
     return {
       open: false,
@@ -71,16 +73,24 @@ export default defineComponent({
     };
   },
   computed: {
-    value: {
+    _value: {
       get() {
-        return this.modelValue;
+        return this.value;
       },
-      set(value) {
-        this.$emit("update:modelValue", value);
+      set(value: string) {
+        this.$emit("update:value", value);
+      },
+    },
+    _is_valid: {
+      get() {
+        return this.is_valid;
+      },
+      set(value: boolean) {
+        this.$emit("update:is_valid", value);
       },
     },
     matches() {
-      return this.stations.filter(
+      return this.values.filter(
         function (item) {
           if (
             this.search &&
@@ -92,48 +102,42 @@ export default defineComponent({
           }
           return false;
         },
-        { count: 0, search: this.modelValue.toLowerCase() }
+        { count: 0, search: this._value.toLowerCase() }
       );
     },
-
     open_suggestions() {
       return (
-        this.modelValue !== "" &&
-        this.matches.length !== 0 &&
-        this.open === true
+        this._value !== "" && this.matches.length !== 0 && this.open === true
       );
     },
-    ...mapState(["stations"]),
+    show_error() {
+      return !(this._is_valid || this._value === "" || this.open);
+    },
   },
-
   methods: {
     enter(event) {
       if (this.open) {
         event.preventDefault();
-        this.value = this.matches[this.current];
+        this._value = this.matches[this.current];
         this.open = false;
+        this.update_is_valid();
       }
     },
-
     up() {
       if (this.current > 0) this.current--;
     },
-
     down() {
       if (this.current < this.matches.length - 1) this.current++;
     },
-
-    is_active(index) {
+    is_active(index: number) {
       return index === this.current;
     },
-
     change() {
-      if (this.open === false) {
+      if (!this.open) {
         this.open = true;
         this.current = 0;
       }
     },
-
     tab(event) {
       if (this.open) {
         event.preventDefault();
@@ -141,19 +145,31 @@ export default defineComponent({
         else this.current = 0;
       }
     },
-
     mousedown_prevent(event) {
       // clicking on a suggestion should not trigger blur
       event.preventDefault();
     },
-
     loose_focus() {
       this.open = false;
+      this.update_is_valid();
     },
-
     suggestion_click(index) {
-      this.value = this.matches[index];
+      this._value = this.matches[index];
       this.open = false;
+      this.update_is_valid();
+    },
+    update_is_valid() {
+      if (this.values.length > 0) {
+        this._is_valid = this.values.includes(this._value);
+      }
+    },
+  },
+  watch: {
+    value() {
+      this.update_is_valid();
+    },
+    values() {
+      this.update_is_valid();
     },
   },
 });
