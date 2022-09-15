@@ -40,7 +40,14 @@ export default createStore({
       state.search_params[key] = value;
     },
     set_search_params(state, search_params: SearchParams) {
-      state.search_params = search_params;
+      // Don't allow undefined values
+      state.search_params = Object.entries(search_params).reduce(
+        (result, [key, value]) => {
+          result[key] = value;
+          return result;
+        },
+        new SearchParams()
+      );
     },
     start_progress(state) {
       state.progressing = true;
