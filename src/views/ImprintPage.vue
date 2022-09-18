@@ -16,8 +16,7 @@
     </div>
     <div>
       <h2>Kontakt</h2>
-      theo.doellmann@gmx.de <br />
-      +49 1575 1990932
+      info@bahnvorhersage.de <br />
     </div>
     <div>
       <h2>Haftungsausschluss:</h2>
