@@ -28,6 +28,22 @@ function parse_datetimes(connections) {
         connections[i].legs[u].departure
       );
       connections[i].legs[u].arrival = dayjs(connections[i].legs[u].arrival);
+
+      connections[i].legs[u].duration = dayjs.duration(
+        connections[i].legs[u].arrival.diff(connections[i].legs[u].departure)
+      );
+      connections[i].legs[u].plannedDuration = dayjs.duration(
+        connections[i].legs[u].plannedArrival.diff(
+          connections[i].legs[u].plannedDeparture
+        )
+      );
+
+      if ("transferTime" in connections[i].legs[u]) {
+        connections[i].legs[u].transferTime = dayjs.duration(
+          connections[i].legs[u].transferTime,
+          "minutes"
+        );
+      }
     }
   }
   return connections;

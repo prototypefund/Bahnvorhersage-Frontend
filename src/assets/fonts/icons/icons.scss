@@ -2,9 +2,9 @@ $icons-font: "icons";
 
 @font-face {
     font-family: $icons-font;
-    src: url("assets/fonts/icons/icons.eot?4ce910a36878b4decd9cc8fb4a637f75#iefix") format("embedded-opentype"),
-url("assets/fonts/icons/icons.woff2?4ce910a36878b4decd9cc8fb4a637f75") format("woff2"),
-url("assets/fonts/icons/icons.woff?4ce910a36878b4decd9cc8fb4a637f75") format("woff");
+    src: url("assets/fonts/icons/icons.eot?7edd00a27904487e57b233ccd8c683a2#iefix") format("embedded-opentype"),
+url("assets/fonts/icons/icons.woff2?7edd00a27904487e57b233ccd8c683a2") format("woff2"),
+url("assets/fonts/icons/icons.woff?7edd00a27904487e57b233ccd8c683a2") format("woff");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -26,9 +26,11 @@ $icons-map: (
     "gitlab": "\f105",
     "pedestrian": "\f106",
     "person-walking-solid": "\f107",
-    "share-fill": "\f108",
-    "swap": "\f109",
-    "train": "\f10a",
+    "record-circle": "\f108",
+    "record-fill": "\f109",
+    "share-fill": "\f10a",
+    "swap": "\f10b",
+    "train": "\f10c",
 );
 
 .icon-arrow-down-up:before {
@@ -51,6 +53,12 @@ $icons-map: (
 }
 .icon-person-walking-solid:before {
     content: map-get($icons-map, "person-walking-solid");
+}
+.icon-record-circle:before {
+    content: map-get($icons-map, "record-circle");
+}
+.icon-record-fill:before {
+    content: map-get($icons-map, "record-fill");
 }
 .icon-share-fill:before {
     content: map-get($icons-map, "share-fill");
