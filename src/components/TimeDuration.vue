@@ -28,8 +28,11 @@ export default defineComponent({
     durationString: function () {
       if (this.duration.asMinutes() < 60) {
         return this.duration.format("m[min]");
-      } else {
+      } else if (this.duration.asMinutes() % 60 !== 0) {
         return this.duration.format("H[h] m[min]");
+      }
+      else {
+        return this.duration.format("H[h]");
       }
     },
     plannedDurationString: function () {
