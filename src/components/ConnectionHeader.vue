@@ -58,9 +58,10 @@
           <div class="details_grid">
             <ConnectionSegment
               v-for="(segment, index) in connection.legs"
-              v-bind:key="index"
-              v-bind:segment="segment"
-              v-bind:con_score="connection.connectionScore"
+              :key="index"
+              :segment="segment"
+              :next_segment="connection.legs[index + 1]"
+              :con_score="connection.connectionScore"
             ></ConnectionSegment>
           </div>
         </div>

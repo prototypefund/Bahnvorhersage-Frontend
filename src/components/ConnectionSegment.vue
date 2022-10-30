@@ -1,22 +1,5 @@
 <template>
-  <div
-    v-if="'walking' in segment && segment.walking"
-    class="transfer"
-    v-bind:style="transfer_style"
-  >
-    <div class="score">
-      <i class="icon icon-person-walking-solid"></i>
-      davon
-      <time-duration :duration="walkDuration" style="display: inline" /> und
-      {{ segment.distance }} m Fußweg
-    </div>
-    <!-- <div style="display: contents">
-      <i class="icon icon-person-walking-solid"></i>
-      davon {{ segment.arrival.diff(segment.departure, "m") }} Min und
-      {{ segment.distance }} m Fußweg
-    </div> -->
-  </div>
-  <div v-else style="display: contents">
+  <div v-if="!('walking' in segment) || !segment.walking" style="display: contents">
     <div class="leg">
       <div class="time start">
         {{ segment.departure.format("HH:mm") }}
@@ -48,7 +31,7 @@
 
       <div class="platform start">
         <span v-if="segment.departurePlatform">
-          von Gl. {{ segment.departurePlatform }}
+          Gl. {{ segment.departurePlatform }}
           <del
             v-if="
               segment.departurePlatform !== segment.plannedDeparturePlatform
@@ -89,7 +72,7 @@
 
       <div class="platform destination">
         <span v-if="segment.arrivalPlatform">
-          an Gl. {{ segment.arrivalPlatform }}
+          Gl. {{ segment.arrivalPlatform }}
           <del
             v-if="segment.arrivalPlatform !== segment.plannedArrivalPlatform"
             class="outdated"
@@ -112,6 +95,19 @@
           >{{ segment.transferScore }}%</span
         >
       </div>
+
+      <div
+        v-if="'walking' in next_segment && next_segment.walking"
+        class="walk"
+        v-bind:style="transfer_style"
+      >
+        <div class="score">
+          <i class="icon icon-person-walking-solid"></i>
+          davon
+          <time-duration :duration="walkDuration" style="display: inline" /> und
+          {{ next_segment.distance }} m Fußweg
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -126,7 +122,7 @@ export default defineComponent({
   components: {
     TimeDuration,
   },
-  props: ["segment", "con_score"],
+  props: ["segment", "next_segment", "con_score"],
   data: function () {
     return {
       show_details: false,
@@ -251,29 +247,31 @@ export default defineComponent({
   },
   computed: {
     walkDuration: function () {
-      return dayjs.duration(this.segment.arrival.diff(this.segment.departure));
+      return dayjs.duration(this.next_segment.arrival.diff(this.next_segment.departure));
     },
   },
 });
 </script>
 
 <style lang="scss">
-$time_col_width: 8ch;
+$time_col_width: 9ch;
 $fancy_line_width: 16px;
 
 .details_grid {
-  margin: 20px;
+  margin: 10px;
   display: inline-grid;
-  grid-template-columns: minmax(max-content, auto);
-  width: calc(100% - 40px);
+  grid-template-columns: 1fr;
+  width: calc(100% - 20px);
+  max-width: calc(100% - 20px);
 }
 
 .leg {
   @include border-radius;
   display: inline-grid;
+  padding: 15px 0;
   grid-template-columns:
-    $time_col_width $fancy_line_width minmax(max-content, 1fr)
-    minmax(max-content, 1fr);
+    $time_col_width $fancy_line_width 1fr
+    max-content;
   grid-template-areas:
     "time-start fancy-line station-start platform-start"
     "duration fancy-line train train"
@@ -283,10 +281,12 @@ $fancy_line_width: 16px;
 
 .station {
   @include border-radius;
-  margin: 10px 10px 10px 10px;
-  padding: 5px 10px;
-  background-color: $page_gray;
+  margin: 10px 0;
+  padding: 5px;
   font-weight: bold;
+
+  overflow-wrap: anywhere;
+  hyphens: auto;
 
   &.start {
     grid-area: station-start;
@@ -298,17 +298,19 @@ $fancy_line_width: 16px;
 }
 
 .time {
-  margin: 15px 0 15px 15px;
+  margin: 15px 5px 15px 15px;
   height: 1.4em;
   text-align: end;
   font-weight: bold;
 
   &.start {
     grid-area: time-start;
+    align-self: start;
   }
 
   &.destination {
     grid-area: time-destination;
+    align-self: end;
   }
 
   .outdated {
@@ -317,10 +319,11 @@ $fancy_line_width: 16px;
 }
 
 .duration {
-  margin: 15px 0;
+  margin: 15px 5px;
   height: 1.4em;
   text-align: end;
   grid-area: duration;
+  align-self: center;
 
   .outdated {
     font-size: 0.8em;
@@ -329,19 +332,24 @@ $fancy_line_width: 16px;
 
 .platform {
   margin: 15px;
+  text-align: end;
 
   &.start {
     grid-area: platform-start;
+    align-self: start;
   }
 
   &.destination {
     grid-area: platform-destination;
+    align-self: end;
   }
 }
 
 .train {
-  margin: 10px;
+  margin: 15px 5px;
   grid-area: train;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 
   img {
     height: 20px;
@@ -349,19 +357,20 @@ $fancy_line_width: 16px;
 }
 
 .score {
-  border: solid 10px transparent;
+  border: solid 15px transparent;
   grid-area: score;
 }
 
 .transfer {
   display: grid;
   grid-template-columns: $time_col_width $fancy_line_width 1fr;
-  grid-template-areas: "duration fancy-line score";
+  grid-template-areas:
+    "duration fancy-line score"
+    "duration fancy-line walk";
 }
 
 .walk {
-  border: solid 10px transparent;
-  grid-column-start: span 2;
+  grid-area: walk;
 }
 
 .station_delay_line_container {
@@ -393,64 +402,5 @@ $fancy_line_width: 16px;
   align-self: center;
   z-index: 1;
   height: calc(100% + 16ch);
-}
-
-@media (max-width: 450px) {
-  .details_grid {
-    margin: 10px;
-    display: inline-grid;
-    grid-template-columns: minmax(max-content, auto);
-    width: calc(100% - 20px);
-  }
-
-  .leg {
-    grid-template-columns: $time_col_width $fancy_line_width minmax(
-        max-content,
-        1fr
-      );
-  }
-
-  .station {
-    border-radius: 0;
-    @include border-top-radius;
-    margin: 8px 8px 0 8px;
-    grid-column-start: span 2;
-  }
-
-  .time {
-    @include border-bottom-start-radius;
-    margin: 8px 0 8px 8px;
-    padding: 5px 8px;
-    background-color: $page_gray;
-  }
-
-  .platform {
-    @include border-bottom-end-radius;
-    margin: 0 8px 8px 0;
-    padding: 5px 8px;
-    background-color: $page_gray;
-  }
-
-  .train {
-    margin: 8px;
-    grid-column-start: span 2;
-  }
-
-  .score {
-    grid-column-start: span 2;
-  }
-
-  // .transfer {
-  //   grid-column-start: span 2;
-  // }
-
-  .walk {
-    grid-column-start: span 2;
-    border-top: 0;
-  }
-
-  .station_delay_line_container {
-    grid-row-start: span 5;
-  }
 }
 </style>

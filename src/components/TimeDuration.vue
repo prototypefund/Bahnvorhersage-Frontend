@@ -26,12 +26,13 @@ export default defineComponent({
   },
   computed: {
     durationString: function () {
-      if (this.duration.asMinutes() < 60) {
+      if (this.duration.asMinutes() < 0) {
+        return "0 min";
+      } else if (this.duration.asMinutes() < 60) {
         return this.duration.format("m[min]");
       } else if (this.duration.asMinutes() % 60 !== 0) {
         return this.duration.format("H[h] m[min]");
-      }
-      else {
+      } else {
         return this.duration.format("H[h]");
       }
     },
