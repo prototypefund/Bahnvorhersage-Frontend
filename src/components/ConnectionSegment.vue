@@ -299,7 +299,7 @@ $fancy_line_width: 16px;
 
 .time {
   margin: 15px 5px 15px 15px;
-  height: 1.4em;
+  height: 24px;
   text-align: end;
   font-weight: bold;
 
