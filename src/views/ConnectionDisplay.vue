@@ -161,6 +161,7 @@ export default defineComponent({
   background-color: $page_gray;
   margin-bottom: 5px;
   color: $text_color;
+  max-width: 70em;
 }
 
 .card_header {
