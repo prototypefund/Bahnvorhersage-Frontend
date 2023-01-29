@@ -34,6 +34,8 @@ pages: # the job must be named pages
   script:
     - npm ci
     - npm run build
+    - rm -rf public # remove the default public folder
+    - mkdir public # create a new public folder
     - mv public public-vue # GitLab Pages hooks on the public folder
     - mv dist public # rename the dist folder (result of npm run build)
     # optionally, you can activate gzip support with the following line:
