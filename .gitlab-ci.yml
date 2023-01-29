@@ -26,3 +26,21 @@ build bahnvorhersage_frontend docker image:
     - docker pull $CI_REGISTRY_IMAGE || true
     - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE --tag $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
+
+pages: # the job must be named pages
+  image: node:latest
+  stage: deploy
+  script:
+    - npm ci
+    - npm run build
+    - mv public public-vue # GitLab Pages hooks on the public folder
+    - mv dist public # rename the dist folder (result of npm run build)
+    # optionally, you can activate gzip support with the following line:
+    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
+  artifacts:
+    paths:
+      - public # artifact path must be /public for GitLab Pages to pick it up
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
