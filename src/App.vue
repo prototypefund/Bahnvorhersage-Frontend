@@ -45,7 +45,7 @@
       </div>
       <br />
       <span
-        >© 2022 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
+        >© 2023 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
         keiner Verbindung mit der Deutschen Bahn und ihren Tochter-Unternehmen.
       </span>
     </footer>
@@ -171,8 +171,7 @@ body {
 }
 
 .text_content {
-  max-width: 50em;
-  width: 90%;
+  max-width: 75ch;
   margin: auto !important;
   margin-bottom: 80px !important;
   display: grid;
