@@ -74,6 +74,18 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "stationviewer" */ "../views/StationDataViewer.vue"
       ),
   },
+  {
+    // Redicrect to external url defined in a parameter called "url"
+    path: "/redirect",
+    name: "Redirect",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
+      ),
+    beforeEnter: (to, from, next) => {
+      location.href = to.query.url as string;
+    }
+  }  
 ];
 
 const router = createRouter({
