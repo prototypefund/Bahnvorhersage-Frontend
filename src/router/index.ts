@@ -37,6 +37,12 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "privacy" */ "../views/PrivacyPage.vue"),
   },
   {
+    path: "/opensource",
+    name: "Open Source",
+    component: () =>
+      import(/* webpackChunkName: "opensource" */ "../views/OpenSource.vue"),
+  },
+  {
     path: "/stats",
     name: "Statistiken",
     component: () =>
