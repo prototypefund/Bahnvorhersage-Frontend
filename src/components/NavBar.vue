@@ -80,12 +80,10 @@
           </ul>
           <div class="d-flex gap-2">
             <install-button></install-button>
-            <a
+            <router-link
               class="btn btn-primary"
-              href="https://gitlab.com/bahnvorhersage/bahnvorhersage"
-              target="_blank"
-              rel="noopener"
-              ><i class="icon icon-gitlab"></i> Projekt auf GitLab</a
+              :to="{ path: '/opensource', hash: '#content' }"
+              ><i class="icon icon-gitlab"></i> GitLab / Docs</router-link
             >
           </div>
         </div>
