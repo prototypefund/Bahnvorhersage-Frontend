@@ -13,10 +13,25 @@
       Ein hoher Verbindungsscore ist aber keine Garantie dafür, dass eine
       Verbindung funktioniert!
     </div>
+    <h2 class="text-center">Funktionsweise</h2>
     <div>
-      Der Verbindungsscore wird mithilfe einer auf historischen Zugdaten
-      trainierten KI ermittelt. Einige Details dazu können in unserem
-      Git-Repository gefunden werden.
+      Die Webseite zeigt die gleichen Zugverbindungen wie die Seite der Bahn
+      oder wie der DB Navigator. Der Verbindungsscore, den diese Seite
+      zusätzlich zu den Informationen der Deutschen Bahn anzeigt, wird aus
+      Zugverspätungsvorhersagen eines Machine Learning Modells und der
+      Umsteigezeit berechnet.
     </div>
+    <div>
+      Um die Machine Learning Modelle zu trainieren, sammeln wir seit Oktober
+      2020 in Echtzeit Abfahrtszeiten von Zügen. Die von heute aus letzten sechs
+      Wochen an historischen Verspätungsdaten werden für das Training verwendet.
+      Die Modelle werden täglich neu trainiert. Weitere Details finden sich in
+      den Langfassungen für Jugend-Forscht.
+    </div>
+    <router-link
+      class="btn btn-primary"
+      :to="{ path: '/opensource', hash: '#content' }"
+      ><i class="icon icon-gitlab"></i> Docs / Langfassungen</router-link
+    >
   </div>
 </template>
