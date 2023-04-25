@@ -88,10 +88,10 @@ const routes: Array<RouteRecordRaw> = [
       import(
         /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
       ),
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to) => {
       location.href = to.query.url as string;
-    }
-  }  
+    },
+  },
 ];
 
 const router = createRouter({
