@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!('walking' in segment) || !segment.walking" style="display: contents">
+  <div
+    v-if="!('walking' in segment) || !segment.walking"
+    style="display: contents"
+  >
     <div class="leg">
       <div class="time start">
         {{ segment.departure.format("HH:mm") }}
@@ -247,7 +250,9 @@ export default defineComponent({
   },
   computed: {
     walkDuration: function () {
-      return dayjs.duration(this.next_segment.arrival.diff(this.next_segment.departure));
+      return dayjs.duration(
+        this.next_segment.arrival.diff(this.next_segment.departure)
+      );
     },
   },
 });

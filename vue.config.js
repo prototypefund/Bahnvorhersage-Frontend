@@ -1,5 +1,7 @@
 module.exports = {
-  runtimeCompiler: true,
+  configureWebpack: {
+    devtool: "source-map",
+  },
   devServer: {
     proxy: {
       "/api": {
@@ -14,7 +16,7 @@ module.exports = {
       sass: {
         additionalData: `
           @use 'sass:color';
-          @import 'src/assets/scss/variables';
+          @import 'src/assets/scss/variables.scss';
           @import 'bootstrap/scss/_functions.scss'; @import 'bootstrap/scss/_variables.scss'; @import 'bootstrap/scss/_mixins.scss';
         `,
       },
