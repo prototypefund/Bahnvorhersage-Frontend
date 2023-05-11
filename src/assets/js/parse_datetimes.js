@@ -43,6 +43,35 @@ function parse_datetimes(connections) {
           connections[i].legs[u].transferTime,
           "minutes"
         );
+
+        if (
+          connections[i].legs[u].neededTransferTime.frequentTraveller.duration
+        ) {
+          connections[i].legs[u].neededTransferTime.frequentTraveller.duration =
+            dayjs.duration(
+              connections[i].legs[u].neededTransferTime.frequentTraveller
+                .duration
+            );
+        }
+        if (
+          connections[i].legs[u].neededTransferTime.mobilityImpaired.duration
+        ) {
+          connections[i].legs[u].neededTransferTime.mobilityImpaired.duration =
+            dayjs.duration(
+              connections[i].legs[u].neededTransferTime.mobilityImpaired
+                .duration
+            );
+        }
+        if (
+          connections[i].legs[u].neededTransferTime.occasionalTraveller.duration
+        ) {
+          connections[i].legs[
+            u
+          ].neededTransferTime.occasionalTraveller.duration = dayjs.duration(
+            connections[i].legs[u].neededTransferTime.occasionalTraveller
+              .duration
+          );
+        }
       }
     }
   }

@@ -92,25 +92,30 @@
         <div class="transfer-line" :style="transfer_score_color"></div>
       </div>
 
-      <div class="score" v-bind:style="transfer_style">
+      <div class="score m-3" v-bind:style="transfer_style">
         Verbindungs-Score:
         <span v-bind:style="transfer_score_color"
           >{{ segment.transferScore }}%</span
         >
       </div>
 
-      <div
+      <needed-transfer-duration
+        v-if="'neededTransferTime' in segment"
+        :transfer="segment.neededTransferTime"
+      />
+
+      <!-- <div
         v-if="'walking' in next_segment && next_segment.walking"
         class="walk"
         v-bind:style="transfer_style"
       >
-        <div class="score">
+        <div class="m-">
           <i class="icon icon-person-walking-solid"></i>
           davon
           <time-duration :duration="walkDuration" style="display: inline" /> und
           {{ next_segment.distance }} m Fußweg
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -119,11 +124,13 @@ import dayjs from "dayjs";
 import { defineComponent } from "vue";
 import { rdylgr_colormap } from "../assets/js/colormap";
 import TimeDuration from "./TimeDuration.vue";
+import NeededTransferDuration from "./NeededTransferDuration.vue";
 
 export default defineComponent({
   name: "ConnectionSegment",
   components: {
     TimeDuration,
+    NeededTransferDuration,
   },
   props: ["segment", "next_segment", "con_score"],
   data: function () {
@@ -362,7 +369,6 @@ $fancy_line_width: 16px;
 }
 
 .score {
-  border: solid 15px transparent;
   grid-area: score;
 }
 
@@ -371,6 +377,7 @@ $fancy_line_width: 16px;
   grid-template-columns: $time_col_width $fancy_line_width 1fr;
   grid-template-areas:
     "duration fancy-line score"
+    "duration fancy-line min-transfer-duration"
     "duration fancy-line walk";
 }
 
