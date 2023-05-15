@@ -116,8 +116,8 @@ const router = createRouter({
 });
 
 type LocationQuery = import("vue-router").LocationQuery;
-import { SearchParams } from "../store";
-import store from "../store";
+import { SearchParams } from "@/store";
+import store from "@/store";
 
 function extract_search_params(query: LocationQuery): LocationQuery {
   return Object.keys(new SearchParams()).reduce((result, key) => {
@@ -132,14 +132,14 @@ function search_params_from_location_query(query: LocationQuery): SearchParams {
   return Object.entries(new SearchParams()).reduce((result, [key, value]) => {
     if (query[key]) {
       if (typeof value == "boolean") {
-        // Booleans need to be parsed seperatly
+        // Booleans need to be parsed separately
         result[key] = query[key] === "true";
       } else {
         result[key] = value.constructor(query[key]);
       }
     }
     return result;
-  }, <SearchParams>{});
+  }, new SearchParams());
 }
 
 router.beforeEach(async (to, from) => {
