@@ -99,12 +99,14 @@ const router = createRouter({
   linkActiveClass: "active",
   linkExactActiveClass: "exact-active",
   routes: routes,
-  scrollBehavior(to): any {
+  scrollBehavior(to, from, savedPosition): any {
     if (to.hash) {
       nextTick(() => {
-        document
-          ?.getElementById(to.hash.substring(1))
-          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        nextTick(() => {
+          document
+            ?.getElementById(to.hash.substring(1))
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
       });
       // Does not work but it's the official vue way
       return {
