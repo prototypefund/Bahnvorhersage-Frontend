@@ -2,90 +2,87 @@
   <div class="fixed-top">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
       <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" @click="collapse.toggle()">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <router-link class="navbar-brand" :to="{ path: '/' }"
+        <div
+          class="collapse navbar-collapse"
+          id="navbarSupportedContent"
+          ref="collapse"
+        >
+          <router-link
+            class="navbar-brand"
+            @click="collapse.hide()"
+            :to="{ path: '/' }"
             ><img
               src="../assets/img/IC.svg"
               height="24"
               width="32"
               alt="bahnvorhersage logo"
           /></router-link>
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :to="{ path: '/connections', hash: '#content' }"
-                >Verbindungen</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :to="{ path: '/about', hash: '#content' }"
-                >Über uns</router-link
-              >
-            </li>
-            <li class="nav-item dropdown">
+          <div class="navbar-nav me-auto">
+            <router-link
+              class="nav-item nav-link"
+              @click="collapse.hide()"
+              :to="{ path: '/connections', hash: '#content' }"
+              >Verbindungen</router-link
+            >
+            <router-link
+              class="nav-item nav-link"
+              @click="collapse.hide()"
+              :to="{ path: '/about', hash: '#content' }"
+              >Über uns</router-link
+            >
+            <div class="nav-item dropdown">
               <router-link
                 class="nav-link dropdown-toggle"
+                @click="collapse.hide()"
                 data-toggle="dropdown"
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
-                <li>
-                  <router-link
-                    class="nav-link"
-                    :to="{ path: '/stats/overview', hash: '#content' }"
-                    >Übersicht</router-link
-                  >
-                </li>
-                <li>
-                  <router-link
-                    class="nav-link"
-                    :to="{ path: '/stats/stations', hash: '#content' }"
-                    >Bahnhöfe</router-link
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
+              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+                <router-link
+                  class="nav-link"
+                  @click="collapse.hide()"
+                  :to="{ path: '/stats/overview', hash: '#content' }"
+                  >Übersicht</router-link
+                >
+                <router-link
+                  class="nav-link"
+                  @click="collapse.hide()"
+                  :to="{ path: '/stats/stations', hash: '#content' }"
+                  >Bahnhöfe</router-link
+                >
+              </div>
+            </div>
+            <div class="nav-item dropdown">
               <router-link
                 class="nav-link dropdown-toggle"
+                @click="collapse.hide()"
                 data-toggle="dropdown"
                 :to="{ path: '/opendata', hash: '#content' }"
                 >Open Data</router-link
               >
-              <ul class="dropdown-menu dropdown-menu-dark bg-dark rounded">
-                <li>
-                  <router-link
-                    class="nav-link"
-                    :to="{ path: '/stationviewer', hash: '#content' }"
-                    >Stationsdaten</router-link
-                  >
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <div class="d-flex gap-2">
-            <install-button></install-button>
-            <router-link
-              class="btn btn-primary"
-              :to="{ path: '/opensource', hash: '#content' }"
-              ><i class="icon icon-gitlab"></i> GitLab / Docs</router-link
-            >
+              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+                <router-link
+                  class="nav-link"
+                  @click="collapse.hide()"
+                  :to="{ path: '/stationviewer', hash: '#content' }"
+                  >Stationsdaten</router-link
+                >
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="d-flex gap-2">
+          <install-button></install-button>
+          <router-link
+            class="btn btn-primary"
+            @click="collapse.hide()"
+            :to="{ path: '/opensource', hash: '#content' }"
+            ><i class="icon icon-gitlab"></i> GitLab / Docs</router-link
+          >
         </div>
       </div>
     </nav>
@@ -99,6 +96,7 @@ import installButton from "./InstallButton.vue";
 import update from "../assets/js/update";
 import { mapState } from "vuex";
 import { default as ProgressBar } from "progressbar.js";
+import { Collapse } from "bootstrap";
 // import ProgressBar = require("progressbar.js");
 
 export default defineComponent({
@@ -107,6 +105,7 @@ export default defineComponent({
   data: function () {
     return {
       progress: null,
+      collapse: null,
     };
   },
   computed: {
@@ -130,6 +129,9 @@ export default defineComponent({
       color: "#3f51b5",
       trailColor: "transparent",
       trailWidth: 0,
+    });
+    this.collapse = new Collapse(this.$refs.collapse, {
+      toggle: false,
     });
   },
   watch: {
