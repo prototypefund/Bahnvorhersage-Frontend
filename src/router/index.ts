@@ -125,7 +125,7 @@ const router = createRouter({
   linkActiveClass: "active",
   linkExactActiveClass: "exact-active",
   routes: routes,
-  scrollBehavior(to, from, savedPosition): any {
+  scrollBehavior(to): any {
     if (to.hash) {
       nextTick(() => {
         nextTick(() => {
