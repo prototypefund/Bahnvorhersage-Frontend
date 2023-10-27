@@ -19,7 +19,7 @@
       Git-Repository gefunden werden.
     </div>
   </div>
-  <div class="text-center">
+  <div class="text-center container-xl">
     <h3>Finde die zuverlässigsten Zugverbindungen zu Top Reisezielen</h3>
     <div class="d-flex gap-3 flex-wrap justify-content-center mt-3">
       <travel-destination
