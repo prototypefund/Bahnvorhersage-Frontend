@@ -161,6 +161,7 @@ export default defineComponent({
   margin-bottom: 5px;
   color: $text_color;
   max-width: 70em;
+  cursor: pointer;
 }
 
 .card_header {

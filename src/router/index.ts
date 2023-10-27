@@ -92,6 +92,32 @@ const routes: Array<RouteRecordRaw> = [
       location.href = to.query.url as string;
     },
   },
+  {
+    // Redicrect to external url defined in a parameter called "url"
+    path: "/paper",
+    name: "Paper",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
+      ),
+    beforeEnter: () => {
+      location.href =
+        "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Langfassung_Bahnvorhersage_2023.pdf";
+    },
+  },
+  {
+    // Redicrect to external url defined in a parameter called "url"
+    path: "/paper2021",
+    name: "Paper2021",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
+      ),
+    beforeEnter: () => {
+      location.href =
+        "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Old%20Docs/JuFo%202021.pdf";
+    },
+  },
 ];
 
 const router = createRouter({
@@ -99,7 +125,7 @@ const router = createRouter({
   linkActiveClass: "active",
   linkExactActiveClass: "exact-active",
   routes: routes,
-  scrollBehavior(to, from, savedPosition): any {
+  scrollBehavior(to): any {
     if (to.hash) {
       nextTick(() => {
         nextTick(() => {
