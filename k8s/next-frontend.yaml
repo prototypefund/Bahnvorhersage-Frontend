@@ -35,22 +35,12 @@ spec:
           volumeMounts:
             - name: tz-berlin # set timezone to CEST
               mountPath: /etc/localtime
-            - mountPath: /mnt/config
-              name: config-pvc-storage
-            - mountPath: /usr/src/app/cache
-              name: cache-pvc-storage
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-        - name: config-pvc-storage
-          persistentVolumeClaim:
-            claimName: config-pvc
-        - name: cache-pvc-storage
-          persistentVolumeClaim:
-            claimName: cache-pvc
         - name: tz-berlin # set timezone to CEST
           hostPath:
             path: /usr/share/zoneinfo/Europe/Berlin
