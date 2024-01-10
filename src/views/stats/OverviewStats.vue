@@ -1,6 +1,6 @@
 <template>
   <div id="stats">
-    <div v-if="show" class="text_content">
+    <div v-if="show" class="text-content">
       <div>
         <h1>Übersicht über die verwendeten Daten</h1>
         Unser Machine Learning System wird auf echten Verspätungsinformationen

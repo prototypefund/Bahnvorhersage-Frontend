@@ -1,60 +1,63 @@
 <template>
-  <div class="my-5">
-    <div v-if="connections.length !== 0">
-      <h1 class="text-center">
-        {{ $store.state.search_params.start }} nach
-        {{ $store.state.search_params.destination }}
-      </h1>
-      <div class="custom_card rounded overflow-hidden">
-        <div class="connections_header">
-          <div class="col1 sort_col" @click="sort_time()">
-            Zeit
-            <span v-if="last_sort === 'departure' || last_sort === 'arrival'">
-              <span v-if="last_sort === 'departure'">Ab </span>
-              <span v-if="last_sort === 'arrival'">An </span>
-              <i v-if="asc_sort[last_sort]" class="arrow up"></i>
-              <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
-            </span>
-          </div>
-          <div class="col2 sort_col" @click="sort_by_key('duration')">
-            Dauer
-            <span v-if="last_sort === 'duration'">
-              <i v-if="asc_sort[last_sort]" class="arrow up"></i>
-              <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
-            </span>
-          </div>
-          <div class="col3 sort_col" @click="sort_by_key('transfers')">
-            Umstiege
-            <span v-if="last_sort === 'transfers'">
-              <i v-if="asc_sort[last_sort]" class="arrow up"></i>
-              <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
-            </span>
-          </div>
-          <div class="col4">Produkte</div>
-          <div class="col5 sort_col" @click="sort_by_key('connectionScore')">
-            Score
-            <span v-if="last_sort === 'connectionScore'">
-              <i v-if="asc_sort[last_sort]" class="arrow up"></i>
-              <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
-            </span>
-          </div>
-          <div class="col6 sort_col" @click="sort_by_key('price')">
-            Ticket
-            <span v-if="last_sort === 'price'">
-              <i v-if="asc_sort[last_sort]" class="arrow up"></i>
-              <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
-            </span>
+  <SearchHero></SearchHero>
+  <div class="content-container" v-if="connections.length !== 0">
+    <div class="m-auto container d-flex justify-content-center">
+      <div>
+        <h1 class="text-center">
+          {{ $store.state.search_params.start }} nach
+          {{ $store.state.search_params.destination }}
+        </h1>
+        <div class="custom_card rounded overflow-hidden">
+          <div class="connections_header">
+            <div class="col1 sort_col" @click="sort_time()">
+              Zeit
+              <span v-if="last_sort === 'departure' || last_sort === 'arrival'">
+                <span v-if="last_sort === 'departure'">Ab </span>
+                <span v-if="last_sort === 'arrival'">An </span>
+                <i v-if="asc_sort[last_sort]" class="arrow up"></i>
+                <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
+              </span>
+            </div>
+            <div class="col2 sort_col" @click="sort_by_key('duration')">
+              Dauer
+              <span v-if="last_sort === 'duration'">
+                <i v-if="asc_sort[last_sort]" class="arrow up"></i>
+                <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
+              </span>
+            </div>
+            <div class="col3 sort_col" @click="sort_by_key('transfers')">
+              Umstiege
+              <span v-if="last_sort === 'transfers'">
+                <i v-if="asc_sort[last_sort]" class="arrow up"></i>
+                <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
+              </span>
+            </div>
+            <div class="col4">Produkte</div>
+            <div class="col5 sort_col" @click="sort_by_key('connectionScore')">
+              Score
+              <span v-if="last_sort === 'connectionScore'">
+                <i v-if="asc_sort[last_sort]" class="arrow up"></i>
+                <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
+              </span>
+            </div>
+            <div class="col6 sort_col" @click="sort_by_key('price')">
+              Ticket
+              <span v-if="last_sort === 'price'">
+                <i v-if="asc_sort[last_sort]" class="arrow up"></i>
+                <i v-else-if="!asc_sort[last_sort]" class="arrow down"></i>
+              </span>
+            </div>
           </div>
         </div>
+        <transition-group name="connections">
+          <div v-for="connection in connections" :key="connection.id">
+            <connection-header :connection="connection"></connection-header>
+          </div>
+        </transition-group>
       </div>
-      <transition-group name="connections" tag="div">
-        <div v-for="connection in connections" :key="connection.id">
-          <connection-header :connection="connection"></connection-header>
-        </div>
-      </transition-group>
-      <div class="d-flex justify-content-center">
-        <ConnectionsSearchShareButton />
-      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <ConnectionsSearchShareButton />
     </div>
   </div>
 </template>
@@ -63,6 +66,7 @@
 import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import ConnectionHeader from "../components/ConnectionHeader.vue";
+import SearchHero from "../components/SearchHero.vue";
 import ConnectionsSearchShareButton from "../components/ConnectionsSearchShareButton.vue";
 
 export default defineComponent({
@@ -73,6 +77,7 @@ export default defineComponent({
   components: {
     ConnectionHeader,
     ConnectionsSearchShareButton,
+    SearchHero,
   },
   data: function () {
     return {
@@ -356,5 +361,9 @@ export default defineComponent({
 
 .sort_col:active {
   transform: scale(0.95);
+}
+
+.fit-content {
+  max-width: fit-content;
 }
 </style>

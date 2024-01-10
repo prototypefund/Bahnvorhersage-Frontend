@@ -1,73 +1,13 @@
 <template>
   <body>
     <NavBar></NavBar>
-    <div id="intro" class="container-md">
-      <div
-        class="d-flex justify-content-center align-items-center"
-        style="height: 100%"
-      >
-        <div class="hero-layout">
-          <div
-            class="slogan d-flex flex-column justify-content-center align-items-center"
-          >
-            <h6 class="display-6">Verspätungen vermeiden</h6>
-            <h6 class="display-6">mit</h6>
-            <h1 class="display-4 fw-bold">Bahn-Vorhersage</h1>
-          </div>
-          <SearchForm id="search" class="search hover shadow rounded">
-          </SearchForm>
-        </div>
-      </div>
-    </div>
-    <div
-      class="container-fluid d-flex flex-column align-items-center py-5 main_background"
-    >
-      <main>
-        <router-view id="content" />
-      </main>
-    </div>
-    <footer class="text-center text-info p-3 shadow bg-dark">
-      <div class="sponsors text-light text-start mx-auto">
-        <h4>Gefördert von:</h4>
-        <div class="logo-container my-4">
-          <a
-            href="https://www.bmbf.de/"
-            target="_blank"
-            rel="noopener noreferrer"
-            ><img
-              class="logo"
-              loading="lazy"
-              :src="require('@/assets/img/bmbf_logo.svg')"
-              alt="Logo des Bundesministeriums für Bildung und Forschung"
-          /></a>
-          <a
-            href="https://prototypefund.de/"
-            target="_blank"
-            rel="noopener noreferrer"
-            ><img
-              class="logo"
-              loading="lazy"
-              :src="require('@/assets/img/prototypefund_logo.svg')"
-              alt="Logo des Prototypefunds"
-          /></a>
-          <a href="https://sfz-bw.de/" target="_blank" rel="noopener noreferrer"
-            ><img
-              class="logo"
-              loading="lazy"
-              :src="require('@/assets/img/sfz_logo.svg')"
-              alt="Logo des Schülerforschungszentrums Südwürttemberg"
-          /></a>
-        </div>
-      </div>
-      <div class="fw-bold mt-5 mb-3">
-        <router-link class="link-info" to="/imprint">Impressum</router-link> /
-        <router-link class="link-info" to="/privacy">Datenschutz</router-link>
-      </div>
-      <span class="py-3"
-        >© 2023 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
-        keiner Verbindung mit der Deutschen Bahn und ihren Tochter-Unternehmen.
-      </span>
-    </footer>
+
+    <main>
+      <router-view id="content" />
+    </main>
+
+    <PageFooter></PageFooter>
+
     <!-- Update Service worker -->
     <SnackBar v-if="updateExists">
       Ein Update ist verfügbar
@@ -82,10 +22,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavBar from "./components/NavBar.vue";
-import SearchForm from "./components/SearchForm.vue";
 import update from "./assets/js/update";
 import SnackBar from "./components/SnackBar.vue";
 import ErrorDisplay from "./components/ErrorDisplay.vue";
+import PageFooter from "./components/PageFooter.vue";
 
 export default defineComponent({
   name: "App",
@@ -95,10 +35,10 @@ export default defineComponent({
     };
   },
   components: {
-    SearchForm,
     SnackBar,
     NavBar,
     ErrorDisplay,
+    PageFooter,
   },
   mixins: [update],
   mounted() {
@@ -154,27 +94,18 @@ i {
   line-height: 1;
 }
 
-#intro {
-  min-height: 800px;
-}
-
-.shadow-xxxl {
-  box-shadow: 0 0 3em 2em $page_background;
-}
-
-.main_background {
+.content-container {
   background-color: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0 2em 4em rgba(0, 0, 0, 0.8);
+  padding-top: $spacer * 5;
+  padding-bottom: $spacer * 5;
+  min-height: 85vh;
 }
 
 html,
 body,
 #intro {
   height: 100%;
-}
-
-main {
-  max-width: 100%;
 }
 
 body {
@@ -189,12 +120,10 @@ body {
   color: $text_color;
 }
 
-.text_content {
-  max-width: 75ch;
+.text-content {
+  max-width: calc(75ch + $spacer * 1.5);
   margin: auto !important;
-  margin-bottom: 80px !important;
-  display: grid;
-  row-gap: 20px;
+  padding: 0 $spacer * 1.5;
 }
 
 .stats {
@@ -231,31 +160,6 @@ body {
   }
 }
 
-.light_text {
-  color: $text_color !important;
-}
-
-.hero-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: max-content max-content;
-  grid-template-areas:
-    "slogan"
-    "search";
-  grid-gap: 20px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.slogan {
-  grid-area: slogan;
-}
-
-.search {
-  grid-area: search;
-  padding: 3em 1em;
-}
-
 .disclaimer {
   color: $gray-500;
 }
@@ -266,14 +170,6 @@ body {
   }
 }
 
-@include media-breakpoint-up(lg) {
-  .hero-layout {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "slogan search";
-  }
-}
-
 .form-check-label {
   text-shadow: 0px 0px 1px $text_color;
   transition: color 0.1s;
@@ -281,26 +177,5 @@ body {
 
 .form-check-label.inactive {
   text-shadow: none;
-}
-
-.sponsors {
-  width: fit-content;
-}
-
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2cm;
-  align-items: center;
-}
-
-@include media-breakpoint-up(md) {
-  .logo-container {
-    flex-direction: row;
-  }
-}
-
-.logo {
-  height: 100px;
 }
 </style>

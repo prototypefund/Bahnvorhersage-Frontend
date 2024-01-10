@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-top">
+  <header class="sticky-top">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" @click="collapse.toggle()">
@@ -87,7 +87,7 @@
       </div>
     </nav>
     <div id="pgr_bar"></div>
-  </div>
+  </header>
 </template>
 
 <script lang="ts">

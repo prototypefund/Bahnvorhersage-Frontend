@@ -1,5 +1,5 @@
 <template>
-  <div id="stats" class="stations shadow-xxxl p-5 bg-black">
+  <div id="stats" class="stations p-5 bg-black">
     <h1 class="text-center">Verspätungen in Deutschland</h1>
     <div class="stats-picker">
       <Slider

@@ -6,9 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
-      ),
+      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
   },
   {
     path: "/connections",
@@ -85,9 +83,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/redirect",
     name: "Redirect",
     component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
-      ),
+      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
     beforeEnter: (to) => {
       location.href = to.query.url as string;
     },
@@ -97,9 +93,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/paper",
     name: "Paper",
     component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
-      ),
+      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
     beforeEnter: () => {
       location.href =
         "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Langfassung_Bahnvorhersage_2023.pdf";
@@ -110,9 +104,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/paper2021",
     name: "Paper2021",
     component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/TravelDestinationsDisplay.vue"
-      ),
+      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
     beforeEnter: () => {
       location.href =
         "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Old%20Docs/JuFo%202021.pdf";
