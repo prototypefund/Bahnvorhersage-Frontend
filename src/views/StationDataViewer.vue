@@ -15,9 +15,9 @@
         <a href="api/stations.json" target="_blank">stations.json</a>
       </p>
     </div>
-    <div class="text-center m-5">
+    <div v-if="stations.length" class="text-center m-5">
       <h2 class="text-center">Beispielhafter Auszug aus den Stationsdaten</h2>
-      <div v-if="show" class="stationviewer">
+      <div class="stationviewer">
         <pre class="header">name</pre>
         <pre class="header">eva</pre>
         <pre class="header">ds100</pre>
@@ -49,33 +49,49 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({
-  data: function () {
-    return {
-      stations: [],
-      show: false,
-    };
-  },
-  created() {
-    this.$store.commit("start_progress");
-    fetch(
-      window.location.protocol +
-        "//" +
-        window.location.host +
-        "/api/stations.json"
-    )
-      .then((response) => this.$store.dispatch("display_fetch_error", response))
-      .then((response) => response.json())
-      .then((response) => {
-        this.stations = response.slice(0, 100);
-        this.show = true;
-        this.$store.commit("stop_progress");
-      });
-  },
-  methods: {},
-});
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+
+type Station = {
+  name: string;
+  eva: string;
+  ds100: string;
+  valid_from: string;
+  valid_to: string;
+  lat: number;
+  lon: number;
+  meta: string;
+  platform: string;
+  db: string;
+};
+
+const store = useMainStore()
+const { progressing } = storeToRefs(store)
+
+const stations = ref<Station[]>([]);
+
+function fetchStations() {
+  progressing.value = true
+  fetch(
+    window.location.protocol +
+      "//" +
+      window.location.host +
+      "/api/stations.json"
+  )
+    .then((response) => store.display_fetch_error(response))
+    .then((response) => response.json())
+    .then((response) => {
+      stations.value = response.slice(0, 100);
+      progressing.value = false
+    });
+}
+
+onMounted(() => {
+  fetchStations()
+})
+
 </script>
 
 <style lang="scss">

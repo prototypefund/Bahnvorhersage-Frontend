@@ -1,121 +1,105 @@
-import { nextTick } from "vue";
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { nextTick } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useMainStore, SearchParams } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+type LocationQuery = import('vue-router').LocationQuery
+type RouteRecordRaw = import('vue-router').RouteRecordRaw
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "Home",
-    component: () =>
-      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
+    path: '/',
+    name: 'Home',
+    component: () => import('../views/HomePage.vue')
   },
   {
-    path: "/connections",
-    name: "Verbindungen",
-    component: () =>
-      import(
-        /* webpackChunkName: "connection" */ "../views/ConnectionDisplay.vue"
-      ),
+    path: '/connections',
+    name: 'Verbindungen',
+    component: () => import('../views/ConnectionDisplay.vue')
   },
   {
-    path: "/about",
-    name: "Über TCP",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutPage.vue"),
+    path: '/routing',
+    name: 'Alpha: Routing',
+    component: () => import('../views/AlphaRouting.vue')
   },
   {
-    path: "/imprint",
-    name: "Impressum",
-    component: () =>
-      import(/* webpackChunkName: "imprint" */ "../views/ImprintPage.vue"),
+    path: '/about',
+    name: 'Über TCP',
+    component: () => import('../views/AboutPage.vue')
   },
   {
-    path: "/privacy",
-    name: "Datenschutz",
-    component: () =>
-      import(/* webpackChunkName: "privacy" */ "../views/PrivacyPage.vue"),
+    path: '/imprint',
+    name: 'Impressum',
+    component: () => import('../views/ImprintPage.vue')
   },
   {
-    path: "/opensource",
-    name: "Open Source",
-    component: () =>
-      import(/* webpackChunkName: "opensource" */ "../views/OpenSource.vue"),
+    path: '/privacy',
+    name: 'Datenschutz',
+    component: () => import('../views/PrivacyPage.vue')
   },
   {
-    path: "/stats",
-    name: "Statistiken",
-    component: () =>
-      import(
-        /* webpackChunkName: "stats" */ "../views/stats/StatsDescription.vue"
-      ),
+    path: '/opensource',
+    name: 'Open Source',
+    component: () => import('../views/OpenSource.vue')
   },
   {
-    path: "/stats/overview",
-    name: "Übersichtsstatistik",
-    component: () =>
-      import(
-        /* webpackChunkName: "overview_stats" */ "../views/stats/OverviewStats.vue"
-      ),
+    path: '/stats',
+    name: 'Statistiken',
+    component: () => import('../views/stats/StatsDescription.vue')
   },
   {
-    path: "/stats/stations",
-    name: "Bahnhofs-Statistiken",
-    component: () =>
-      import(
-        /* webpackChunkName: "station_stats" */ "../views/stats/StationStats.vue"
-      ),
+    path: '/stats/overview',
+    name: 'Übersichtsstatistik',
+    component: () => import('../views/stats/OverviewStats.vue')
   },
   {
-    path: "/opendata",
-    name: "Open Data",
-    component: () =>
-      import(/* webpackChunkName: "opendata" */ "../views/OpenData.vue"),
+    path: '/stats/stations',
+    name: 'Bahnhofs-Statistiken',
+    component: () => import('../views/stats/StationStats.vue')
   },
   {
-    path: "/stationviewer",
-    name: "Stationviewer",
-    component: () =>
-      import(
-        /* webpackChunkName: "stationviewer" */ "../views/StationDataViewer.vue"
-      ),
+    path: '/opendata',
+    name: 'Open Data',
+    component: () => import('../views/OpenData.vue')
+  },
+  {
+    path: '/stationviewer',
+    name: 'Stationviewer',
+    component: () => import('../views/StationDataViewer.vue')
   },
   {
     // Redicrect to external url defined in a parameter called "url"
-    path: "/redirect",
-    name: "Redirect",
-    component: () =>
-      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
+    path: '/redirect',
+    name: 'Redirect',
+    component: () => import('../views/HomePage.vue'),
     beforeEnter: (to) => {
-      location.href = to.query.url as string;
-    },
+      location.href = to.query.url as string
+    }
   },
   {
     // Redicrect to external url defined in a parameter called "url"
-    path: "/paper",
-    name: "Paper",
-    component: () =>
-      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
+    path: '/paper',
+    name: 'Paper',
+    component: () => import('../views/HomePage.vue'),
     beforeEnter: () => {
       location.href =
-        "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Langfassung_Bahnvorhersage_2023.pdf";
-    },
+        'https://gitlab.com/bahnvorhersage/docs/-/raw/main/Langfassung_Bahnvorhersage_2023.pdf'
+    }
   },
   {
     // Redicrect to external url defined in a parameter called "url"
-    path: "/paper2021",
-    name: "Paper2021",
-    component: () =>
-      import(/* webpackChunkName: "home" */ "../views/HomePage.vue"),
+    path: '/paper2021',
+    name: 'Paper2021',
+    component: () => import('../views/HomePage.vue'),
     beforeEnter: () => {
-      location.href =
-        "https://gitlab.com/bahnvorhersage/docs/-/raw/main/Old%20Docs/JuFo%202021.pdf";
-    },
-  },
-];
+      location.href = 'https://gitlab.com/bahnvorhersage/docs/-/raw/main/Old%20Docs/JuFo%202021.pdf'
+    }
+  }
+]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  linkActiveClass: "active",
-  linkExactActiveClass: "exact-active",
+  history: createWebHistory(import.meta.env.BASE_URL),
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'exact-active',
   routes: routes,
   scrollBehavior(to): any {
     if (to.hash) {
@@ -123,81 +107,82 @@ const router = createRouter({
         nextTick(() => {
           document
             ?.getElementById(to.hash.substring(1))
-            ?.scrollIntoView({ behavior: "smooth", block: "center" });
-        });
-      });
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        })
+      })
       // Does not work but it's the official vue way
       return {
         el: to.hash,
-        behavior: "smooth",
-      };
+        behavior: 'smooth'
+      }
     }
-  },
-});
-
-type LocationQuery = import("vue-router").LocationQuery;
-import { SearchParams } from "@/store";
-import store from "@/store";
+  }
+})
 
 function extract_search_params(query: LocationQuery): LocationQuery {
-  return Object.keys(new SearchParams()).reduce((result, key) => {
-    if (query[key]) {
-      result[key] = query[key];
-    }
-    return result;
-  }, <LocationQuery>{});
+  return Object.keys(new SearchParams()).reduce(
+    (result, key) => {
+      if (query[key]) {
+        result[key] = query[key]
+      }
+      return result
+    },
+    <LocationQuery>{}
+  )
 }
 
 function search_params_from_location_query(query: LocationQuery): SearchParams {
   return Object.entries(new SearchParams()).reduce((result, [key, value]) => {
     if (query[key]) {
-      if (typeof value == "boolean") {
+      if (typeof value == 'boolean') {
         // Booleans need to be parsed separately
-        result[key] = query[key] === "true";
+        result[key] = query[key] === 'true'
       } else {
-        result[key] = value.constructor(query[key]);
+        result[key] = value.constructor(query[key])
       }
     }
-    return result;
-  }, new SearchParams());
+    return result
+  }, new SearchParams())
 }
 
 router.beforeEach(async (to, from) => {
-  const old_query_params = extract_search_params(from.query);
-  const new_query_params = extract_search_params(to.query);
-  const new_query_params_parsed =
-    search_params_from_location_query(new_query_params);
+  const old_query_params = extract_search_params(from.query)
+  const new_query_params = extract_search_params(to.query)
+  const new_query_params_parsed = search_params_from_location_query(new_query_params)
+
+  const store = useMainStore()
+  const { search_params, stations } = storeToRefs(store)
+
   if (
     Object.keys(new_query_params).length > 0 &&
     JSON.stringify(new_query_params) !== JSON.stringify(old_query_params) &&
-    JSON.stringify(new_query_params_parsed) !==
-      JSON.stringify(store.state.search_params)
+    JSON.stringify(new_query_params_parsed) !== JSON.stringify(search_params.value)
   ) {
     // newer params in the query
-    store.commit("set_search_params", new_query_params_parsed);
-    if (to.path === "/connections") {
+    search_params.value = new_query_params_parsed
+    if (to.path === '/connections') {
       // do an await here in order to make it possible to return a different hash
-      store.dispatch("fetch_stations").then(() => {
+      store.fetch_stations().then(() => {
         if (
-          store.state.stations.includes(store.state.search_params.start) &&
-          store.state.stations.includes(store.state.search_params.destination)
+          stations.value.includes(search_params.value.start) &&
+          stations.value.includes(search_params.value.destination)
         ) {
-          store.dispatch("get_connections");
+          store.get_connections()
         } else {
           router.push({
             ...to,
-            hash: "#search",
-          });
+            hash: '#search'
+          })
         }
-      });
+      })
     }
   } else if (
     Object.keys(new_query_params).length === 0 &&
     Object.keys(old_query_params).length > 0
   ) {
     // preserve query
-    return { ...to, query: old_query_params };
+    return { ...to, query: old_query_params }
   }
-});
+})
 
-export default router;
+export default router

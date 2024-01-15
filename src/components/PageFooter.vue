@@ -7,7 +7,7 @@
           ><img
             class="logo"
             loading="lazy"
-            :src="require('@/assets/img/bmbf_logo.svg')"
+            :src="bmbfLogo"
             alt="Logo des Bundesministeriums für Bildung und Forschung"
         /></a>
         <a
@@ -17,14 +17,14 @@
           ><img
             class="logo"
             loading="lazy"
-            :src="require('@/assets/img/prototypefund_logo.svg')"
+            :src="prototypefundLogo"
             alt="Logo des Prototypefunds"
         /></a>
         <a href="https://sfz-bw.de/" target="_blank" rel="noopener noreferrer"
           ><img
             class="logo"
             loading="lazy"
-            :src="require('@/assets/img/sfz_logo.svg')"
+            :src="sfzLogo"
             alt="Logo des Schülerforschungszentrums Südwürttemberg"
         /></a>
       </div>
@@ -40,12 +40,10 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "PageFooter",
-});
+<script setup lang="ts">
+import sfzLogo from "@/assets/img/sfz_logo.svg";
+import bmbfLogo from "@/assets/img/bmbf_logo.svg";
+import prototypefundLogo from "@/assets/img/prototypefund_logo.svg";
 </script>
 
 <style lang="scss">

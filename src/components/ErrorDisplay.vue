@@ -9,8 +9,7 @@
     <div>
       <div><b>Holy Guacamole!</b> {{ error.toString() }}</div>
       <div>
-        Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen Bugreport
-        auf
+        Falls der Fehler weiterhin auftritt, verfassen Sie bitte einen Bugreport auf
         <a
           href="https://gitlab.com/bahnvorhersage/bahnvorhersage/-/issues?sort=created_date&state=opened"
           class="link-dark fw-bold"
@@ -23,18 +22,11 @@
   </SnackBar>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
-import SnackBar from "../components/SnackBar.vue";
+<script setup lang="ts">
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+import SnackBar from '../components/SnackBar.vue'
 
-export default defineComponent({
-  name: "ErrorDisplay",
-  computed: {
-    ...mapState(["error"]),
-  },
-  components: {
-    SnackBar,
-  },
-});
+const store = useMainStore()
+const { error } = storeToRefs(store)
 </script>

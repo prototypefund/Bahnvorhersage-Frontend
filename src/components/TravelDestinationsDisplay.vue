@@ -26,7 +26,7 @@
         <travel-destination
           description="In die Hauptstadt nach"
           title="Berlin"
-          :image="require('@/assets/img/berlin.jpg')"
+          :image="berlinImg"
           :url="{
             path: '/',
             hash: '#search',
@@ -36,7 +36,7 @@
         <travel-destination
           description="Zuverlässige Reise nach"
           title="München"
-          :image="require('@/assets/img/münchen.jpg')"
+          :image="münchenImg"
           :url="{
             path: '/',
             hash: '#search',
@@ -46,7 +46,7 @@
         <travel-destination
           description="Mit dem Nahverkehr nach"
           title="Sylt"
-          :image="require('@/assets/img/sylt.jpg')"
+          :image="syltImg"
           :url="{
             path: '/',
             hash: '#search',
@@ -56,7 +56,7 @@
         <travel-destination
           description="An den Bodensee nach"
           title="Lindau"
-          :image="require('@/assets/img/lindau.jpg')"
+          :image="lindauImg"
           :url="{
             path: '/',
             hash: '#search',
@@ -66,7 +66,7 @@
         <travel-destination
           description="In die Hafenstadt nach"
           title="Hamburg"
-          :image="require('@/assets/img/hamburg.jpg')"
+          :image="hamburgImg"
           :url="{
             path: '/',
             hash: '#search',
@@ -76,7 +76,7 @@
         <travel-destination
           description="Zuverlässige Verbindungen:"
           title="Tübingen - Köln"
-          :image="require('@/assets/img/köln.jpg')"
+          :image="kölnImg"
           :url="{
             path: '/connections',
             hash: '#search',
@@ -88,14 +88,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import travelDestination from "../components/TravelDestination.vue";
 
-export default defineComponent({
-  name: "TravelDestinationsDisplay",
-  components: {
-    travelDestination,
-  },
-});
+import berlinImg from "@/assets/img/berlin.jpg";
+import münchenImg from "@/assets/img/münchen.jpg";
+import syltImg from "@/assets/img/sylt.jpg";
+import lindauImg from "@/assets/img/lindau.jpg";
+import hamburgImg from "@/assets/img/hamburg.jpg";
+import kölnImg from "@/assets/img/köln.jpg";
+
+
 </script>

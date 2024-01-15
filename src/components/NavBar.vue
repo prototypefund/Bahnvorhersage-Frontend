@@ -8,7 +8,6 @@
         <div
           class="collapse navbar-collapse"
           id="navbarSupportedContent"
-          ref="collapse"
         >
           <router-link
             class="navbar-brand"
@@ -26,6 +25,12 @@
               @click="collapse.hide()"
               :to="{ path: '/connections', hash: '#content' }"
               >Verbindungen</router-link
+            >
+            <router-link
+              class="nav-item nav-link"
+              @click="collapse.hide()"
+              :to="{ path: '/routing', hash: '#content' }"
+              >Alpha: Routing</router-link
             >
             <router-link
               class="nav-item nav-link"
@@ -90,47 +95,40 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
 import installButton from "./InstallButton.vue";
-import update from "../assets/js/update";
-import { mapState } from "vuex";
+// import update from "../assets/js/update";
 import { default as ProgressBar } from "progressbar.js";
 import { Collapse } from "bootstrap";
-// import ProgressBar = require("progressbar.js");
+import { useMainStore } from "@/stores/main";
+import { storeToRefs } from "pinia";
 
-export default defineComponent({
-  name: "NavBar",
-  components: { installButton },
-  data: function () {
-    return {
-      progress: null,
-      collapse: null,
-    };
-  },
-  computed: {
-    ...mapState(["progressing"]),
-  },
-  mounted: function () {
-    this.progress = new ProgressBar.Line("#pgr_bar", {
+const store = useMainStore();
+const { progressing } = storeToRefs(store);
+
+const progress = ref(null);
+const collapse = ref(null);
+
+onMounted(() => {
+  progress.value = new ProgressBar.Line("#pgr_bar", {
       strokeWidth: 0.8,
       color: "#3f51b5",
       trailColor: "transparent",
       trailWidth: 0,
     });
-    this.collapse = new Collapse(this.$refs.collapse, {
+  collapse.value = new Collapse('#navbarSupportedContent', {
       toggle: false,
     });
-  },
-  watch: {
-    progressing: function (val) {
-      if (val) {
-        this.progress.animate(600, { duration: 300000, easing: "linear" });
-      } else {
-        this.progress.animate(0, { duration: 10, easing: "linear" });
-      }
-    },
-  },
+});
+
+
+watch(progressing, (val) => {
+  if (val) {
+    progress.value.animate(600, { duration: 300000, easing: "linear" });
+  } else {
+    progress.value.animate(0, { duration: 10, easing: "linear" });
+  }
 });
 </script>
 

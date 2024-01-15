@@ -4,8 +4,8 @@
     <div class="m-auto container d-flex justify-content-center">
       <div>
         <h1 class="text-center">
-          {{ $store.state.search_params.start }} nach
-          {{ $store.state.search_params.destination }}
+          {{ search_params.start }} nach
+          {{ search_params.destination }}
         </h1>
         <div class="custom_card rounded overflow-hidden">
           <div class="connections_header">
@@ -62,96 +62,80 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
-import ConnectionHeader from "../components/ConnectionHeader.vue";
-import SearchHero from "../components/SearchHero.vue";
-import ConnectionsSearchShareButton from "../components/ConnectionsSearchShareButton.vue";
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+import ConnectionHeader from '../components/ConnectionHeader.vue'
+import SearchHero from '../components/SearchHero.vue'
+import ConnectionsSearchShareButton from '../components/ConnectionsSearchShareButton.vue'
 
-export default defineComponent({
-  name: "ConnectionDisplay",
-  computed: {
-    ...mapState(["connections"]),
-  },
-  components: {
-    ConnectionHeader,
-    ConnectionsSearchShareButton,
-    SearchHero,
-  },
-  data: function () {
-    return {
-      last_time_key: "departure" as string,
-      last_sort: "departure" as string,
-      asc_sort: {
-        departure: true,
-        arrival: false,
-        duration: false,
-        transfers: true,
-        connectionScore: true,
-        price: false,
-      },
-    } as any;
-  },
-  methods: {
-    sort_time: function () {
-      if (
-        this.last_time_key === "departure" &&
-        !this.asc_sort[this.last_time_key]
-      ) {
-        this.last_time_key = "arrival";
-        this.sort_by_key(this.last_time_key);
-        this.asc_sort[this.last_time_key] = true;
-      } else if (
-        this.last_time_key === "arrival" &&
-        !this.asc_sort[this.last_time_key]
-      ) {
-        this.last_time_key = "departure";
-        this.sort_by_key(this.last_time_key);
-        this.asc_sort[this.last_time_key] = true;
-      } else {
-        this.sort_by_key(this.last_time_key);
-      }
-    },
-    sort_by_key: function (key: string) {
-      let connections = [...this.connections];
-      this.last_sort = key;
-      // switch sort oder
-      this.asc_sort[key] = !this.asc_sort[key];
+type SortKey = 'departure' | 'arrival' | 'duration' | 'transfers' | 'connectionScore' | 'price'
 
-      if (key === "duration" && this.asc_sort[key]) {
-        // sort ascending
-        connections.sort(function (a: any, b: any) {
-          const x = a[key].$ms;
-          const y = b[key].$ms;
-          return x < y ? -1 : x > y ? 1 : 0;
-        });
-      } else if (key === "duration" && !this.asc_sort[key]) {
-        // sort descending
-        connections.sort(function (a: any, b: any) {
-          const x = a[key].$ms;
-          const y = b[key].$ms;
-          return x < y ? 1 : x > y ? -1 : 0;
-        });
-      } else if (this.asc_sort[key]) {
-        // sort ascending
-        connections.sort(function (a: any, b: any) {
-          const x = a[key];
-          const y = b[key];
-          return x < y ? -1 : x > y ? 1 : 0;
-        });
-      } else if (!this.asc_sort[key]) {
-        // sort descending
-        connections.sort(function (a: any, b: any) {
-          const x = a[key];
-          const y = b[key];
-          return x < y ? 1 : x > y ? -1 : 0;
-        });
-      }
-      this.$store.commit("set_connections", connections);
-    },
-  },
-});
+const last_time_key = ref<SortKey>('departure')
+const last_sort = ref<SortKey>('departure')
+const asc_sort = ref({
+  departure: true,
+  arrival: false,
+  duration: false,
+  transfers: true,
+  connectionScore: true,
+  price: false
+})
+
+const store = useMainStore()
+const { connections, search_params } = storeToRefs(store)
+
+function sort_time() {
+  if (last_time_key.value === 'departure' && !asc_sort.value[last_time_key.value]) {
+    last_time_key.value = 'arrival'
+    sort_by_key(last_time_key.value)
+    asc_sort.value[last_time_key.value] = true
+  } else if (last_time_key.value === 'arrival' && !asc_sort.value[last_time_key.value]) {
+    last_time_key.value = 'departure'
+    sort_by_key(last_time_key.value)
+    asc_sort.value[last_time_key.value] = true
+  } else {
+    sort_by_key(last_time_key.value)
+  }
+}
+function sort_by_key(key: SortKey) {
+  let tmpConnections = [...connections.value]
+  last_sort.value = key
+  // switch sort oder
+  asc_sort.value[key] = !asc_sort.value[key]
+
+  if (key === 'duration' && asc_sort.value[key]) {
+    // sort ascending
+    tmpConnections.sort(function (a: any, b: any) {
+      const x = a[key].$ms
+      const y = b[key].$ms
+      return x < y ? -1 : x > y ? 1 : 0
+    })
+  } else if (key === 'duration' && !asc_sort.value[key]) {
+    // sort descending
+    tmpConnections.sort(function (a: any, b: any) {
+      const x = a[key].$ms
+      const y = b[key].$ms
+      return x < y ? 1 : x > y ? -1 : 0
+    })
+  } else if (asc_sort.value[key]) {
+    // sort ascending
+    tmpConnections.sort(function (a: any, b: any) {
+      const x = a[key]
+      const y = b[key]
+      return x < y ? -1 : x > y ? 1 : 0
+    })
+  } else if (!asc_sort.value[key]) {
+    // sort descending
+    tmpConnections.sort(function (a: any, b: any) {
+      const x = a[key]
+      const y = b[key]
+      return x < y ? 1 : x > y ? -1 : 0
+    })
+  }
+  connections.value = tmpConnections
+}
 </script>
 
 <style lang="scss">

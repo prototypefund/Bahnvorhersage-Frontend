@@ -78,83 +78,63 @@
 
     <!-- Submit Button -->
     <div class="text-center">
-      <input
-        class="btn btn-primary"
-        id=""
-        name="submit"
-        type="submit"
-        value="SUCHEN"
-      />
+      <input class="btn btn-primary" id="" name="submit" type="submit" value="SUCHEN" />
     </div>
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
-import flatPickr from "vue-flatpickr-component";
-import "flatpickr/dist/flatpickr.css";
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import flatPickr from 'vue-flatpickr-component'
+import 'flatpickr/dist/flatpickr.css'
 
-import AutoSuggest from "./AutoSuggest.vue";
-import ToggleSwitch from "./ToggleSwitch.vue";
-import CheckBox from "./CheckBox.vue";
+import AutoSuggest from './AutoSuggest.vue'
+import ToggleSwitch from './ToggleSwitch.vue'
+import CheckBox from './CheckBox.vue'
 
-require("flatpickr/dist/themes/dark.css");
+import('flatpickr/dist/themes/dark.css')
 
-export default defineComponent({
-  name: "SearchForm",
-  data: function () {
-    return {
-      // Get more from https://flatpickr.js.org/options/
-      config: {
-        enableTime: true,
-        time_24hr: true,
-        dateFormat: "d.m.Y H:i",
-        altFormat: "d.m.Y H:i",
-      },
-      check_form_validity: false,
-      start_valid: false,
-      destination_valid: false,
-    };
-  },
-  created() {
-    this.$store.dispatch("fetch_stations");
-  },
-  methods: {
-    get_connections() {
-      if (this.start_valid && this.destination_valid) {
-        this.$store.dispatch("fetch_stations").then(async () => {
-          this.$router.push({
-            path: "/connections",
-            query: this.convert_values_to_string(this.search_params),
-            // hash: "#content",
-          });
-          this.$store.dispatch("get_connections");
-        });
-      }
-    },
-    convert_values_to_string(object: any) {
-      return Object.fromEntries(
-        Object.entries(object).map(([k, v]) => [k, String(v)])
-      );
-    },
-    swap_stations() {
-      [this.search_params.start, this.search_params.destination] = [
-        this.search_params.destination,
-        this.search_params.start,
-      ];
-    },
-  },
-  computed: {
-    ...mapState(["stations", "search_params"]),
-  },
-  components: {
-    flatPickr,
-    AutoSuggest,
-    ToggleSwitch,
-    CheckBox,
-  },
-});
+const store = useMainStore()
+const { stations, search_params } = storeToRefs(store)
+
+const router = useRouter()
+
+const config = ref({
+  // Get more from https://flatpickr.js.org/options/
+  enableTime: true,
+  time_24hr: true,
+  dateFormat: 'd.m.Y H:i',
+  altFormat: 'd.m.Y H:i'
+})
+
+const start_valid = ref(false)
+const destination_valid = ref(false)
+
+function get_connections() {
+  if (start_valid.value && destination_valid.value) {
+    store.fetch_stations().then(async () => {
+      router.push({
+        path: '/connections',
+        query: convert_values_to_string(search_params.value)
+      })
+      store.get_connections()
+    })
+  }
+}
+function convert_values_to_string(object: any) {
+  return Object.fromEntries(Object.entries(object).map(([k, v]) => [k, String(v)]))
+}
+function swap_stations() {
+  ;[search_params.value.start, search_params.value.destination] = [
+    search_params.value.destination,
+    search_params.value.start
+  ]
+}
+
+store.fetch_stations()
 </script>
 
 <style lang="scss">

@@ -4,28 +4,23 @@
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({
-  name: "installButton",
-  data: function () {
-    return {
-      showInstallButton: false,
-      deferredPrompt: null,
-    };
-  },
-  mounted: function () {
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      this.deferredPrompt = e;
-      this.showInstallButton = true;
-    });
-  },
-  methods: {
-    install: function () {
-      this.showInstallButton = false;
-      this.deferredPrompt.prompt();
-    },
-  },
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const showInstallButton = ref(false);
+const deferredPrompt = ref<BeforeInstallPromptEvent>();
+
+onMounted(() => {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt.value = e;
+    showInstallButton.value = true;
+  });
 });
+
+const install = () => {
+  showInstallButton.value = false;
+  deferredPrompt.value?.prompt();
+};
+
 </script>

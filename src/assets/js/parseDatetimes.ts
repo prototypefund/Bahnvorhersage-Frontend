@@ -1,6 +1,6 @@
 import { default as dayjs } from "dayjs";
 
-function parse_datetimes(connections) {
+export default function parseDatetimes(connections: any): any {
   for (let i = 0; i < connections.length; i++) {
     connections[i].plannedDeparture = dayjs(connections[i].plannedDeparture);
     connections[i].plannedArrival = dayjs(connections[i].plannedArrival);
@@ -77,5 +77,3 @@ function parse_datetimes(connections) {
   }
   return connections;
 }
-
-export default parse_datetimes;

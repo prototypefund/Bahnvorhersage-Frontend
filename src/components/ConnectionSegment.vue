@@ -126,6 +126,13 @@ import { rdylgr_colormap } from "../assets/js/colormap";
 import TimeDuration from "./TimeDuration.vue";
 import NeededTransferDuration from "./NeededTransferDuration.vue";
 
+import iceUrl from "../assets/img/ICE.svg";
+import icUrl from "../assets/img/IC.svg";
+import reUrl from "../assets/img/RE.svg";
+import sUrl from "../assets/img/S.svg";
+import rbUrl from "../assets/img/RB.svg";
+
+
 export default defineComponent({
   name: "ConnectionSegment",
   components: {
@@ -245,13 +252,13 @@ export default defineComponent({
         color: rdylgr_colormap(this.segment.arrivalPrediction, 0.2, 0.8, 200),
       },
       train_icons: {
-        ICE: require("../assets/img/ICE.svg"),
-        IC: require("../assets/img/IC.svg"),
-        EC: require("../assets/img/IC.svg"),
-        RE: require("../assets/img/RE.svg"),
-        IRE: require("../assets/img/RE.svg"),
-        S: require("../assets/img/S.svg"),
-        RB: require("../assets/img/RB.svg"),
+        ICE: iceUrl,
+        IC: icUrl,
+        EC: icUrl,
+        RE: reUrl,
+        IRE: reUrl,
+        S: sUrl,
+        RB: rbUrl,
       },
     };
   },

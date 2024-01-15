@@ -19,66 +19,49 @@
   </body>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import NavBar from "./components/NavBar.vue";
-import update from "./assets/js/update";
-import SnackBar from "./components/SnackBar.vue";
-import ErrorDisplay from "./components/ErrorDisplay.vue";
-import PageFooter from "./components/PageFooter.vue";
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import NavBar from './components/NavBar.vue'
+import PageFooter from './components/PageFooter.vue'
+import SnackBar from './components/SnackBar.vue'
+import ErrorDisplay from './components/ErrorDisplay.vue'
+import update from './assets/js/update' // TODO: add this as mixin
+import printLogo from './assets/js/bahnvorhersageLogo'
 
-export default defineComponent({
-  name: "App",
-  data: function () {
-    return {
-      connections: [],
-    };
-  },
-  components: {
-    SnackBar,
-    NavBar,
-    ErrorDisplay,
-    PageFooter,
-  },
-  mixins: [update],
-  mounted() {
-    const styles = {
-      light_grey: "color: #e5e5e5;",
-      light_grey_bg_black:
-        "color: #e5e5e5;background-color: #000;font-weight: bold;",
-      light_grey_bg_red: "color: #e5e5e5;background-color: #b43836;",
-      dark_grey: "color: #666666;",
-    };
-    console.log(
-      "%c████████████████████████████████████▇▆▅▃▁\n" +
-        "%c       Bahn-Vorhersage      ███████▙  ▜" +
-        "%c██▆▁\n" +
-        "%c███████████████████████████████████████████▃\n" +
-        "%c▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" +
-        "%c█████▄" +
-        "%c▖\n" +
-        "%c█████████████████████████████████████████████\n" +
-        "%c ▜█▀▀▜█▘                       ▜█▀▀▜█▘" +
-        "%c   ▀▀▀",
-      styles.light_grey,
-      styles.light_grey_bg_black,
-      styles.light_grey,
-      styles.light_grey,
-      styles.light_grey_bg_red,
-      styles.light_grey,
-      styles.dark_grey,
-      styles.light_grey,
-      styles.dark_grey,
-      styles.light_grey
-    );
-  },
-  methods: {},
-});
+const refreshing = ref(false)
+const registration = ref(null)
+const updateExists = ref(false)
+
+function updateAvailable(event: CustomEvent) {
+  registration.value = event.detail
+  updateExists.value = true
+}
+
+function refreshApp() {
+  updateExists.value = false
+  // Make sure we only send a 'skip waiting' message if the SW is waiting
+  if (!registration.value || !registration.value.waiting) return
+  // send message to SW to skip the waiting and activate the new SW
+  registration.value.waiting.postMessage({ type: 'SKIP_WAITING' })
+}
+
+onMounted(() => {
+  printLogo()
+  document.addEventListener('sw_updated', updateAvailable);
+
+  // Prevent multiple refreshes
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing.value) return
+    refreshing.value = true
+    // Here the actual reload of the page occurs
+    window.location.reload()
+  })
+})
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap";
-@import "src/assets/fonts/icons/icons.scss";
+@import 'bootstrap/scss/bootstrap';
+@import 'src/assets/fonts/icons/icons.scss';
 
 .input-group-text {
   font-size: 2rem;
@@ -86,7 +69,7 @@ export default defineComponent({
 
 i {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "icons" !important;
+  font-family: 'icons' !important;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;

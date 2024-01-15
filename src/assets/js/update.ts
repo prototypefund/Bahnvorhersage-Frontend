@@ -1,3 +1,6 @@
+export function refreshApp()
+
+
 export default {
   data(): any {
     return {
@@ -41,12 +44,6 @@ export default {
       this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
     },
 
-    clearCache(): void {
-      caches.keys().then(function (names) {
-        for (const name of names) {
-          caches.delete(name);
-        }
-      });
-    },
+    
   },
 };
