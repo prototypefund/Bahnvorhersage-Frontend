@@ -97,11 +97,6 @@ function loaded_img() {
   progressing.value = false
   document.getElementById('stats_image')?.scrollIntoView({ behavior: 'smooth' })
 }
-function replaceByDefault() {
-  plotURL.value =
-    window.location.protocol + '//' + window.location.host + '/api/stationplot/default.webp'
-  progressing.value = true
-}
 function format(index: number) {
   return sliderDates.value[index]
 }
