@@ -6,6 +6,14 @@ export type Stopover = {
     distTraveled: number,
 }
 
+export type Line = {
+    type: 'line',
+    id: string,
+    name: string,
+    operator: string,
+    isRegio: boolean,
+}
+
 export type JourneyLeg = {
     origin: string,
     destination: string,
@@ -15,7 +23,7 @@ export type JourneyLeg = {
     mode: string,
     public: boolean,
     distTraveled: number,
-    isRegio: boolean,
+    line: Line,
 }
 
 export type Journey = {

@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { default as dayjs } from 'dayjs'
 import * as d3 from 'd3'
 import { type Journey, type JourneyAndAlternative, type JourneyLeg } from '../assets/js/fptfTypes'
 
@@ -16,16 +17,17 @@ import _dummyJourney from './dummy_routing.json'
 
 const dummyJourneys: JourneyAndAlternative[] = _dummyJourney
 
-const height = 600
-const width = 800
+let height = 600
+let width = 800
 const trainWidth = 40
 const gap = 20
 const alternativeGap = 5
 const alternativeTrainWidth = 5
-const marginLeft = 50
-const scaleXWidth = 42
-const journeyDisplayWidth = width - marginLeft
+const marginLeft = 15
+// const scaleXWidth = 42
+// let journeyDisplayWidth = width - marginLeft
 const transitionDuration = 200
+const marginTopBottom = 60
 
 const svg = d3.create('svg').attr('height', height).attr('width', width)
 const gY = svg.append('g')
@@ -129,13 +131,23 @@ let journeyXCords: number[] = []
 const timeScale = d3
   .scaleTime()
   .domain([min(minDates), max(maxDates)])
-  .range([0, height])
+  .range([marginTopBottom, height - marginTopBottom])
 
 const zoom = d3.zoom().scaleExtent([1, 1]).on('zoom', zoomed).on('end', snapToNearestJourney)
 
 const boundX = (x: number) => {
-  return Math.min(0, Math.max(journeyDisplayWidth - journeyXCords.at(-1), x))
+  return Math.min(0, Math.max(width - marginLeft - journeyXCords.at(-1), x))
 }
+
+const redraw = () => {
+  for (let i = 0; i < dummyJourneys.length; i++) {
+    updateJourney(i, dummyJourneys[i].journey, dummyJourneys[i].alternatives)
+  }
+  gY.transition().duration(transitionDuration).call(yAxis, timeScale)
+}
+
+var oldMinIndex = 0
+var oldMaxIndex = 0
 
 function zoomed({
   transform,
@@ -144,10 +156,11 @@ function zoomed({
   transform: d3.ZoomTransform
   noXMovement: Boolean
 }) {
-  d3.select('#debug-field').text(
-    `x: ${transform.x}, k: ${transform.k},` // extend: [${currentXtend}], indices: [${currentMinIndex}, ${currentMaxIndex}]`
-  )
+  // d3.select('#debug-field').text(
+  //   `x: ${transform.x}, k: ${transform.k},` // extend: [${currentXtend}], indices: [${currentMinIndex}, ${currentMaxIndex}]`
+  // )
 
+  // Only allow panning within bounds
   const tx = boundX(transform.x)
   if (tx !== transform.x) {
     const t = d3.zoomIdentity.translate(tx, 0)
@@ -157,37 +170,20 @@ function zoomed({
 
   const currentXtend: [number, number] = [marginLeft - tx, width - tx]
   const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
+  if (currentMinIndex !== oldMinIndex || currentMaxIndex !== oldMaxIndex) {
+    oldMinIndex = currentMinIndex
+    oldMaxIndex = currentMaxIndex
 
-  const currentMinDate = min(minDates.slice(currentMinIndex, currentMaxIndex + 1))
-  const currentMaxDate = max(maxDates.slice(currentMinIndex, currentMaxIndex + 1))
+    const currentMinDate = min(minDates.slice(currentMinIndex, currentMaxIndex + 1))
+    const currentMaxDate = max(maxDates.slice(currentMinIndex, currentMaxIndex + 1))
 
-  timeScale.domain([currentMinDate, currentMaxDate])
+    timeScale.domain([currentMinDate, currentMaxDate])
+    redraw()
+  }
+
   if (noXMovement === false) {
     gJourneys.attr('transform', `translate(${tx},0)`)
   }
-
-  let x = gap + marginLeft
-  for (let i = 0; i < dummyJourneys.length - 1; i++) {
-    x = updateJourney(x, i, dummyJourneys[i].journey, dummyJourneys[i].alternatives)
-  }
-
-  gY.transition().duration(transitionDuration).call(yAxis, timeScale)
-  // gY.select('.domain').remove()
-  // svg
-  //   .selectAll('line.horizontal-grid')
-  //   .data(timeScale.ticks())
-  //   .join('line')
-  //   .transition()
-  //   .duration(transitionDuration)
-  //   .attr('class', 'horizontal-grid')
-  //   .attr('x1', marginLeft)
-  //   .attr('x2', width)
-  //   .attr('y1', (d) => timeScale(d))
-  //   .attr('y2', (d) => timeScale(d))
-  // .attr('fill', 'none')
-  // .attr('shape-rendering', 'crispEdges')
-  // .attr('stroke', 'white')
-  // .attr('stroke-width', '1px')
 }
 
 function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
@@ -207,14 +203,12 @@ function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
   zoomed({ transform: t, noXMovement: true })
 }
 
-const drawLegs = (g, legs: JourneyLeg[], x: number, width: number) => {
+const drawLegs = (g, legs: JourneyLeg[], x: number, width: number, isAlternative: boolean) => {
   g.selectAll('rect')
     .data(legs)
     .join('rect')
     .classed('leg', true)
-    .classed('regio', (leg: JourneyLeg) => leg.isRegio)
-    .transition()
-    .duration(transitionDuration)
+    .classed('regio', (leg: JourneyLeg) => leg.line.isRegio)
     .attr('x', x)
     .attr('y', (leg: JourneyLeg) => timeScale(new Date(leg.departure)))
     .attr('width', width)
@@ -222,6 +216,91 @@ const drawLegs = (g, legs: JourneyLeg[], x: number, width: number) => {
       'height',
       (leg: JourneyLeg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
     )
+  if (!isAlternative) {
+    g.selectAll('g.train-name')
+      .data(legs)
+      .join('g')
+      .attr('class', 'train-name')
+      .call((g) => {
+        g.append('text')
+          .attr('class', 'name')
+          .attr('x', x + width / 2)
+          .attr(
+            'y',
+            (leg: JourneyLeg) =>
+              (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2
+          )
+          .text((leg: JourneyLeg) => leg.line.name.substring(0, leg.line.name.indexOf(' ')))
+        g.append('text')
+          .attr('class', 'number')
+          .attr('x', x + width / 2)
+          .attr(
+            'y',
+            (leg: JourneyLeg) =>
+              (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 12
+          )
+          .text((leg: JourneyLeg) => leg.line.name.substring(leg.line.name.indexOf(' ') + 1))
+      })
+  }
+}
+
+const drawDpArTs = (g, legs: JourneyLeg[], x: number) => {
+  g.append('text')
+    .attr('class', 'dp-ts')
+    .attr('x', x + trainWidth / 2)
+    .attr('y', timeScale(new Date(legs[0].departure)))
+    .text(dayjs(legs[0].departure).format('HH:mm'))
+
+  g.append('text')
+    .attr('class', 'ar-ts')
+    .attr('x', x + trainWidth / 2)
+    .attr('y', timeScale(new Date(legs.at(-1).arrival)))
+    .text(dayjs(legs.at(-1).arrival).format('HH:mm'))
+}
+
+const updateLegs = (g, legs: JourneyLeg[], isAlternative: boolean) => {
+  g.selectAll('rect')
+    .data(legs)
+    .join('rect')
+    .transition()
+    .duration(transitionDuration)
+    .attr('y', (leg: JourneyLeg) => timeScale(new Date(leg.departure)))
+    .attr(
+      'height',
+      (leg: JourneyLeg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
+    )
+
+  if (!isAlternative) {
+    g.selectAll('g.train-name')
+      .data(legs)
+      .join('g')
+      .transition()
+      .duration(transitionDuration)
+      .call((g) => {
+        g.select('.name').attr(
+          'y',
+          (leg: JourneyLeg) =>
+            (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 - 3
+        )
+        g.select('.number').attr(
+          'y',
+          (leg: JourneyLeg) =>
+            (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 13
+        )
+      })
+  }
+}
+
+const updateDpArTs = (g, legs: JourneyLeg[]) => {
+  g.select('.dp-ts')
+    .transition()
+    .duration(transitionDuration)
+    .attr('y', timeScale(new Date(legs[0].departure)))
+
+  g.select('.ar-ts')
+    .transition()
+    .duration(transitionDuration)
+    .attr('y', timeScale(new Date(legs.at(-1).arrival)))
 }
 
 function drawJourney(x: number, id: number, journey: Journey, alternatives: Journey[]): number {
@@ -231,16 +310,16 @@ function drawJourney(x: number, id: number, journey: Journey, alternatives: Jour
   const mainJourney = gJourney.append('g').attr('class', 'main-journey')
   const alternativeJourneys = gJourney.append('g').attr('class', 'alternative-journeys')
 
-  mainJourney.call((g) => drawLegs(g, journey.legs, x, trainWidth))
+  mainJourney.call((g) => drawLegs(g, journey.legs, x, trainWidth, false))
+  mainJourney.call((g) => drawDpArTs(g, journey.legs, x))
 
   x += trainWidth + alternativeGap
 
   for (let i = 0; i < alternatives.length; i++) {
-    const alternative = alternativeJourneys.append('g').attr('id', `alternative-${i}`)
+    const alternative = alternativeJourneys.append('g').attr('id', `alternative-lines-${i}`)
     const initialDepartureLine = alternative.append('line').attr('class', 'initial-departure-line')
     const journeyLine = alternative.append('line').attr('class', 'journey-line')
 
-    alternative.call((g) => drawLegs(g, alternatives[i].legs, x, alternativeTrainWidth))
     initialDepartureLine
       .attr('stroke', 'white')
       .attr('x1', journeyX + trainWidth)
@@ -258,65 +337,80 @@ function drawJourney(x: number, id: number, journey: Journey, alternatives: Jour
     x += alternativeTrainWidth + alternativeGap
   }
 
+  x = journeyX + trainWidth + alternativeGap
+  for (let i = 0; i < alternatives.length; i++) {
+    const alternative = alternativeJourneys.append('g').attr('id', `alternative-${i}`)
+    alternative.call((g) => drawLegs(g, alternatives[i].legs, x, alternativeTrainWidth, true))
+    x += alternativeTrainWidth + alternativeGap
+  }
+
   return x + gap - alternativeGap
 }
 
-function updateJourney(x: number, id: number, journey: Journey, alternatives: Journey[]): number {
-  const journeyX = x
-
+function updateJourney(id: number, journey: Journey, alternatives: Journey[]) {
   const gJourney = gJourneys.select(`#journey-${id}`)
   const mainJourney = gJourney.select('.main-journey')
   const alternativeJourneys = gJourney.select('.alternative-journeys')
 
-  mainJourney.call((g) => drawLegs(g, journey.legs, x, trainWidth))
-
-  x += trainWidth + alternativeGap
+  mainJourney.call((g) => updateLegs(g, journey.legs))
+  mainJourney.call((g) => updateDpArTs(g, journey.legs))
 
   for (let i = 0; i < alternatives.length; i++) {
     const alternative = alternativeJourneys.select(`#alternative-${i}`)
-    const initialDepartureLine = alternative.select('.initial-departure-line')
-    const journeyLine = alternative.select('.journey-line')
+    const alternativeLines = alternativeJourneys.select(`#alternative-lines-${i}`)
+    const initialDepartureLine = alternativeLines.select('.initial-departure-line')
+    const journeyLine = alternativeLines.select('.journey-line')
 
-    alternative.call((g) => drawLegs(g, alternatives[i].legs, x, alternativeTrainWidth))
+    alternative.call((g) => updateLegs(g, alternatives[i].legs))
 
     initialDepartureLine
       .transition()
       .duration(transitionDuration)
       .attr('stroke', 'white')
-      .attr('x1', journeyX + trainWidth)
       .attr('y1', timeScale(getInitialDeparture(journey, alternatives[i])))
-      .attr('x2', x + alternativeTrainWidth / 2)
       .attr('y2', timeScale(getInitialDeparture(journey, alternatives[i])))
 
     journeyLine
       .transition()
       .duration(transitionDuration)
       .attr('stroke', 'white')
-      .attr('x1', x + alternativeTrainWidth / 2)
       .attr('y1', timeScale(getInitialDeparture(journey, alternatives[i])))
-      .attr('x2', x + alternativeTrainWidth / 2)
       .attr('y2', timeScale(new Date(alternatives[i].legs.at(-1).arrival)))
-
-    x += alternativeTrainWidth + alternativeGap
   }
-
-  return x + gap - alternativeGap
 }
 
 const yAxis = (g, y) => {
-  g.call(d3.axisLeft(y).tickSize(journeyDisplayWidth)).call((g) =>
+  g.call(d3.axisLeft(y).tickSize(width).tickFormat(d3.timeFormat('%H:%M'))).call((g) =>
     g.attr('transform', `translate(${width},0)`)
   )
+}
+
+function onResize() {
+  width = document.getElementById('journey-display-container')?.offsetWidth || width
+  height = document.getElementById('journey-display-container')?.offsetHeight || height
+
+  svg.attr('height', height).attr('width', width)
+
+  redraw()
 }
 
 onMounted(() => {
   let x = gap + marginLeft
   journeyXCords.push(x)
-
   for (let i = 0; i < dummyJourneys.length - 1; i++) {
     x = drawJourney(x, i, dummyJourneys[i].journey, dummyJourneys[i].alternatives)
     journeyXCords.push(x)
   }
+
+  onResize()
+  window.addEventListener('resize', onResize)
+
+  const currentXtend: [number, number] = [marginLeft, width]
+  const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
+  const currentMinDate = min(minDates.slice(currentMinIndex, currentMaxIndex + 1))
+  const currentMaxDate = max(maxDates.slice(currentMinIndex, currentMaxIndex + 1))
+  timeScale.domain([currentMinDate, currentMaxDate])
+  redraw()
 
   d3.select('#journey-display-container').append(() => svg.node())
   gY.call(yAxis, timeScale)
@@ -326,30 +420,84 @@ onMounted(() => {
 
 <style lang="scss">
 svg {
-  .leg {
-    fill: $text_color;
+  .main-journey {
+    .leg {
+      fill: $text_color;
+    }
+
+    .regio {
+      fill: $page_gray_text;
+    }
   }
 
-  .alternative {
-    fill: #999;
+  .alternative-journeys {
+    .leg {
+      fill: darken($text_color, 20%);
+    }
+
+    .regio {
+      fill: darken($page_gray_text, 20%);
+    }
+
+    line {
+      stroke: $page_gray_text;
+      shape-rendering: crispEdges;
+    }
   }
 
-  .regio {
-    fill: $page_gray_text;
+  .train-name {
+    text-anchor: middle;
+
+    text {
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 12px;
+      stroke: $text_color;
+      paint-order: stroke;
+      stroke-width: 3px;
+    }
   }
 
-  .horizontal-grid {
-    stroke: $page_gray_text;
+  .tick {
+    line {
+      stroke-dasharray: 1, 3;
+      color: $page_gray_text;
+    }
+
+    text {
+      transform: translate(30px, -6px);
+    }
   }
 
-  .tick line {
-    stroke-dasharray: 2,2;
+  .domain {
+    stroke: none;
   }
 
   #journey-display-content {
-    line {
-      color: $text_color;
+    @mixin time-text {
+      font-size: 12px;
+      font-family: monospace;
+      fill: $text_color;
+      text-anchor: middle;
+      font-weight: bold;
+      stroke: black;
+      paint-order: stroke;
+      stroke-width: 5px;
+    }
+
+    .dp-ts {
+      @include time-text;
+      transform: translateY(-5px);
+    }
+
+    .ar-ts {
+      @include time-text;
+      transform: translateY(3px + 12px);
     }
   }
+}
+
+#journey-display-container {
+  background-color: black;
 }
 </style>
