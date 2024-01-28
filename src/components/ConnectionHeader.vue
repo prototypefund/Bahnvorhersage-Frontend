@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { rdylgr_colormap } from "../assets/js/colormap";
+import { rdylgrColormap } from "../assets/ts/colormap";
 import ConnectionSegment from "./ConnectionSegment.vue";
 import AffiliateLink from "./AffiliateLink.vue";
 
@@ -92,10 +92,10 @@ export default defineComponent({
       border_style: {
         "border-left":
           "7px solid " +
-          rdylgr_colormap(this.connection.connectionScore, 50, 100, 200),
+          rdylgrColormap(this.connection.connectionScore, 50, 100, 200),
       },
       text_color: {
-        color: rdylgr_colormap(this.connection.connectionScore, 50, 100, 200),
+        color: rdylgrColormap(this.connection.connectionScore, 50, 100, 200),
       },
     };
   },

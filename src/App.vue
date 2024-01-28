@@ -25,7 +25,7 @@ import NavBar from './components/NavBar.vue'
 import PageFooter from './components/PageFooter.vue'
 import SnackBar from './components/SnackBar.vue'
 import ErrorDisplay from './components/ErrorDisplay.vue'
-import printLogo from './assets/js/bahnvorhersageLogo'
+import printLogo from './assets/ts/bahnvorhersageLogo'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 const {

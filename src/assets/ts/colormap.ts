@@ -1,4 +1,4 @@
-function rdylgr_colormap(
+function rdylgrColormap(
   x: number,
   min = 0,
   max = 1,
@@ -19,4 +19,4 @@ function rdylgr_colormap(
   }
 }
 
-export { rdylgr_colormap };
+export { rdylgrColormap };
