@@ -98,7 +98,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import installButton from "./InstallButton.vue";
-// import update from "../assets/js/update";
 import { default as ProgressBar } from "progressbar.js";
 import { Collapse } from "bootstrap";
 import { useMainStore } from "@/stores/main";
