@@ -115,7 +115,7 @@ const destination_valid = ref(false)
 
 function get_connections() {
   if (start_valid.value && destination_valid.value) {
-    store.fetch_stations().then(async () => {
+    store.fetchStations().then(async () => {
       router.push({
         path: '/connections',
         query: convert_values_to_string(search_params.value)
@@ -134,38 +134,9 @@ function swap_stations() {
   ]
 }
 
-store.fetch_stations()
+store.fetchStations()
 </script>
 
 <style lang="scss">
-.flatpickr-calendar,
-.flatpickr-calendar.arrowTop,
-.flatpickr-months .flatpickr-month,
-.flatpickr-current-month,
-span.flatpickr-weekday,
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-  background: $page_gray;
-}
-
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange,
-.flatpickr-day.selected.inRange,
-.flatpickr-day.startRange.inRange,
-.flatpickr-day.endRange.inRange,
-.flatpickr-day.selected:focus,
-.flatpickr-day.startRange:focus,
-.flatpickr-day.endRange:focus,
-.flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover,
-.flatpickr-day.selected.prevMonthDay,
-.flatpickr-day.startRange.prevMonthDay,
-.flatpickr-day.endRange.prevMonthDay,
-.flatpickr-day.selected.nextMonthDay,
-.flatpickr-day.startRange.nextMonthDay,
-.flatpickr-day.endRange.nextMonthDay {
-  background: $primary;
-  border-color: $primary;
-}
+@import '../assets/css/flatpickr.scss';
 </style>
