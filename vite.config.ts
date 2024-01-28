@@ -38,10 +38,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  build: {
+    target: 'es2022'
+  },
   server: {
     proxy: {
-      '/api': 'https://next.bahnvorhersage.de'
-      // '/api': 'http://localhost:5000',
+      // '/api': 'https://next.bahnvorhersage.de'
+      '/api': 'http://localhost:5000',
     }
   },
   css: {
