@@ -2,9 +2,9 @@ $icons-font: "icons";
 
 @font-face {
     font-family: $icons-font;
-    src: url("assets/fonts/icons/icons.eot?7edd00a27904487e57b233ccd8c683a2#iefix") format("embedded-opentype"),
-url("assets/fonts/icons/icons.woff2?7edd00a27904487e57b233ccd8c683a2") format("woff2"),
-url("assets/fonts/icons/icons.woff?7edd00a27904487e57b233ccd8c683a2") format("woff");
+    src: url("assets/fonts/icons/icons.eot?ad31740e5f323b6dfabd0a6364d0911a#iefix") format("embedded-opentype"),
+url("assets/fonts/icons/icons.woff2?ad31740e5f323b6dfabd0a6364d0911a") format("woff2"),
+url("assets/fonts/icons/icons.woff?ad31740e5f323b6dfabd0a6364d0911a") format("woff");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -22,15 +22,16 @@ $icons-map: (
     "arrow-down-up": "\f101",
     "calendar": "\f102",
     "check": "\f103",
-    "github": "\f104",
-    "gitlab": "\f105",
-    "pedestrian": "\f106",
-    "person-walking-solid": "\f107",
-    "record-circle": "\f108",
-    "record-fill": "\f109",
-    "share-fill": "\f10a",
-    "swap": "\f10b",
-    "train": "\f10c",
+    "exclamation-triangle-fill": "\f104",
+    "github": "\f105",
+    "gitlab": "\f106",
+    "pedestrian": "\f107",
+    "person-walking-solid": "\f108",
+    "record-circle": "\f109",
+    "record-fill": "\f10a",
+    "share-fill": "\f10b",
+    "swap": "\f10c",
+    "train": "\f10d",
 );
 
 .icon-arrow-down-up:before {
@@ -41,6 +42,9 @@ $icons-map: (
 }
 .icon-check:before {
     content: map-get($icons-map, "check");
+}
+.icon-exclamation-triangle-fill:before {
+    content: map-get($icons-map, "exclamation-triangle-fill");
 }
 .icon-github:before {
     content: map-get($icons-map, "github");
