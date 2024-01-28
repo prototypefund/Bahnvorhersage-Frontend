@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import parseDatetimes from "../assets/js/parseDatetimes";
+import parseDatetimes from "../assets/ts/parseDatetimes";
 import flatpickr from "flatpickr";
 import router from "../router";
+import { type Journey, type JourneyAndAlternative, type JourneyLeg } from '../assets/ts/fptfTypes'
 
 /**
  * https://stackoverflow.com/a/59806829/7246401
@@ -15,13 +16,23 @@ export class SearchParams {
     bike = false;
   }
 
+type SearchParamsKey = keyof SearchParams
+
+export class AlphaSearchParams {
+  origin = "";
+  destination = "";
+  departure = new Date();
+}
+
 export const useMainStore = defineStore('main', {
   state: () => ({
-    stations: [],
+    stations: [] as string[],
     connections: [],
     progressing: false,
     error: null as Error | null,
     search_params: new SearchParams(),
+    alphaSearchParams: new AlphaSearchParams(),
+    journeysAndAlternatives: [] as JourneyAndAlternative[],
   }),
   actions: {
     display_fetch_error (response: Response) {
@@ -48,12 +59,23 @@ export const useMainStore = defineStore('main', {
       console.log(event);
       console.log(error);
     },
-    async fetch_stations() {
+    async fetchStations() {
       if (!(this.stations.length > 0)) {
         let response = await fetch("/api/station_list.json");
         response = await this.display_fetch_error(response);
         this.stations = (await response.json()).stations;
       }
+    },
+    async getJourneys() {
+      this.progressing = true;
+      const response = await fetch("/api/journeys", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.alphaSearchParams),
+      });
+      this.journeysAndAlternatives = await this.display_fetch_error(response).json();
     },
     async get_connections() {
       // remove current connections

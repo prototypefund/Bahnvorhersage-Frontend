@@ -122,7 +122,7 @@
 <script lang="ts">
 import dayjs from "dayjs";
 import { defineComponent } from "vue";
-import { rdylgr_colormap } from "../assets/js/colormap";
+import { rdylgrColormap } from "../assets/ts/colormap";
 import TimeDuration from "./TimeDuration.vue";
 import NeededTransferDuration from "./NeededTransferDuration.vue";
 
@@ -144,7 +144,7 @@ export default defineComponent({
     return {
       show_details: false,
       dp_station_style: {
-        "background-color": rdylgr_colormap(
+        "background-color": rdylgrColormap(
           this.segment.departurePrediction,
           0.2,
           0.8,
@@ -152,7 +152,7 @@ export default defineComponent({
         ),
       },
       ar_station_style: {
-        "background-color": rdylgr_colormap(
+        "background-color": rdylgrColormap(
           this.segment.arrivalPrediction,
           0.2,
           0.8,
@@ -163,14 +163,14 @@ export default defineComponent({
         "background-color": "#212529",
       },
       transfer_score_color: {
-        color: rdylgr_colormap(this.segment.transferScore, 50, 100, 200),
+        color: rdylgrColormap(this.segment.transferScore, 50, 100, 200),
       },
       gradient_line: {
         "background-image":
           "linear-gradient(" +
-          rdylgr_colormap(this.segment.departurePrediction, 0.2, 0.8, 200) +
+          rdylgrColormap(this.segment.departurePrediction, 0.2, 0.8, 200) +
           " 0%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.9 +
               this.segment.arrivalPrediction * 0.1,
             0.2,
@@ -178,7 +178,7 @@ export default defineComponent({
             200
           ) +
           " 10%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.8 +
               this.segment.arrivalPrediction * 0.2,
             0.2,
@@ -186,7 +186,7 @@ export default defineComponent({
             200
           ) +
           " 20%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.7 +
               this.segment.arrivalPrediction * 0.3,
             0.2,
@@ -194,7 +194,7 @@ export default defineComponent({
             200
           ) +
           " 30%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.6 +
               this.segment.arrivalPrediction * 0.4,
             0.2,
@@ -202,7 +202,7 @@ export default defineComponent({
             200
           ) +
           " 40%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.5 +
               this.segment.arrivalPrediction * 0.5,
             0.2,
@@ -210,7 +210,7 @@ export default defineComponent({
             200
           ) +
           " 50%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.4 +
               this.segment.arrivalPrediction * 0.6,
             0.2,
@@ -218,7 +218,7 @@ export default defineComponent({
             200
           ) +
           " 60%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.3 +
               this.segment.arrivalPrediction * 0.7,
             0.2,
@@ -226,7 +226,7 @@ export default defineComponent({
             200
           ) +
           " 70%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.2 +
               this.segment.arrivalPrediction * 0.8,
             0.2,
@@ -234,7 +234,7 @@ export default defineComponent({
             200
           ) +
           " 80%, " +
-          rdylgr_colormap(
+          rdylgrColormap(
             this.segment.departurePrediction * 0.1 +
               this.segment.arrivalPrediction * 0.9,
             0.2,
@@ -242,14 +242,14 @@ export default defineComponent({
             200
           ) +
           " 90%, " +
-          rdylgr_colormap(this.segment.arrivalPrediction, 0.2, 0.8, 200) +
+          rdylgrColormap(this.segment.arrivalPrediction, 0.2, 0.8, 200) +
           " 100%)",
       },
       start_style: {
-        color: rdylgr_colormap(this.segment.departurePrediction, 0.2, 0.8, 200),
+        color: rdylgrColormap(this.segment.departurePrediction, 0.2, 0.8, 200),
       },
       destination_style: {
-        color: rdylgr_colormap(this.segment.arrivalPrediction, 0.2, 0.8, 200),
+        color: rdylgrColormap(this.segment.arrivalPrediction, 0.2, 0.8, 200),
       },
       train_icons: {
         ICE: iceUrl,

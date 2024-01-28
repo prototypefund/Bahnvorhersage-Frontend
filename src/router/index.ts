@@ -162,7 +162,7 @@ router.beforeEach(async (to, from) => {
     search_params.value = new_query_params_parsed
     if (to.path === '/connections') {
       // do an await here in order to make it possible to return a different hash
-      store.fetch_stations().then(() => {
+      store.fetchStations().then(() => {
         if (
           stations.value.includes(search_params.value.start) &&
           stations.value.includes(search_params.value.destination)
