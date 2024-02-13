@@ -1,57 +1,39 @@
 <template>
-  <div class="duration">
-    {{ durationString }}
-    <del v-if="showPlannedDuration" class="outdated d-block">
-      {{ plannedDurationString }}
-    </del>
-  </div>
+  <outdated-info :real="durationString()" :planned="plannedDurationString()"></outdated-info>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { Duration } from "dayjs/plugin/duration";
+<script setup lang="ts">
+import OutdatedInfo from './OutdatedInfo.vue'
+import type { Duration } from 'dayjs/plugin/duration'
 
-export default defineComponent({
-  name: "TimeDuration",
-  props: {
-    duration: {
-      type: null as Duration,
-      required: true,
-    },
-    plannedDuration: {
-      type: null as Duration,
-      required: false,
-      default: null,
-    },
-  },
-  computed: {
-    durationString: function () {
-      if (this.duration.asMinutes() < 0) {
-        return "0 min";
-      } else if (this.duration.asMinutes() < 60) {
-        return this.duration.format("m[min]");
-      } else if (this.duration.asMinutes() % 60 !== 0) {
-        return this.duration.format("H[h] m[min]");
-      } else {
-        return this.duration.format("H[h]");
-      }
-    },
-    plannedDurationString: function () {
-      if (this.plannedDuration == null) {
-        return "";
-      }
-      if (this.plannedDuration.asMinutes() < 60) {
-        return this.plannedDuration.format("m[min]");
-      } else {
-        return this.plannedDuration.format("H[h] m[min]");
-      }
-    },
-    showPlannedDuration: function () {
-      return (
-        this.plannedDuration != null &&
-        this.duration.asSeconds() !== this.plannedDuration.asSeconds()
-      );
-    },
-  },
-});
+const props = defineProps<{
+  duration: Duration
+  plannedDuration?: Duration
+}>()
+
+function durationString() {
+  if (props.duration.asMinutes() < 0) {
+    return '0 min'
+  } else if (props.duration.asMinutes() < 60) {
+    return props.duration.format('m[min]')
+  } else if (props.duration.asMinutes() % 60 !== 0) {
+    return props.duration.format('H[h] m[min]')
+  } else {
+    return props.duration.format('H[h]')
+  }
+}
+
+function plannedDurationString() {
+  if (props.plannedDuration) {
+    if (props.plannedDuration.asMinutes() < 60) {
+      return props.plannedDuration.format('m[min]')
+    } else if (props.plannedDuration.asMinutes() % 60 !== 0) {
+      return props.plannedDuration.format('H[h] m[min]')
+    } else {
+      return props.duration.format('H[h]')
+    }
+  } else {
+    return ''
+  }
+}
 </script>

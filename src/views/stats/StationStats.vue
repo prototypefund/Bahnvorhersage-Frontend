@@ -1,32 +1,34 @@
 <template>
-  <div id="stats" class="stations p-5 bg-black">
-    <h1 class="text-center">Verspätungen in Deutschland</h1>
-    <div v-if="sliderDates.length" class="stats-picker">
-      <Slider
-        class="slider"
-        v-if="values.length"
-        v-model="values"
-        :merge="merge"
-        :max="sliderDates.length - 1"
-        :format="format"
-        style="width: 200px"
-      />
-      <input
-        class="btn btn-primary"
-        type="button"
-        value="Plot generieren"
-        v-on:click="updatePlot"
+  <main-layout>
+    <div id="stats" class="stations p-5 bg-black">
+      <h1 class="text-center">Verspätungen in Deutschland</h1>
+      <div v-if="sliderDates.length" class="stats-picker">
+        <Slider
+          class="slider"
+          v-if="values.length"
+          v-model="values"
+          :merge="merge"
+          :max="sliderDates.length - 1"
+          :format="format"
+          style="width: 200px"
+        />
+        <input
+          class="btn btn-primary"
+          type="button"
+          value="Plot generieren"
+          v-on:click="updatePlot"
+        />
+      </div>
+      <img
+        class="stats-image"
+        id="stats_image"
+        v-if="plotURL"
+        :src="plotURL"
+        @error="on_error"
+        @load="loaded_img()"
       />
     </div>
-    <img
-      class="stats-image"
-      id="stats_image"
-      v-if="plotURL"
-      :src="plotURL"
-      @error="on_error"
-      @load="loaded_img()"
-    />
-  </div>
+  </main-layout>
 </template>
 
 <script setup lang="ts">
@@ -35,6 +37,7 @@ import { useMainStore } from '@/stores/main'
 import { storeToRefs } from 'pinia'
 import Slider from '@vueform/slider'
 import { default as dayjs } from 'dayjs'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 const store = useMainStore()
 const { progressing } = storeToRefs(store)

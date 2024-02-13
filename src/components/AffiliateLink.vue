@@ -3,7 +3,7 @@
     <a :href="link" target="_blank" rel="noopener" @click.stop>
       <span
         class="btn btn-primary text-nowrap d-block m-2"
-        v-if="price === -1"
+        v-if="(!price) || price === -1"
         data-bs-toggle="tooltip"
         title="Wir können für diese Verbindung leider keinen Preis ermitteln. Vielleicht kann die Bahn den Preis angeben"
         >Preis ermitteln</span

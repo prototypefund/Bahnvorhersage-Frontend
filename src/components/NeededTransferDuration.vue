@@ -14,28 +14,17 @@
 </template>
 
 <script lang="ts">
-import { Duration } from "dayjs/plugin/duration";
 import { defineComponent } from "vue";
 import { Tooltip } from "bootstrap";
+import dayjs from 'dayjs'
 
-interface TransferDuration {
-  duration: Duration | null;
-  distance: number | null;
-}
-
-interface Transfer {
-  identicalPhysicalPlatform: boolean;
-  frequentTraveller: TransferDuration;
-  mobilityImpaired: TransferDuration;
-  occasionalTraveller: TransferDuration;
-  source: "RIL420" | "INDOOR_ROUTING" | "EFZ" | "FALLBACK";
-}
+import { type TransferInfo } from '../assets/ts/fptfTypes'
 
 export default defineComponent({
   name: "NeededTransferDuration",
   props: {
     transfer: {
-      type: Object as () => Transfer,
+      type: Object as () => TransferInfo,
       required: true,
     },
   },
@@ -44,10 +33,11 @@ export default defineComponent({
   },
   computed: {
     durationString: function () {
-      if (this.transfer.frequentTraveller.duration.seconds() == 0) {
-        return this.transfer.frequentTraveller.duration.format("m[min]");
+      let transferDuration = dayjs.duration(this.transfer.frequentTraveller.duration)
+      if (transferDuration.seconds() == 0) {
+        return transferDuration.format("m[min]");
       } else {
-        return this.transfer.frequentTraveller.duration.format("m[min] s[sec]");
+        return transferDuration.format("m[min] s[sec]");
       }
     },
     distanceString: function () {

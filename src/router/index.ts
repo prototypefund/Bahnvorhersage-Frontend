@@ -14,12 +14,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/connections',
     name: 'Verbindungen',
-    component: () => import('../views/ConnectionDisplay.vue')
+    component: () => import('../views/JourneyDisplay.vue')
   },
   {
     path: '/routing',
     name: 'Alpha: Routing',
     component: () => import('../views/AlphaRouting.vue')
+  },
+  {
+    path: '/journeydetails/:index',
+    name: 'Verbindungs-Details',
+    component: () => import('../views/JourneyDetails.vue')
   },
   {
     path: '/about',
@@ -67,7 +72,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/StationDataViewer.vue')
   },
   {
-    // Redicrect to external url defined in a parameter called "url"
+    // Redirect to external url defined in a parameter called "url"
     path: '/redirect',
     name: 'Redirect',
     component: () => import('../views/HomePage.vue'),
@@ -76,7 +81,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    // Redicrect to external url defined in a parameter called "url"
+    // Redirect to external url defined in a parameter called "url"
     path: '/paper',
     name: 'Paper',
     component: () => import('../views/HomePage.vue'),
@@ -86,7 +91,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    // Redicrect to external url defined in a parameter called "url"
+    // Redirect to external url defined in a parameter called "url"
     path: '/paper2021',
     name: 'Paper2021',
     component: () => import('../views/HomePage.vue'),
@@ -151,21 +156,21 @@ router.beforeEach(async (to, from) => {
   const new_query_params_parsed = search_params_from_location_query(new_query_params)
 
   const store = useMainStore()
-  const { search_params, stations } = storeToRefs(store)
+  const { searchParams: searchParams, stations } = storeToRefs(store)
 
   if (
     Object.keys(new_query_params).length > 0 &&
     JSON.stringify(new_query_params) !== JSON.stringify(old_query_params) &&
-    JSON.stringify(new_query_params_parsed) !== JSON.stringify(search_params.value)
+    JSON.stringify(new_query_params_parsed) !== JSON.stringify(searchParams.value)
   ) {
     // newer params in the query
-    search_params.value = new_query_params_parsed
+    searchParams.value = new_query_params_parsed
     if (to.path === '/connections') {
       // do an await here in order to make it possible to return a different hash
       store.fetchStations().then(() => {
         if (
-          stations.value.includes(search_params.value.start) &&
-          stations.value.includes(search_params.value.destination)
+          stations.value.includes(searchParams.value.start) &&
+          stations.value.includes(searchParams.value.destination)
         ) {
           store.get_connections()
         } else {

@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import parseDatetimes from "../assets/ts/parseDatetimes";
 import flatpickr from "flatpickr";
 import router from "../router";
-import { type Journey, type JourneyAndAlternative, type JourneyLeg } from '../assets/ts/fptfTypes'
+import { type JourneyAndAlternative } from '../assets/ts/fptfTypes'
 
 /**
  * https://stackoverflow.com/a/59806829/7246401
@@ -16,8 +15,6 @@ export class SearchParams {
     bike = false;
   }
 
-type SearchParamsKey = keyof SearchParams
-
 export class AlphaSearchParams {
   origin = "";
   destination = "";
@@ -30,7 +27,7 @@ export const useMainStore = defineStore('main', {
     connections: [],
     progressing: false,
     error: null as Error | null,
-    search_params: new SearchParams(),
+    searchParams: new SearchParams(),
     alphaSearchParams: new AlphaSearchParams(),
     journeysAndAlternatives: [] as JourneyAndAlternative[],
   }),
@@ -75,6 +72,7 @@ export const useMainStore = defineStore('main', {
         },
         body: JSON.stringify(this.alphaSearchParams),
       });
+      this.progressing = false;
       this.journeysAndAlternatives = await this.display_fetch_error(response).json();
     },
     async get_connections() {
@@ -86,11 +84,10 @@ export const useMainStore = defineStore('main', {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.search_params),
+        body: JSON.stringify(this.searchParams),
       });
-      let connections = await this.display_fetch_error(response).json();
+      const connections = await this.display_fetch_error(response).json();
       if (connections) {
-        connections = parseDatetimes(connections);
 
         router.replace({
           path: "/connections",

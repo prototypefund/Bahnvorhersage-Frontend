@@ -12,7 +12,7 @@
       <auto-suggest
         name="start"
         class="form-control p-0"
-        v-model:value="search_params.start"
+        v-model:value="searchParams.start"
         v-model:is_valid="start_valid"
         :values="stations"
         placeholder="Bahnhof"
@@ -27,7 +27,7 @@
       <auto-suggest
         name="destination"
         class="form-control p-0"
-        v-model:value="search_params.destination"
+        v-model:value="searchParams.destination"
         v-model:is_valid="destination_valid"
         :values="stations"
         placeholder="Bahnhof"
@@ -43,7 +43,7 @@
     <div class="input-group mb-3">
       <span class="input-group-text"><i class="icon icon-calendar"></i></span>
       <flat-pickr
-        v-model="search_params.date"
+        v-model="searchParams.date"
         :config="config"
         class="form-control"
         placeholder="Datum und Uhrzeit auswählen"
@@ -53,7 +53,7 @@
       <toggle-switch
         class="align-self-center"
         style="padding: 6px 12px"
-        v-model="search_params.search_for_arrival"
+        v-model="searchParams.search_for_arrival"
       ></toggle-switch>
     </div>
 
@@ -61,7 +61,7 @@
       <!-- Only regional checkbox -->
       <check-box
         class="mb-3"
-        v-model="search_params.only_regional"
+        v-model="searchParams.only_regional"
         id="only_regional"
         label="Nur Nahverkehr"
         :inline="true"
@@ -69,7 +69,7 @@
       <!-- Bike checkbox -->
       <check-box
         class="mb-3"
-        v-model="search_params.bike"
+        v-model="searchParams.bike"
         id="bike"
         label="Fahrradmitnahme"
         :inline="true"
@@ -98,7 +98,7 @@ import CheckBox from './CheckBox.vue'
 import('flatpickr/dist/themes/dark.css')
 
 const store = useMainStore()
-const { stations, search_params } = storeToRefs(store)
+const { stations, searchParams: searchParams } = storeToRefs(store)
 
 const router = useRouter()
 
@@ -118,7 +118,7 @@ function get_connections() {
     store.fetchStations().then(async () => {
       router.push({
         path: '/connections',
-        query: convert_values_to_string(search_params.value)
+        query: convert_values_to_string(searchParams.value)
       })
       store.get_connections()
     })
@@ -128,9 +128,9 @@ function convert_values_to_string(object: any) {
   return Object.fromEntries(Object.entries(object).map(([k, v]) => [k, String(v)]))
 }
 function swap_stations() {
-  ;[search_params.value.start, search_params.value.destination] = [
-    search_params.value.destination,
-    search_params.value.start
+  ;[searchParams.value.start, searchParams.value.destination] = [
+    searchParams.value.destination,
+    searchParams.value.start
   ]
 }
 

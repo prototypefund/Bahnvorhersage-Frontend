@@ -34,7 +34,7 @@
       <router-link class="link-info" to="/privacy">Datenschutz</router-link>
     </div>
     <span class="py-3"
-      >© 2023 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
+      >© 2024 Bahn-Vorhersage ist ein unabhängiger Service. Dieser steht in
       keiner Verbindung mit der Deutschen Bahn und ihren Tochter-Unternehmen.
     </span>
   </footer>

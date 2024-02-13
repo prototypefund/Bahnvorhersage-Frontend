@@ -1,37 +1,25 @@
 <template>
-  <body>
-    <NavBar></NavBar>
+  <router-view id="content" />
 
-    <main>
-      <router-view id="content" />
-    </main>
-
-    <PageFooter></PageFooter>
-
-    <!-- Update Service worker -->
-    <SnackBar v-if="needRefresh">
-      Ein Update ist verfügbar
-      <template v-slot:action>
-        <div @click="updateServiceWorker()" class="click_text">UPDATE</div>
-      </template>
-    </SnackBar>
-    <ErrorDisplay></ErrorDisplay>
-  </body>
+  <!-- Update Service worker -->
+  <SnackBar v-if="needRefresh">
+    Ein Update ist verfügbar
+    <template v-slot:action>
+      <div @click="updateServiceWorker()" class="click_text">UPDATE</div>
+    </template>
+  </SnackBar>
+  <ErrorDisplay></ErrorDisplay>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import NavBar from './components/NavBar.vue'
-import PageFooter from './components/PageFooter.vue'
+
 import SnackBar from './components/SnackBar.vue'
 import ErrorDisplay from './components/ErrorDisplay.vue'
 import printLogo from './assets/ts/bahnvorhersageLogo'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
-const {
-  needRefresh,
-  updateServiceWorker,
-} = useRegisterSW()
+const { needRefresh, updateServiceWorker } = useRegisterSW()
 
 onMounted(() => {
   printLogo()
@@ -41,6 +29,7 @@ onMounted(() => {
 <style lang="scss">
 @import 'bootstrap/scss/bootstrap';
 @import 'src/assets/fonts/icons/icons.scss';
+@import 'src/assets/scss/journeyDisplay.scss';
 
 .input-group-text {
   font-size: 2rem;
@@ -67,7 +56,7 @@ i {
 html,
 body,
 #intro {
-  height: 100%;
+  height: 100vh;
 }
 
 body {
@@ -124,6 +113,10 @@ body {
 
 .disclaimer {
   color: $gray-500;
+}
+
+.pointer-cursor {
+  cursor: pointer;
 }
 
 @include media-breakpoint-up(sm) {

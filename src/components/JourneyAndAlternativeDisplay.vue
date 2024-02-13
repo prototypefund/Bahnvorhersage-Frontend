@@ -2,7 +2,10 @@
 import { onMounted } from 'vue'
 import { default as dayjs } from 'dayjs'
 import * as d3 from 'd3'
-import { type Journey, type JourneyAndAlternative, type JourneyLeg } from '../assets/ts/fptfTypes'
+import { type Journey, type JourneyAndAlternative, type Leg } from '../assets/ts/fptfTypes'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps<{
   journeys: JourneyAndAlternative[]
@@ -84,15 +87,15 @@ function getAllMinsAndMaxes(journeys: JourneyAndAlternative[]): [Date[], Date[]]
 }
 
 function getInitialDeparture(journey: Journey, alternative: Journey): Date {
-  if (journey.legs[0].origin === alternative.legs[0].origin) {
+  if (journey.legs[0].origin.id === alternative.legs[0].origin.id) {
     return new Date(journey.legs[0].departure)
   }
   for (let leg of journey.legs) {
-    if (leg.destination === alternative.legs[0].origin) {
+    if (leg.destination.id === alternative.legs[0].origin.id) {
       return new Date(leg.arrival)
     }
     for (let stopover of leg.stopovers) {
-      if (stopover.stop === alternative.legs[0].origin) {
+      if (stopover.stop.id === alternative.legs[0].origin.id) {
         return new Date(stopover.arrival)
       }
     }
@@ -154,10 +157,6 @@ function zoomed({
   transform: d3.ZoomTransform
   noXMovement: Boolean
 }) {
-  // d3.select('#debug-field').text(
-  //   `x: ${transform.x}, k: ${transform.k},` // extend: [${currentXtend}], indices: [${currentMinIndex}, ${currentMaxIndex}]`
-  // )
-
   // Only allow panning within bounds
   const tx = boundX(transform.x)
   if (tx !== transform.x) {
@@ -201,18 +200,18 @@ function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
   zoomed({ transform: t, noXMovement: true })
 }
 
-const drawLegs = (g, legs: JourneyLeg[], x: number, width: number, isAlternative: boolean) => {
+const drawLegs = (g, legs: Leg[], x: number, width: number, isAlternative: boolean) => {
   g.selectAll('rect')
     .data(legs)
     .join('rect')
     .classed('leg', true)
-    .classed('regio', (leg: JourneyLeg) => leg.line.isRegio)
+    .classed('regio', (leg: Leg) => leg.line.isRegio)
     .attr('x', x)
-    .attr('y', (leg: JourneyLeg) => timeScale(new Date(leg.departure)))
+    .attr('y', (leg: Leg) => timeScale(new Date(leg.departure)))
     .attr('width', width)
     .attr(
       'height',
-      (leg: JourneyLeg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
+      (leg: Leg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
     )
   if (!isAlternative) {
     g.selectAll('g.train-name')
@@ -225,24 +224,24 @@ const drawLegs = (g, legs: JourneyLeg[], x: number, width: number, isAlternative
           .attr('x', x + width / 2)
           .attr(
             'y',
-            (leg: JourneyLeg) =>
+            (leg: Leg) =>
               (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2
           )
-          .text((leg: JourneyLeg) => leg.line.name.substring(0, leg.line.name.indexOf(' ')))
+          .text((leg: Leg) => leg.line.name.substring(0, leg.line.name.indexOf(' ')))
         g.append('text')
           .attr('class', 'number')
           .attr('x', x + width / 2)
           .attr(
             'y',
-            (leg: JourneyLeg) =>
+            (leg: Leg) =>
               (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 12
           )
-          .text((leg: JourneyLeg) => leg.line.name.substring(leg.line.name.indexOf(' ') + 1))
+          .text((leg: Leg) => leg.line.name.substring(leg.line.name.indexOf(' ') + 1))
       })
   }
 }
 
-const drawDpArTs = (g, legs: JourneyLeg[], x: number) => {
+const drawDpArTs = (g, legs: Leg[], x: number) => {
   g.append('text')
     .attr('class', 'dp-ts')
     .attr('x', x + trainWidth / 2)
@@ -256,16 +255,16 @@ const drawDpArTs = (g, legs: JourneyLeg[], x: number) => {
     .text(dayjs(legs.at(-1).arrival).format('HH:mm'))
 }
 
-const updateLegs = (g, legs: JourneyLeg[], isAlternative: boolean) => {
+const updateLegs = (g, legs: Leg[], isAlternative: boolean) => {
   g.selectAll('rect')
     .data(legs)
     .join('rect')
     .transition()
     .duration(transitionDuration)
-    .attr('y', (leg: JourneyLeg) => timeScale(new Date(leg.departure)))
+    .attr('y', (leg: Leg) => timeScale(new Date(leg.departure)))
     .attr(
       'height',
-      (leg: JourneyLeg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
+      (leg: Leg) => timeScale(new Date(leg.arrival)) - timeScale(new Date(leg.departure))
     )
 
   if (!isAlternative) {
@@ -277,19 +276,19 @@ const updateLegs = (g, legs: JourneyLeg[], isAlternative: boolean) => {
       .call((g) => {
         g.select('.name').attr(
           'y',
-          (leg: JourneyLeg) =>
+          (leg: Leg) =>
             (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 - 3
         )
         g.select('.number').attr(
           'y',
-          (leg: JourneyLeg) =>
+          (leg: Leg) =>
             (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 13
         )
       })
   }
 }
 
-const updateDpArTs = (g, legs: JourneyLeg[]) => {
+const updateDpArTs = (g, legs: Leg[]) => {
   g.select('.dp-ts')
     .transition()
     .duration(transitionDuration)
@@ -301,10 +300,14 @@ const updateDpArTs = (g, legs: JourneyLeg[]) => {
     .attr('y', timeScale(new Date(legs.at(-1).arrival)))
 }
 
+function showJourneyDetails(index: number) {
+  router.push({ name: 'Verbindungs-Details', params: { index: index.toString() } })
+}
+
 function drawJourney(x: number, id: number, journey: Journey, alternatives: Journey[]): number {
   const journeyX = x
 
-  const gJourney = gJourneys.append('g').attr('id', `journey-${id}`)
+  const gJourney = gJourneys.append('a').attr('id', `journey-${id}`).on('click', () => showJourneyDetails(id))
   const mainJourney = gJourney.append('g').attr('class', 'main-journey')
   const alternativeJourneys = gJourney.append('g').attr('class', 'alternative-journeys')
 
@@ -500,10 +503,17 @@ svg {
       transform: translateY(3px + 12px);
     }
   }
+
+  a {
+    cursor: pointer;
+  }
+
+  a:hover {
+    filter: brightness(1.2);
+  }
 }
 
 #journey-display-container {
   background-color: black;
 }
 </style>
-../assets/ts/fptfTypes
