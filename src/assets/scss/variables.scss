@@ -1,7 +1,8 @@
-$border-radius: .375rem;
+$border-radius: 0.375rem;
 
 $page_background: black;
 $page_gray: #212529;
+$page_darker_gray: #1c1f22;
 $page_lighter_gray: #2d2f31;
 $page_even_lighter_gray: #3b3e41;
 // $page_accent: #3f51b5;
@@ -15,13 +16,15 @@ $nav-height: 64.4px;
 $content-width: 80ch;
 
 $primary: #3f51b5;
-// $secondary: ;
+$secondary: $page_lighter_gray;
 // $success: ;
 $info: $page_gray_text;
 // $warning: ;
 $danger: #bb0000;
 $light: $text_color;
 $dark: $page_gray;
+
+$body-secondary-bg-dark: $secondary;
 
 // $text-color: $text_color;
 $enable-rounded: true;
@@ -38,7 +41,7 @@ $btn-padding-x: 1rem;
 $input-bg: $page_lighter_gray;
 $input-disabled-bg: $page_lighter_gray;
 $input-color: $text_color;
-$input-border-width: 1px;
+// $input-border-width: 1px;
 $input-border-color: $page_lighter_gray;
 $input-placeholder-color: $page_gray_text;
 $input-padding-y: $btn-padding-y;
@@ -62,13 +65,17 @@ $display-font-sizes: (
 
 $form-check-input-width: 1.5em;
 $form-check-input-border-radius: $border-radius;
+$form-invalid-color-dark: $danger;
+$form-invalid-border-color-dark: $danger;
 
 $card-bg: $page_lighter_gray;
-$card-color: $text_color;
+$card-border-width: 1px;
+$card-border-color: none;
 
+$dropdown-border-color: $page_darker_gray;
 
 :root {
   --slider-connect-bg: #{$primary};
   --slider-tooltip-bg: #{$primary};
-  --slider-handle-ring-color: #3B82F630;
+  --slider-handle-ring-color: #3b82f630;
 }

@@ -6,7 +6,7 @@
 .flatpickr-current-month,
 span.flatpickr-weekday,
 .flatpickr-current-month .flatpickr-monthDropdown-months {
-  background: $page_gray;
+  background: $dark !important;
 }
 
 .flatpickr-day.selected,
@@ -27,6 +27,6 @@ span.flatpickr-weekday,
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: $primary;
-  border-color: $primary;
+  background: $primary !important;
+  border-color: $primary !important;
 }

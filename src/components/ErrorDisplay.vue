@@ -2,7 +2,6 @@
   <SnackBar
     v-if="error"
     :layout="'multiline'"
-    :timeout="15000"
     class="text-dark"
     :style_class="'bg-danger'"
   >

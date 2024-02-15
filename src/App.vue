@@ -5,7 +5,7 @@
   <SnackBar v-if="needRefresh">
     Ein Update ist verfügbar
     <template v-slot:action>
-      <div @click="updateServiceWorker()" class="click_text">UPDATE</div>
+      <div @click="updateServiceWorker()" class="link-primary link-underline-opacity-0 link-underline-opacity-100-hover">UPDATE</div>
     </template>
   </SnackBar>
   <ErrorDisplay></ErrorDisplay>
@@ -117,12 +117,6 @@ body {
 
 .pointer-cursor {
   cursor: pointer;
-}
-
-@include media-breakpoint-up(sm) {
-  .search {
-    padding: 3em;
-  }
 }
 
 .form-check-label {

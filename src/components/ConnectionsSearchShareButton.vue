@@ -2,7 +2,7 @@
   <button @click="copy_link_to_clipboard" class="btn btn-primary">
     <i class="icon-share-fill"></i> Verbindungen teilen
   </button>
-  <SnackBar v-if="link_copied" timeout="3000"> Link in Zwischenablage kopiert </SnackBar>
+  <SnackBar v-if="link_copied"> Link in Zwischenablage kopiert </SnackBar>
 </template>
 
 <script setup lang="ts">

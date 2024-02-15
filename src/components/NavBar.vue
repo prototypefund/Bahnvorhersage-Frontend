@@ -1,6 +1,6 @@
 <template>
   <header class="sticky-top">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
+    <nav class="navbar navbar-expand-md bg-dark shadow">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" @click="collapse.toggle()">
           <span class="navbar-toggler-icon"></span>
@@ -27,10 +27,10 @@
               >Verbindungen</router-link
             >
             <router-link
-              class="nav-item nav-link"
+              class="nav-item nav-link glow"
               @click="collapse.hide()"
               :to="{ path: '/routing', hash: '#content' }"
-              >Alpha: Routing</router-link
+              >Neu: Routing</router-link
             >
             <router-link
               class="nav-item nav-link"
@@ -46,7 +46,7 @@
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+              <div class="dropdown-menu rounded">
                 <router-link
                   class="nav-link"
                   @click="collapse.hide()"
@@ -69,7 +69,7 @@
                 :to="{ path: '/opendata', hash: '#content' }"
                 >Open Data</router-link
               >
-              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+              <div class="dropdown-menu shadow rounded">
                 <router-link
                   class="nav-link"
                   @click="collapse.hide()"
@@ -155,5 +155,20 @@ watch(progressing, (val) => {
 #pgr_bar {
   position: relative;
   top: -5px;
+}
+
+.glow {
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: none;
+    color: $page_gray_text;
+  }
+  to {
+    text-shadow: 0 0 10px $warning;
+    color: $text_color;
+  }
 }
 </style>

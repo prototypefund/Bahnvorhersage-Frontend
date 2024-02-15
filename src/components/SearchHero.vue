@@ -51,4 +51,10 @@ import SearchForm from "./SearchForm.vue";
   grid-area: search;
   padding: 3em 1em;
 }
+
+@include media-breakpoint-up(sm) {
+  .search {
+    padding: 3em;
+  }
+}
 </style>

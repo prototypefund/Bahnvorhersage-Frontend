@@ -17,7 +17,7 @@
       v-on:blur="loose_focus"
     />
     <ul
-      class="dropdown-menu dropdown-menu-dark"
+      class="dropdown-menu bg-body-secondary"
       v-bind:class="{ show: open_suggestions }"
       style="width: 100%"
     >
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from "vue";
+import { type PropType, defineComponent } from "vue";
 
 export default defineComponent({
   name: "AutoSuggest",

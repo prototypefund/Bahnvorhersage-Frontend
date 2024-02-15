@@ -53,12 +53,13 @@ const { journeysAndAlternatives } = storeToRefs(store)
                   teilweise zu sehr komischen Verbindungen führt
                 </li>
                 <li>
-                  Es gibt einige Fehler mit Zügen, die zusammen- oder auseinander-gekuppelt werden
+                  Züge, die zusammen- oder auseinander-gekuppelt werden, werden teilweise doppelt
+                  angezeigt
                 </li>
-                <li>Busse, Trams, etc. werden grundsätzlich nicht beachtet</li>
+                <li>Busse, Trams, etc. sind nicht enthalten</li>
                 <li>
-                  Es wird grundsätzlich mit einer Umsteigezeit von 3 Minuten gerechnet, was häufig
-                  unrealistisch ist
+                  Es wird mit einer minimalen Umsteigezeit von 3 Minuten gerechnet, was häufig zu
+                  knapp ist
                 </li>
                 <li>Das Routing ist langsam - Wartezeiten von 1 - 2 Minuten sind normal</li>
                 <li>...</li>
