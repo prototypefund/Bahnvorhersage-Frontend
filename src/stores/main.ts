@@ -93,7 +93,7 @@ export const useMainStore = defineStore('main', {
         },
         body: JSON.stringify(this.searchParams)
       })
-      const connections = await this.display_fetch_error(response).json()
+      const connections = await (await this.display_fetch_error(response)).json()
       if (connections) {
         router.replace({
           path: '/connections',
