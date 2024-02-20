@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { type Journey } from '@/assets/ts/fptfTypes'
 import JourneyLegs from './JourneyLegs.vue'
 import JourneyHeader from './JourneyHeader.vue'

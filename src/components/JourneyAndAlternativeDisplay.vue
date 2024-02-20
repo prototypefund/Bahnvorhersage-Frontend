@@ -23,6 +23,8 @@ const marginLeft = 15
 const transitionDuration = 200
 const marginTopBottom = 60
 
+const maxCharsSingleLine = 5
+
 const svg = d3.create('svg').attr('height', height).attr('width', width)
 const gY = svg.append('g')
 const gJourneys = svg.append('g').attr('id', 'journey-display-content')
@@ -200,6 +202,56 @@ function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
   zoomed({ transform: t, noXMovement: true })
 }
 
+function drawLegText(g, leg: Leg, x: number, width: number) {
+  if (leg.mode === 'walking') {
+    g.append('text')
+      .attr('class', 'walk')
+      .attr('x', x + width / 2)
+      .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4)
+      .text('\uf109')
+  } else if (leg.line.name.length <= maxCharsSingleLine) {
+    g.append('text')
+      .attr('class', 'name-number')
+      .attr('x', x + width / 2)
+      .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4)
+      .text(leg.line.name)
+  } else {
+    g.append('text')
+      .attr('class', 'name')
+      .attr('x', x + width / 2)
+      .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2)
+      .text(leg.line.name.substring(0, leg.line.name.indexOf(' ')))
+    g.append('text')
+      .attr('class', 'number')
+      .attr('x', x + width / 2)
+      .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 12)
+      .text(leg.line.name.substring(leg.line.name.indexOf(' ') + 1))
+  }
+}
+
+function updateLegText(g, leg: Leg) {
+  if (leg.mode === 'walking') {
+    g.select('.walk').attr(
+      'y',
+      (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4
+    )
+  } else if (leg.line.name.length <= maxCharsSingleLine) {
+    g.select('.name-number').attr(
+      'y',
+      (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4
+    )
+  } else {
+    g.select('.name').attr(
+      'y',
+      (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2
+    )
+    g.select('.number').attr(
+      'y',
+      (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 12
+    )
+  }
+}
+
 const drawLegs = (g, legs: Leg[], x: number, width: number, isAlternative: boolean) => {
   g.selectAll('rect')
     .data(legs)
@@ -218,26 +270,14 @@ const drawLegs = (g, legs: Leg[], x: number, width: number, isAlternative: boole
       .data(legs)
       .join('g')
       .attr('class', 'train-name')
-      .call((g) => {
-        g.append('text')
-          .attr('class', 'name')
-          .attr('x', x + width / 2)
-          .attr(
-            'y',
-            (leg: Leg) =>
-              (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2
-          )
-          .text((leg: Leg) => leg.line.name.substring(0, leg.line.name.indexOf(' ')))
-        g.append('text')
-          .attr('class', 'number')
-          .attr('x', x + width / 2)
-          .attr(
-            'y',
-            (leg: Leg) =>
-              (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 12
-          )
-          .text((leg: Leg) => leg.line.name.substring(leg.line.name.indexOf(' ') + 1))
+      .each((leg: Leg, index: number, nodes) => {
+        drawLegText(d3.select(nodes[index]), leg, x, width)
       })
+    for (let leg of legs) {
+      g.append('g')
+        .attr('class', 'train-name')
+        .call((g) => drawLegText(g, leg, x, width))
+    }
   }
 }
 
@@ -271,19 +311,8 @@ const updateLegs = (g, legs: Leg[], isAlternative: boolean) => {
     g.selectAll('g.train-name')
       .data(legs)
       .join('g')
-      .transition()
-      .duration(transitionDuration)
-      .call((g) => {
-        g.select('.name').attr(
-          'y',
-          (leg: Leg) =>
-            (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 - 3
-        )
-        g.select('.number').attr(
-          'y',
-          (leg: Leg) =>
-            (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 13
-        )
+      .each((leg: Leg, index: number, nodes) => {
+        updateLegText(d3.select(nodes[index]).transition().duration(transitionDuration), leg)
       })
   }
 }
@@ -307,7 +336,10 @@ function showJourneyDetails(index: number) {
 function drawJourney(x: number, id: number, journey: Journey, alternatives: Journey[]): number {
   const journeyX = x
 
-  const gJourney = gJourneys.append('a').attr('id', `journey-${id}`).on('click', () => showJourneyDetails(id))
+  const gJourney = gJourneys
+    .append('a')
+    .attr('id', `journey-${id}`)
+    .on('click', () => showJourneyDetails(id))
   const mainJourney = gJourney.append('g').attr('class', 'main-journey')
   const alternativeJourneys = gJourney.append('g').attr('class', 'alternative-journeys')
 
@@ -353,7 +385,7 @@ function updateJourney(id: number, journey: Journey, alternatives: Journey[]) {
   const mainJourney = gJourney.select('.main-journey')
   const alternativeJourneys = gJourney.select('.alternative-journeys')
 
-  mainJourney.call((g) => updateLegs(g, journey.legs))
+  mainJourney.call((g) => updateLegs(g, journey.legs, false))
   mainJourney.call((g) => updateDpArTs(g, journey.legs))
 
   for (let i = 0; i < alternatives.length; i++) {
@@ -362,7 +394,7 @@ function updateJourney(id: number, journey: Journey, alternatives: Journey[]) {
     const initialDepartureLine = alternativeLines.select('.initial-departure-line')
     const journeyLine = alternativeLines.select('.journey-line')
 
-    alternative.call((g) => updateLegs(g, alternatives[i].legs))
+    alternative.call((g) => updateLegs(g, alternatives[i].legs, true))
 
     initialDepartureLine
       .transition()
@@ -463,6 +495,11 @@ svg {
       stroke: $text_color;
       paint-order: stroke;
       stroke-width: 3px;
+    }
+
+    .walk {
+      font-family: icons !important;
+      font-weight: normal !important;
     }
   }
 
