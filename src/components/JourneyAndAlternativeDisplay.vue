@@ -258,6 +258,7 @@ const drawLegs = (g, legs: Leg[], x: number, width: number, isAlternative: boole
     .join('rect')
     .classed('leg', true)
     .classed('regio', (leg: Leg) => leg.line.isRegio)
+    .classed('walk', (leg: Leg) => leg.mode === 'walking')
     .attr('x', x)
     .attr('y', (leg: Leg) => timeScale(new Date(leg.departure)))
     .attr('width', width)
@@ -467,6 +468,10 @@ svg {
 
     .regio {
       fill: $page_gray_text;
+    }
+
+    .walk {
+      fill: $page_even_lighter_gray;
     }
   }
 
