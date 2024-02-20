@@ -49,10 +49,6 @@ const { journeysAndAlternatives } = storeToRefs(store)
                 </li>
                 <li>Es können keine Verbindungen über Tagesübergänge gefunden werden</li>
                 <li>
-                  Fußwege, z.B. von Berlin Hbf (tief) nach Berlin Hbf werden nicht beachtet, was
-                  teilweise zu sehr komischen Verbindungen führt
-                </li>
-                <li>
                   Züge, die zusammen- oder auseinander-gekuppelt werden, werden teilweise doppelt
                   angezeigt
                 </li>
@@ -61,7 +57,7 @@ const { journeysAndAlternatives } = storeToRefs(store)
                   Es wird mit einer minimalen Umsteigezeit von 3 Minuten gerechnet, was häufig zu
                   knapp ist
                 </li>
-                <li>Das Routing ist langsam - Wartezeiten von 1 - 2 Minuten sind normal</li>
+                <li>Das Routing ist langsam - Wartezeiten von 1 - 5 Minuten sind normal</li>
                 <li>...</li>
               </ul>
               <p class="card-text">
