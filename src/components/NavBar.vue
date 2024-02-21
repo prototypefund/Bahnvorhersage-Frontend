@@ -1,6 +1,6 @@
 <template>
-  <div class="fixed-top">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
+  <header class="sticky-top">
+    <nav class="navbar navbar-expand-md bg-dark shadow">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" @click="collapse.toggle()">
           <span class="navbar-toggler-icon"></span>
@@ -8,7 +8,6 @@
         <div
           class="collapse navbar-collapse"
           id="navbarSupportedContent"
-          ref="collapse"
         >
           <router-link
             class="navbar-brand"
@@ -28,6 +27,12 @@
               >Verbindungen</router-link
             >
             <router-link
+              class="nav-item nav-link glow"
+              @click="collapse.hide()"
+              :to="{ path: '/routing', hash: '#content' }"
+              >Neu: Routing</router-link
+            >
+            <router-link
               class="nav-item nav-link"
               @click="collapse.hide()"
               :to="{ path: '/about', hash: '#content' }"
@@ -41,7 +46,7 @@
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+              <div class="dropdown-menu rounded">
                 <router-link
                   class="nav-link"
                   @click="collapse.hide()"
@@ -64,7 +69,7 @@
                 :to="{ path: '/opendata', hash: '#content' }"
                 >Open Data</router-link
               >
-              <div class="dropdown-menu dropdown-menu-dark bg-dark rounded">
+              <div class="dropdown-menu shadow rounded">
                 <router-link
                   class="nav-link"
                   @click="collapse.hide()"
@@ -87,50 +92,42 @@
       </div>
     </nav>
     <div id="pgr_bar"></div>
-  </div>
+  </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
 import installButton from "./InstallButton.vue";
-import update from "../assets/js/update";
-import { mapState } from "vuex";
 import { default as ProgressBar } from "progressbar.js";
 import { Collapse } from "bootstrap";
-// import ProgressBar = require("progressbar.js");
+import { useMainStore } from "@/stores/main";
+import { storeToRefs } from "pinia";
 
-export default defineComponent({
-  name: "NavBar",
-  components: { installButton },
-  data: function () {
-    return {
-      progress: null,
-      collapse: null,
-    };
-  },
-  computed: {
-    ...mapState(["progressing"]),
-  },
-  mounted: function () {
-    this.progress = new ProgressBar.Line("#pgr_bar", {
+const store = useMainStore();
+const { progressing } = storeToRefs(store);
+
+const progress = ref(null);
+const collapse = ref(null);
+
+onMounted(() => {
+  progress.value = new ProgressBar.Line("#pgr_bar", {
       strokeWidth: 0.8,
       color: "#3f51b5",
       trailColor: "transparent",
       trailWidth: 0,
     });
-    this.collapse = new Collapse(this.$refs.collapse, {
+  collapse.value = new Collapse('#navbarSupportedContent', {
       toggle: false,
     });
-  },
-  watch: {
-    progressing: function (val) {
-      if (val) {
-        this.progress.animate(600, { duration: 300000, easing: "linear" });
-      } else {
-        this.progress.animate(0, { duration: 10, easing: "linear" });
-      }
-    },
-  },
+});
+
+
+watch(progressing, (val) => {
+  if (val) {
+    progress.value.animate(600, { duration: 300000, easing: "linear" });
+  } else {
+    progress.value.animate(0, { duration: 10, easing: "linear" });
+  }
 });
 </script>
 
@@ -158,5 +155,20 @@ export default defineComponent({
 #pgr_bar {
   position: relative;
   top: -5px;
+}
+
+.glow {
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: none;
+    color: $page_gray_text;
+  }
+  to {
+    text-shadow: 0 0 10px $warning;
+    color: $text_color;
+  }
 }
 </style>

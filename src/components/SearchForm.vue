@@ -12,7 +12,7 @@
       <auto-suggest
         name="start"
         class="form-control p-0"
-        v-model:value="search_params.start"
+        v-model:value="searchParams.start"
         v-model:is_valid="start_valid"
         :values="stations"
         placeholder="Bahnhof"
@@ -27,7 +27,7 @@
       <auto-suggest
         name="destination"
         class="form-control p-0"
-        v-model:value="search_params.destination"
+        v-model:value="searchParams.destination"
         v-model:is_valid="destination_valid"
         :values="stations"
         placeholder="Bahnhof"
@@ -43,7 +43,7 @@
     <div class="input-group mb-3">
       <span class="input-group-text"><i class="icon icon-calendar"></i></span>
       <flat-pickr
-        v-model="search_params.date"
+        v-model="searchParams.date"
         :config="config"
         class="form-control"
         placeholder="Datum und Uhrzeit auswählen"
@@ -53,7 +53,7 @@
       <toggle-switch
         class="align-self-center"
         style="padding: 6px 12px"
-        v-model="search_params.search_for_arrival"
+        v-model="searchParams.search_for_arrival"
       ></toggle-switch>
     </div>
 
@@ -61,7 +61,7 @@
       <!-- Only regional checkbox -->
       <check-box
         class="mb-3"
-        v-model="search_params.only_regional"
+        v-model="searchParams.only_regional"
         id="only_regional"
         label="Nur Nahverkehr"
         :inline="true"
@@ -69,7 +69,7 @@
       <!-- Bike checkbox -->
       <check-box
         class="mb-3"
-        v-model="search_params.bike"
+        v-model="searchParams.bike"
         id="bike"
         label="Fahrradmitnahme"
         :inline="true"
@@ -78,114 +78,61 @@
 
     <!-- Submit Button -->
     <div class="text-center">
-      <input
-        class="btn btn-primary"
-        id=""
-        name="submit"
-        type="submit"
-        value="SUCHEN"
-      />
+      <input class="btn btn-primary" id="" name="submit" type="submit" value="SUCHEN" />
     </div>
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
-import flatPickr from "vue-flatpickr-component";
-import "flatpickr/dist/flatpickr.css";
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import flatPickr from 'vue-flatpickr-component'
+import 'flatpickr/dist/flatpickr.css'
 
-import AutoSuggest from "./AutoSuggest.vue";
-import ToggleSwitch from "./ToggleSwitch.vue";
-import CheckBox from "./CheckBox.vue";
+import AutoSuggest from './AutoSuggest.vue'
+import ToggleSwitch from './ToggleSwitch.vue'
+import CheckBox from './CheckBox.vue'
 
-require("flatpickr/dist/themes/dark.css");
+import('flatpickr/dist/themes/dark.css')
 
-export default defineComponent({
-  name: "SearchForm",
-  data: function () {
-    return {
-      // Get more from https://flatpickr.js.org/options/
-      config: {
-        enableTime: true,
-        time_24hr: true,
-        dateFormat: "d.m.Y H:i",
-        altFormat: "d.m.Y H:i",
-      },
-      check_form_validity: false,
-      start_valid: false,
-      destination_valid: false,
-    };
-  },
-  created() {
-    this.$store.dispatch("fetch_stations");
-  },
-  methods: {
-    get_connections() {
-      if (this.start_valid && this.destination_valid) {
-        this.$store.dispatch("fetch_stations").then(async () => {
-          this.$router.push({
-            path: "/connections",
-            query: this.convert_values_to_string(this.search_params),
-            // hash: "#content",
-          });
-          this.$store.dispatch("get_connections");
-        });
-      }
-    },
-    convert_values_to_string(object: any) {
-      return Object.fromEntries(
-        Object.entries(object).map(([k, v]) => [k, String(v)])
-      );
-    },
-    swap_stations() {
-      [this.search_params.start, this.search_params.destination] = [
-        this.search_params.destination,
-        this.search_params.start,
-      ];
-    },
-  },
-  computed: {
-    ...mapState(["stations", "search_params"]),
-  },
-  components: {
-    flatPickr,
-    AutoSuggest,
-    ToggleSwitch,
-    CheckBox,
-  },
-});
+const store = useMainStore()
+const { stations, searchParams: searchParams } = storeToRefs(store)
+
+const router = useRouter()
+
+const config = ref({
+  // Get more from https://flatpickr.js.org/options/
+  enableTime: true,
+  time_24hr: true,
+  dateFormat: 'd.m.Y H:i',
+  altFormat: 'd.m.Y H:i'
+})
+
+const start_valid = ref(false)
+const destination_valid = ref(false)
+
+function get_connections() {
+  if (start_valid.value && destination_valid.value) {
+    store.fetchStations().then(async () => {
+      store.get_connections()
+    })
+  }
+}
+function convert_values_to_string(object: any) {
+  return Object.fromEntries(Object.entries(object).map(([k, v]) => [k, String(v)]))
+}
+function swap_stations() {
+  ;[searchParams.value.start, searchParams.value.destination] = [
+    searchParams.value.destination,
+    searchParams.value.start
+  ]
+}
+
+store.fetchStations()
 </script>
 
 <style lang="scss">
-.flatpickr-calendar,
-.flatpickr-calendar.arrowTop,
-.flatpickr-months .flatpickr-month,
-.flatpickr-current-month,
-span.flatpickr-weekday,
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-  background: $page_gray;
-}
-
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange,
-.flatpickr-day.selected.inRange,
-.flatpickr-day.startRange.inRange,
-.flatpickr-day.endRange.inRange,
-.flatpickr-day.selected:focus,
-.flatpickr-day.startRange:focus,
-.flatpickr-day.endRange:focus,
-.flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover,
-.flatpickr-day.selected.prevMonthDay,
-.flatpickr-day.startRange.prevMonthDay,
-.flatpickr-day.endRange.prevMonthDay,
-.flatpickr-day.selected.nextMonthDay,
-.flatpickr-day.startRange.nextMonthDay,
-.flatpickr-day.endRange.nextMonthDay {
-  background: $primary;
-  border-color: $primary;
-}
+@import '../assets/css/flatpickr.scss';
 </style>

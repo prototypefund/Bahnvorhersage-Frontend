@@ -1,78 +1,43 @@
 <template>
-  <transition name="fade">
-    <div v-if="show" class="snackbar-center">
-      <div id="snackbar" class="">
-        <div
-          class="shadow rounded snack-content"
-          :class="[
-            {
-              'layout small': layout === 'small',
-              'layout multiline': layout === 'multiline',
-            },
-            style_class,
-          ]"
-        >
-          <div>
-            <slot></slot>
-          </div>
-          <slot v-if="timeout === -1" name="action">
-            <div class="click_text text-right" @click="show = false">
-              SCHLIESSEN
-            </div>
-          </slot>
+  <div class="snackbar-center">
+    <div id="snackbar" class="">
+      <div
+        class="shadow rounded snack-content"
+        :class="[
+          {
+            'layout small': layout === 'small',
+            'layout multiline': layout === 'multiline'
+          },
+          style_class
+        ]"
+      >
+        <div>
+          <slot></slot>
         </div>
+        <slot name="action"> </slot>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 export default defineComponent({
-  name: "SnackBar",
+  name: 'SnackBar',
   props: {
     layout: {
       type: String,
-      default: "small",
+      default: 'small',
       validator: function (value: any) {
-        return ["small", "multiline"].indexOf(value) !== -1;
-      },
-    },
-    timeout: {
-      type: Number,
-      default: -1,
+        return ['small', 'multiline'].indexOf(value) !== -1
+      }
     },
     style_class: {
       type: String,
-      default: "",
-    },
-  },
-  data: function () {
-    return {
-      show: true,
-    };
-  },
-  updated() {
-    if (this.timeout !== -1) {
-      setTimeout(
-        function () {
-          this.show = false;
-        }.bind(this),
-        this.timeout
-      );
+      default: ''
     }
   },
-  mounted() {
-    if (this.timeout !== -1) {
-      setTimeout(
-        function () {
-          this.show = false;
-        }.bind(this),
-        this.timeout
-      );
-    }
-  },
-});
+})
 </script>
 
 <style lang="scss">
@@ -108,30 +73,5 @@ export default defineComponent({
   .snack-content {
     background-color: $page_lighter_gray;
   }
-}
-
-.click_text {
-  font-size: 1.3em;
-  font-weight: bold;
-  cursor: pointer;
-  color: $primary;
-}
-
-.click_text:hover {
-  color: lighten($primary, 10);
-}
-
-.click_text:active {
-  position: relative;
-  top: 1px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

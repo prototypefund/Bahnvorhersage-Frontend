@@ -7,7 +7,7 @@ ARG DEV_SERVER
 RUN if [ "$DEV_SERVER" ]; then echo $'\
 User-agent: *\n\
 Disallow: / ' | tee public/robots.txt; fi
-RUN npm run build --modern
+RUN npm run build-only
 RUN find /app/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\|json\)$' -exec gzip -f -k {} \;
 
 FROM nginx as production-stage
