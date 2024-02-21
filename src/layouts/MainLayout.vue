@@ -7,7 +7,7 @@ import PageFooter from '@/components/PageFooter.vue'
   <NavBar></NavBar>
 
   <main>
-    <slot id="content" />
+    <slot />
   </main>
 
   <PageFooter></PageFooter>

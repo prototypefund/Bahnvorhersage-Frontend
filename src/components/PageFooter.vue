@@ -7,6 +7,7 @@
           ><img
             class="logo"
             loading="lazy"
+            width="198.45px"
             :src="bmbfLogo"
             alt="Logo des Bundesministeriums für Bildung und Forschung"
         /></a>
@@ -17,6 +18,7 @@
           ><img
             class="logo"
             loading="lazy"
+            width="56.6167px"
             :src="prototypefundLogo"
             alt="Logo des Prototypefunds"
         /></a>
@@ -24,6 +26,7 @@
           ><img
             class="logo"
             loading="lazy"
+            width="139.183px"
             :src="sfzLogo"
             alt="Logo des Schülerforschungszentrums Südwürttemberg"
         /></a>

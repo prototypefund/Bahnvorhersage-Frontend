@@ -41,7 +41,6 @@ export const useMainStore = defineStore('main', {
     },
     async display_fetch_error(response: Response) {
       if (!response.ok) {
-        this.progressing = false
         let error
         if (response.status === 429) {
           error = Error(
@@ -55,6 +54,7 @@ export const useMainStore = defineStore('main', {
           }
         }
         this.setError(error)
+        this.progressing = false
       }
       return response
     },
@@ -79,30 +79,33 @@ export const useMainStore = defineStore('main', {
         },
         body: JSON.stringify(this.alphaSearchParams)
       })
-      this.progressing = false
       this.journeysAndAlternatives = await (await this.display_fetch_error(response)).json()
+      this.progressing = false
     },
-    async get_connections() {
+    get_connections() {
       // remove current connections
       this.connections = []
       this.progressing = true
-      const response = await fetch('/api/trip', {
+      fetch('/api/trip', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(this.searchParams)
       })
-      const connections = await (await this.display_fetch_error(response)).json()
-      if (connections) {
-        router.replace({
-          path: '/connections',
-          hash: '#content'
-        })
+        .then((response) => this.display_fetch_error(response))
+        .then((response) => response.json())
+        .then((connections) => {
+          if (connections) {
+            router.replace({
+              path: '/connections',
+              hash: '#content'
+            })
 
-        this.connections = connections
-      }
-      this.progressing = false
+            this.connections = connections
+          }
+          this.progressing = false
+        })
     }
   }
 })

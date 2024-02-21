@@ -1,5 +1,5 @@
 <template>
-  <router-view id="content" />
+  <router-view />
 
   <!-- Update Service worker -->
   <SnackBar v-if="needRefresh">

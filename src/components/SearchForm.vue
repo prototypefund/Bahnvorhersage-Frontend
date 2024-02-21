@@ -116,10 +116,6 @@ const destination_valid = ref(false)
 function get_connections() {
   if (start_valid.value && destination_valid.value) {
     store.fetchStations().then(async () => {
-      router.push({
-        path: '/connections',
-        query: convert_values_to_string(searchParams.value)
-      })
       store.get_connections()
     })
   }

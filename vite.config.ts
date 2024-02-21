@@ -43,8 +43,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // '/api': 'https://next.bahnvorhersage.de'
-      '/api': 'http://localhost:5000',
+      '/api': 'https://next.bahnvorhersage.de'
+      // '/api': 'http://localhost:5000',
     }
   },
   css: {

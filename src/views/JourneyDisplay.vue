@@ -1,7 +1,7 @@
 <template>
   <main-layout>
     <SearchHero></SearchHero>
-    <div class="content-container" v-if="connections.length !== 0">
+    <div class="content-container" id="content" v-if="connections.length !== 0">
       <div class="m-auto container d-flex justify-content-center">
         <div>
           <h1 class="text-center">
