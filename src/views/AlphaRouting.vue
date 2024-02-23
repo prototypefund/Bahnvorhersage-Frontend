@@ -12,7 +12,7 @@ const { journeysAndAlternatives } = storeToRefs(store)
 
 <template>
   <main-layout>
-    <div class="max-width">
+    <div class="max-width content-container">
       <div class="card mb-3">
         <div class="row">
           <div class="col">
@@ -44,9 +44,7 @@ const { journeysAndAlternatives } = storeToRefs(store)
               </p>
               <ul>
                 <li>Verspätungen, Ausfälle etc. werden nicht beachtet</li>
-                <li>
-                  Das Datum muss in der Vergangenheit liegen, zwischen Mai 2021 und Oktober 2023
-                </li>
+                <li>Verbindungen können maximal zwei Stunden in der Zukunft liegen</li>
                 <li>Es können keine Verbindungen über Tagesübergänge gefunden werden</li>
                 <li>
                   Züge, die zusammen- oder auseinander-gekuppelt werden, werden teilweise doppelt

@@ -453,10 +453,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="content-container">
-    <div id="debug-field"></div>
-    <div id="journey-display-container"></div>
-  </div>
+  <div id="journey-display-container"></div>
 </template>
 
 <style lang="scss">
