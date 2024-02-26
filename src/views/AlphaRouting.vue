@@ -73,17 +73,6 @@ const { journeysAndAlternatives } = storeToRefs(store)
         </div>
       </div>
       <AlphaSearchForm />
-      <JourneyAndAlternativeDisplay
-        :journeys="journeysAndAlternatives"
-        v-if="journeysAndAlternatives.length"
-      />
     </div>
   </main-layout>
 </template>
-
-<style lang="scss">
-.max-width {
-  max-width: $content-width;
-  margin: auto !important;
-}
-</style>

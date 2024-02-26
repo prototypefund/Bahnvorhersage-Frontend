@@ -53,6 +53,12 @@ i {
   min-height: 85vh;
 }
 
+.max-width {
+  max-width: $content-width;
+  margin: auto !important;
+  width: 100%;
+}
+
 html,
 body,
 #intro {

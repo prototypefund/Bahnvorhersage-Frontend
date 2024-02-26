@@ -42,4 +42,4 @@ npm run lint
 ```bash
 fantasticon src/assets/fonts/icons -o src/assets/fonts/icons  --asset-types scss --normalize --fonts-url assets/fonts/icons
 ```
-**Important:** Check if `"person-walking-solid": "\f109"` changed to a different code in `icons.scss`. If it did, change it in `JourneyAndAlternativeDisplay.vue`
+**Important:** Check if `"person-walking-solid": "\f10a"` changed to a different code in `icons.scss`. If it did, change it in `JourneyAndAlternativeDisplay.vue`

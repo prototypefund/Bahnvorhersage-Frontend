@@ -4,14 +4,15 @@ import { useMainStore } from '@/stores/main'
 import { storeToRefs } from 'pinia'
 import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
-
+import { useRouter } from 'vue-router'
 import AutoSuggest from './AutoSuggest.vue'
 
+const router = useRouter()
 const store = useMainStore()
-const { stations, alphaSearchParams } = storeToRefs(store)
+const { stations, alphaSearchParams, journeysAndAlternatives } = storeToRefs(store)
 
 const config = ref({
-  // Get more from https://flatpickr.js.org/options/
+  // https://flatpickr.js.org/options/
   enableTime: true,
   time_24hr: true,
   dateFormat: 'Z',
@@ -25,6 +26,8 @@ const destinationValid = ref(false)
 function routing() {
   if (originValid.value && destinationValid.value) {
     store.fetchStations().then(async () => {
+      journeysAndAlternatives.value = []
+      router.push({path: '/routing/journeys'})
       store.getJourneys()
     })
   }

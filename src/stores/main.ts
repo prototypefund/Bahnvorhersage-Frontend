@@ -71,7 +71,6 @@ export const useMainStore = defineStore('main', {
       }
     },
     async getJourneys() {
-      this.progressing = true
       const response = await fetch('/api/journeys', {
         method: 'POST',
         headers: {
@@ -80,7 +79,6 @@ export const useMainStore = defineStore('main', {
         body: JSON.stringify(this.alphaSearchParams)
       })
       this.journeysAndAlternatives = await (await this.display_fetch_error(response)).json()
-      this.progressing = false
     },
     get_connections() {
       // remove current connections

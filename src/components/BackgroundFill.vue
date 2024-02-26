@@ -6,7 +6,7 @@
 
 <style lang="scss">
 .background-fill {
-    background-color: $page_background;
+    background-color: $page_darker_gray;
     min-height: calc(100% - $nav-height);
     overflow: scroll;
     display: flex;

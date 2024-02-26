@@ -18,10 +18,10 @@ const gap = 20
 const alternativeGap = 5
 const alternativeTrainWidth = 5
 const marginLeft = 15
+const marginY = 25
 // const scaleXWidth = 42
 // let journeyDisplayWidth = width - marginLeft
 const transitionDuration = 200
-const marginTopBottom = 60
 
 const maxCharsSingleLine = 5
 
@@ -134,13 +134,9 @@ let journeyXCords: number[] = []
 const timeScale = d3
   .scaleTime()
   .domain([min(minDates), max(maxDates)])
-  .range([marginTopBottom, height - marginTopBottom])
+  .range([marginY, height - marginY])
 
-const zoom = d3.zoom().scaleExtent([1, 1]).on('zoom', zoomed).on('end', snapToNearestJourney)
-
-const boundX = (x: number) => {
-  return Math.min(0, Math.max(width - marginLeft - journeyXCords.at(-1), x))
-}
+const zoom = d3.zoom()
 
 const redraw = () => {
   for (let i = 0; i < props.journeys.length; i++) {
@@ -159,13 +155,7 @@ function zoomed({
   transform: d3.ZoomTransform
   noXMovement: Boolean
 }) {
-  // Only allow panning within bounds
-  const tx = boundX(transform.x)
-  if (tx !== transform.x) {
-    const t = d3.zoomIdentity.translate(tx, 0)
-    svg.call(zoom.transform, t)
-    return
-  }
+  const tx = transform.x
 
   const currentXtend: [number, number] = [marginLeft - tx, width - tx]
   const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
@@ -196,7 +186,7 @@ function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
       closestJourneyDistance = distance
     }
   }
-  const tx = boundX(marginLeft + gap - closestJourneyX)
+  const tx = marginLeft + gap - closestJourneyX
   gJourneys.transition().duration(transitionDuration).attr('transform', `translate(${tx},0)`)
   const t = d3.zoomIdentity.translate(tx, 0)
   zoomed({ transform: t, noXMovement: true })
@@ -208,7 +198,7 @@ function drawLegText(g, leg: Leg, x: number, width: number) {
       .attr('class', 'walk')
       .attr('x', x + width / 2)
       .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4)
-      .text('\uf109')
+      .text('\uf10a')
   } else if (leg.line.name.length <= maxCharsSingleLine) {
     g.append('text')
       .attr('class', 'name-number')
@@ -423,6 +413,8 @@ function onResize() {
   width = document.getElementById('journey-display-container')?.offsetWidth || width
   height = document.getElementById('journey-display-container')?.offsetHeight || height
 
+  timeScale.range([marginY, height - marginY])
+
   svg.attr('height', height).attr('width', width)
 
   redraw()
@@ -436,9 +428,6 @@ onMounted(() => {
     journeyXCords.push(x)
   }
 
-  onResize()
-  window.addEventListener('resize', onResize)
-
   const currentXtend: [number, number] = [marginLeft, width]
   const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
   const currentMinDate = min(minDates.slice(currentMinIndex, currentMaxIndex + 1))
@@ -448,12 +437,25 @@ onMounted(() => {
 
   d3.select('#journey-display-container').append(() => svg.node())
   gY.call(yAxis, timeScale)
+  zoom
+    .scaleExtent([1, 1])
+    .translateExtent([
+      [0, 0],
+      [journeyXCords.at(-1) - marginLeft + trainWidth * 3, 0]
+    ])
+    .on('zoom', zoomed)
+    .on('end', snapToNearestJourney)
   svg.call(zoom)
+
+  onResize()
+  window.addEventListener('resize', onResize)
 })
 </script>
 
 <template>
-  <div id="journey-display-container"></div>
+  <div id="journey-display-container-container" class="p-2 shadow rounded">
+    <div id="journey-display-container"></div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -491,7 +493,7 @@ svg {
     text-anchor: middle;
 
     text {
-      font-family: monospace;
+      font-family: $font-family-monospace;
       font-weight: bold;
       font-size: 12px;
       stroke: $text_color;
@@ -512,7 +514,8 @@ svg {
     }
 
     text {
-      transform: translate(30px, -6px);
+      transform: translate(32px, -6px);
+      font-family: $font-family-monospace;
     }
   }
 
@@ -523,7 +526,7 @@ svg {
   #journey-display-content {
     @mixin time-text {
       font-size: 12px;
-      font-family: monospace;
+      font-family: $font-family-monospace;
       fill: $text_color;
       text-anchor: middle;
       font-weight: bold;
@@ -552,7 +555,15 @@ svg {
   }
 }
 
-#journey-display-container {
+#journey-display-container-container {
   background-color: black;
+  height: calc(100vh - $nav-height - 20px);
+  max-width: 100vw;
+  width: 100%;
+}
+
+#journey-display-container {
+  height: 100%;
+  width: 100%;
 }
 </style>
