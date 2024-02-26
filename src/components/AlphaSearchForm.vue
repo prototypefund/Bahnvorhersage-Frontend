@@ -82,7 +82,7 @@ store.fetchStations()
 
     <!-- Date Form -->
     <label for="datetime" class="form-label visually-hidden">Datum und Uhrzeit</label>
-    <div class="input-group mb-3">
+    <div class="input-group mb-3 rounded overflow-hidden">
       <span class="input-group-text"><i class="icon icon-calendar"></i></span>
       <flat-pickr
         v-model="alphaSearchParams.departure"

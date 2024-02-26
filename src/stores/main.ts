@@ -18,7 +18,7 @@ export class SearchParams {
 export class AlphaSearchParams {
   origin = ''
   destination = ''
-  departure = new Date()
+  departure = new Date().setSeconds(0, 0) // when seconds are set, flatpickr mobile will fail on some validation
 }
 
 export const useMainStore = defineStore('main', {

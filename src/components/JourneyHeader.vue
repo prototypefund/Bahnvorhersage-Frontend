@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 import dayjs from 'dayjs'
 import { rdylgrColormap } from '../assets/ts/colormap'
 import AffiliateLink from './AffiliateLink.vue'
