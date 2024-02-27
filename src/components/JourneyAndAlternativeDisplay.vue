@@ -19,8 +19,6 @@ const alternativeGap = 5
 const alternativeTrainWidth = 5
 const marginLeft = 15
 const marginY = 25
-// const scaleXWidth = 42
-// let journeyDisplayWidth = width - marginLeft
 const transitionDuration = 200
 
 const maxCharsSingleLine = 5
@@ -175,8 +173,8 @@ function zoomed({
   }
 }
 
-function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
-  const leftLimit = marginLeft - transform.x
+function closestJourneyX(x: number) {
+  let leftLimit = marginLeft - x
   let closestJourneyX = journeyXCords[0]
   let closestJourneyDistance = Math.abs(journeyXCords[0] - leftLimit)
   for (let i = 1; i < journeyXCords.length; i++) {
@@ -187,9 +185,34 @@ function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
     }
   }
   const tx = marginLeft + gap - closestJourneyX
+  return tx
+}
+
+function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
+  const tx = closestJourneyX(transform.x) 
   gJourneys.transition().duration(transitionDuration).attr('transform', `translate(${tx},0)`)
   const t = d3.zoomIdentity.translate(tx, 0)
   zoomed({ transform: t, noXMovement: true })
+}
+
+function move(by: number) {
+  let transform = d3.zoomTransform(svg.node())
+  const xOrigin = transform.x
+  transform = transform.translate(by, 0)
+  const tx = closestJourneyX(transform.x)
+  svg.transition().duration(transitionDuration).call(
+    zoom.translateBy,
+    tx - xOrigin, 0,
+  ).on('end', null)
+
+}
+
+function next() {
+  move(-trainWidth * 4)
+}
+
+function prev() {
+  move(trainWidth * 4)
 }
 
 function drawLegText(g, leg: Leg, x: number, width: number) {
@@ -449,6 +472,13 @@ onMounted(() => {
 
   onResize()
   window.addEventListener('resize', onResize)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      next()
+    } else if (e.key === 'ArrowLeft') {
+      prev()
+    }
+  })
 })
 </script>
 
@@ -456,6 +486,14 @@ onMounted(() => {
   <div id="journey-display-container-container" class="p-2 shadow rounded">
     <div id="journey-display-container"></div>
   </div>
+  <button class="carousel-control-prev journey-control-prev" type="button" @click="prev">
+    <span class="carousel-control-prev-icon btn" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next journey-control-next" type="button" @click="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </template>
 
 <style lang="scss">
@@ -566,4 +604,17 @@ svg {
   height: 100%;
   width: 100%;
 }
+
+.journey-control-prev, .journey-control-next {
+    display: none;
+  }
+
+@include media-breakpoint-up(md) { 
+  .journey-control-prev, .journey-control-next {
+    width: 100px;
+    display: block;
+  }
+ }
+
+
 </style>
