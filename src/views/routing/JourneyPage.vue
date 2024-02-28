@@ -28,8 +28,11 @@ const { journeysAndAlternatives, alphaSearchParams } = storeToRefs(store)
         :journeys="journeysAndAlternatives"
         v-if="journeysAndAlternatives.length"
       />
-      <div v-else class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+      <div v-else class="d-flex justify-content-center">
+
+        <div  class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
     </div>
   </single-view-layout>
