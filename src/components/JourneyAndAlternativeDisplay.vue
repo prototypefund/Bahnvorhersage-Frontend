@@ -111,7 +111,7 @@ function getInitialDeparture(journey: Journey, alternative: Journey): Date {
 
 function getDisplayedJourneyIndices(extend: [number, number]) {
   let minIndex = 0
-  let maxIndex = journeyXCords.length - 2
+  let maxIndex = journeyXCords.length - 2 // -2 because journeyXCords has one more element than there are journeys
 
   for (let i = 0; i < journeyXCords.length; i++) {
     if (journeyXCords[i] <= extend[0]) {
@@ -446,7 +446,7 @@ function onResize() {
 onMounted(() => {
   let x = gap + marginLeft
   journeyXCords.push(x)
-  for (let i = 0; i < props.journeys.length - 1; i++) {
+  for (let i = 0; i < props.journeys.length; i++) {
     x = drawJourney(x, i, props.journeys[i].journey, props.journeys[i].alternatives)
     journeyXCords.push(x)
   }
