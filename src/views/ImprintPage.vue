@@ -6,7 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
   <main-layout>
     <div id="impressum" class="content-container">
       <div class="text-content">
-        <h1 class="text-center">Impressum</h1>
+        <h1>Impressum</h1>
         <p>
           Angaben gemäß § 5 TMG <br />
           <br />
@@ -20,8 +20,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
           Weilerhalde 60 <br />
           72070 Tübingen
         </p>
-        <h2>Kontakt</h2>
-        <p>info@bahnvorhersage.de <br /></p>
+        <p>info@bahnvorhersage.de</p>
         <h2>Haftungsausschluss:</h2>
         <h3>Haftung für Links</h3>
         <p>

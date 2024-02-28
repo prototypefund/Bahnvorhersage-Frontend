@@ -4,7 +4,11 @@ import BackgroundFill from '@/components/BackgroundFill.vue'
 </script>
 
 <template>
-    <back-navigation></back-navigation>
+    <back-navigation>
+        <template v-slot:nav-body>
+            <slot name="nav-body"></slot>
+        </template>
+    </back-navigation>
     <background-fill class="py-2">
         <slot id="content"></slot>
     </background-fill>

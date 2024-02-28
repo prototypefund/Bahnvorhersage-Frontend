@@ -6,7 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
   <main-layout>
     <div id="open-source" class="content-container">
       <div class="text-content">
-        <h1 class="text-center"><i class="icon icon-gitlab"></i> Open Source</h1>
+        <h1><i class="icon icon-gitlab"></i> Open Source</h1>
         <p>
           Dieses Projekt ist Open Source. Der gesammte Quellcode ist auf GitLab zu finden. Die
           meisten Daten, die wir für dieses Projekt benötigen, dürfen wir nicht veröffentlichen.

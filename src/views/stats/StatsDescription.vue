@@ -6,7 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
   <main-layout>
     <div id="about" class="content-container">
       <div class="text-content">
-        <h1 class="text-center">Statistiken</h1>
+        <h1>Statistiken</h1>
         <p>
           Wer wollte alles schon mal wissen wie pünktlich die Bahn gestern war? Oder welche
           Zugstrecken besonders zuverlässig sind? Wir sammeln rund um die Uhr die

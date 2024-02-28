@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AlphaRouting.vue')
   },
   {
+    path: '/routing/journeys',
+    name: 'Verbindungen und Alternativen',
+    component: () => import('../views/routing/JourneyPage.vue')
+  },
+  {
     path: '/journeydetails/:index',
     name: 'Verbindungs-Details',
     component: () => import('../views/JourneyDetails.vue')

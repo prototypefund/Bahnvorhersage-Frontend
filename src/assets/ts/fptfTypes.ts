@@ -63,6 +63,7 @@ export type Leg = {
 export type Journey = {
     type: 'journey',
     legs: Leg[],
+    price?: number,
 }
 
 export type JourneyAndAlternative = {

@@ -18,10 +18,8 @@ const gap = 20
 const alternativeGap = 5
 const alternativeTrainWidth = 5
 const marginLeft = 15
-// const scaleXWidth = 42
-// let journeyDisplayWidth = width - marginLeft
+const marginY = 25
 const transitionDuration = 200
-const marginTopBottom = 60
 
 const maxCharsSingleLine = 5
 
@@ -113,7 +111,7 @@ function getInitialDeparture(journey: Journey, alternative: Journey): Date {
 
 function getDisplayedJourneyIndices(extend: [number, number]) {
   let minIndex = 0
-  let maxIndex = journeyXCords.length - 2
+  let maxIndex = journeyXCords.length - 2 // -2 because journeyXCords has one more element than there are journeys
 
   for (let i = 0; i < journeyXCords.length; i++) {
     if (journeyXCords[i] <= extend[0]) {
@@ -129,18 +127,15 @@ function getDisplayedJourneyIndices(extend: [number, number]) {
 }
 
 const [minDates, maxDates] = getAllMinsAndMaxes(props.journeys)
+let translationXCords: number[] = []
 let journeyXCords: number[] = []
 
 const timeScale = d3
   .scaleTime()
   .domain([min(minDates), max(maxDates)])
-  .range([marginTopBottom, height - marginTopBottom])
+  .range([marginY, height - marginY])
 
-const zoom = d3.zoom().scaleExtent([1, 1]).on('zoom', zoomed).on('end', snapToNearestJourney)
-
-const boundX = (x: number) => {
-  return Math.min(0, Math.max(width - marginLeft - journeyXCords.at(-1), x))
-}
+const zoom = d3.zoom()
 
 const redraw = () => {
   for (let i = 0; i < props.journeys.length; i++) {
@@ -159,13 +154,7 @@ function zoomed({
   transform: d3.ZoomTransform
   noXMovement: Boolean
 }) {
-  // Only allow panning within bounds
-  const tx = boundX(transform.x)
-  if (tx !== transform.x) {
-    const t = d3.zoomIdentity.translate(tx, 0)
-    svg.call(zoom.transform, t)
-    return
-  }
+  const tx = transform.x
 
   const currentXtend: [number, number] = [marginLeft - tx, width - tx]
   const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
@@ -185,21 +174,57 @@ function zoomed({
   }
 }
 
-function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
-  const leftLimit = marginLeft - transform.x
-  let closestJourneyX = journeyXCords[0]
-  let closestJourneyDistance = Math.abs(journeyXCords[0] - leftLimit)
-  for (let i = 1; i < journeyXCords.length; i++) {
-    const distance = Math.abs(journeyXCords[i] - leftLimit)
+function closestJourneyX(x: number) {
+  let closestJourneyX = translationXCords[0]
+  let closestJourneyDistance = Math.abs(translationXCords[0] - x)
+  for (let i = 1; i < translationXCords.length; i++) {
+    const distance = Math.abs(translationXCords[i] - x)
     if (distance < closestJourneyDistance) {
-      closestJourneyX = journeyXCords[i]
+      closestJourneyX = translationXCords[i]
       closestJourneyDistance = distance
     }
   }
-  const tx = boundX(marginLeft + gap - closestJourneyX)
-  gJourneys.transition().duration(transitionDuration).attr('transform', `translate(${tx},0)`)
-  const t = d3.zoomIdentity.translate(tx, 0)
-  zoomed({ transform: t, noXMovement: true })
+  return closestJourneyX
+}
+
+function snapToNearestJourney(event: d3.D3ZoomEvent<SVGSVGElement, unknown>) {
+  // Don't snap to nearest journey if the event was triggered by programmatic
+  // zoom (event.sourceEvent === null)
+  if (event.sourceEvent !== null) {
+    const tx = closestJourneyX( event.transform.x)
+    svg
+      .transition()
+      .duration(transitionDuration)
+      .call(zoom.translateBy, tx -  event.transform.x, 0)
+  }
+}
+
+function move(by: number) {
+  let transform = d3.zoomTransform(svg.node())
+  const xOrigin = transform.x
+  transform = transform.translate(by, 0)
+  let tx = closestJourneyX(transform.x)
+  // It might happen, that a journey an its alternatives are so wide, that a move by `by`
+  // would not change the x position of the journey. In this case, we need to move to the next
+  // journey.
+  if (xOrigin === tx) {
+    let currentXIndex = translationXCords.indexOf(xOrigin)
+    currentXIndex += by < 0 ? 1 : -1
+    currentXIndex = Math.min(translationXCords.length - 2, Math.max(0, currentXIndex))
+    tx = translationXCords[currentXIndex]
+  }
+  svg
+    .transition()
+    .duration(transitionDuration)
+    .call(zoom.translateBy, tx - xOrigin, 0)
+}
+
+function next() {
+  move(-trainWidth * 4)
+}
+
+function prev() {
+  move(trainWidth * 4)
 }
 
 function drawLegText(g, leg: Leg, x: number, width: number) {
@@ -208,7 +233,7 @@ function drawLegText(g, leg: Leg, x: number, width: number) {
       .attr('class', 'walk')
       .attr('x', x + width / 2)
       .attr('y', (timeScale(new Date(leg.arrival)) + timeScale(new Date(leg.departure))) / 2 + 4)
-      .text('\uf109')
+      .text('\uf10a')
   } else if (leg.line.name.length <= maxCharsSingleLine) {
     g.append('text')
       .attr('class', 'name-number')
@@ -423,6 +448,8 @@ function onResize() {
   width = document.getElementById('journey-display-container')?.offsetWidth || width
   height = document.getElementById('journey-display-container')?.offsetHeight || height
 
+  timeScale.range([marginY, height - marginY])
+
   svg.attr('height', height).attr('width', width)
 
   redraw()
@@ -431,13 +458,12 @@ function onResize() {
 onMounted(() => {
   let x = gap + marginLeft
   journeyXCords.push(x)
-  for (let i = 0; i < props.journeys.length - 1; i++) {
+  translationXCords.push(-(x - marginLeft - gap))
+  for (let i = 0; i < props.journeys.length; i++) {
     x = drawJourney(x, i, props.journeys[i].journey, props.journeys[i].alternatives)
     journeyXCords.push(x)
+    translationXCords.push(-(x - marginLeft - gap))
   }
-
-  onResize()
-  window.addEventListener('resize', onResize)
 
   const currentXtend: [number, number] = [marginLeft, width]
   const [currentMinIndex, currentMaxIndex] = getDisplayedJourneyIndices(currentXtend)
@@ -448,15 +474,40 @@ onMounted(() => {
 
   d3.select('#journey-display-container').append(() => svg.node())
   gY.call(yAxis, timeScale)
+  zoom
+    .scaleExtent([1, 1])
+    .translateExtent([
+      [0, 0],
+      [journeyXCords.at(-1), 0]
+    ])
+    .on('zoom', zoomed)
+    .on('end', snapToNearestJourney)
   svg.call(zoom)
+
+  onResize()
+  window.addEventListener('resize', onResize)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      next()
+    } else if (e.key === 'ArrowLeft') {
+      prev()
+    }
+  })
 })
 </script>
 
 <template>
-  <div class="content-container">
-    <div id="debug-field"></div>
+  <div id="journey-display-container-container" class="p-2 shadow rounded">
     <div id="journey-display-container"></div>
   </div>
+  <button class="carousel-control-prev journey-control-prev" type="button" @click="prev">
+    <span class="carousel-control-prev-icon btn" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next journey-control-next" type="button" @click="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </template>
 
 <style lang="scss">
@@ -494,7 +545,7 @@ svg {
     text-anchor: middle;
 
     text {
-      font-family: monospace;
+      font-family: $font-family-monospace;
       font-weight: bold;
       font-size: 12px;
       stroke: $text_color;
@@ -515,7 +566,8 @@ svg {
     }
 
     text {
-      transform: translate(30px, -6px);
+      transform: translate(32px, -6px);
+      font-family: $font-family-monospace;
     }
   }
 
@@ -526,7 +578,7 @@ svg {
   #journey-display-content {
     @mixin time-text {
       font-size: 12px;
-      font-family: monospace;
+      font-family: $font-family-monospace;
       fill: $text_color;
       text-anchor: middle;
       font-weight: bold;
@@ -555,7 +607,28 @@ svg {
   }
 }
 
-#journey-display-container {
+#journey-display-container-container {
   background-color: black;
+  height: calc(100vh - $nav-height - 20px);
+  max-width: 100vw;
+  width: 100%;
+}
+
+#journey-display-container {
+  height: 100%;
+  width: 100%;
+}
+
+.journey-control-prev,
+.journey-control-next {
+  display: none;
+}
+
+@include media-breakpoint-up(md) {
+  .journey-control-prev,
+  .journey-control-next {
+    width: 100px;
+    display: block;
+  }
 }
 </style>

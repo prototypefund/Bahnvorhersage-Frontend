@@ -72,8 +72,45 @@ import JourneyCard from '@/components/JourneyCard.vue'
 import SearchHero from '../components/SearchHero.vue'
 import ConnectionsSearchShareButton from '../components/ConnectionsSearchShareButton.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import type { Journey } from '@/assets/ts/fptfTypes'
+import dayjs from 'dayjs'
 
 type SortKey = 'departure' | 'arrival' | 'duration' | 'transfers' | 'connectionScore' | 'price'
+
+const departureFunc = (c: Journey) => c.legs[0].departure
+const arrivalFunc = (c: Journey) => c.legs[c.legs.length - 1].arrival
+const durationFunc = (c: Journey) => dayjs(arrivalFunc(c)).diff(dayjs(departureFunc(c)))
+const transfersFunc = (c: Journey) => {
+  let ridingLegs = 0
+  for (let leg of c.legs) {
+    if (! ('walking' in leg) || leg.walking === false) {
+      ridingLegs++
+    }
+  }
+  return ridingLegs - 1
+}
+const connectionScoreFunc = (c: Journey) => {
+  let connectionScore = 1
+  for (let leg of c.legs) {
+    if (leg.transferScore) {
+      connectionScore *= leg.transferScore
+    }
+  }
+  return Math.trunc(connectionScore * 100)
+}
+const priceFunc = (c: Journey) => {
+  return c.price || Infinity
+}
+
+const keyFuncs = {
+  departure: departureFunc,
+  arrival: arrivalFunc,
+  duration: durationFunc,
+  transfers: transfersFunc,
+  connectionScore: connectionScoreFunc,
+  price: priceFunc
+}
+  
 
 const lastTimeKey = ref<SortKey>('departure')
 const lastSort = ref<SortKey>('departure')
@@ -103,37 +140,24 @@ function sortTime() {
   }
 }
 function sortByKey(key: SortKey) {
+  const sortFunc = keyFuncs[key]
   let tmpConnections = [...connections.value]
   lastSort.value = key
   // switch sort oder
   ascSort.value[key] = !ascSort.value[key]
 
-  if (key === 'duration' && ascSort.value[key]) {
+  if (ascSort.value[key]) {
     // sort ascending
-    tmpConnections.sort(function (a: any, b: any) {
-      const x = a[key].$ms
-      const y = b[key].$ms
+    tmpConnections.sort(function (a: Journey, b: Journey) {
+      const x = sortFunc(a)
+      const y = sortFunc(b)
       return x < y ? -1 : x > y ? 1 : 0
     })
-  } else if (key === 'duration' && !ascSort.value[key]) {
+  } else {
     // sort descending
-    tmpConnections.sort(function (a: any, b: any) {
-      const x = a[key].$ms
-      const y = b[key].$ms
-      return x < y ? 1 : x > y ? -1 : 0
-    })
-  } else if (ascSort.value[key]) {
-    // sort ascending
-    tmpConnections.sort(function (a: any, b: any) {
-      const x = a[key]
-      const y = b[key]
-      return x < y ? -1 : x > y ? 1 : 0
-    })
-  } else if (!ascSort.value[key]) {
-    // sort descending
-    tmpConnections.sort(function (a: any, b: any) {
-      const x = a[key]
-      const y = b[key]
+    tmpConnections.sort(function (a: Journey, b: Journey) {
+      const x = sortFunc(a)
+      const y = sortFunc(b)
       return x < y ? 1 : x > y ? -1 : 0
     })
   }

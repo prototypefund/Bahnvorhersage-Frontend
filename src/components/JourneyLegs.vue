@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import { type Leg } from '@/assets/ts/fptfTypes'
 import JourneyLeg from "./JourneyLeg.vue";
 

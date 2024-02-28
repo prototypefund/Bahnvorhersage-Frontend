@@ -18,7 +18,7 @@ export class SearchParams {
 export class AlphaSearchParams {
   origin = ''
   destination = ''
-  departure = new Date()
+  departure = (new Date(new Date().setSeconds(0, 0))).toISOString() // when seconds are set, flatpickr mobile will fail on some validation
 }
 
 export const useMainStore = defineStore('main', {
@@ -71,7 +71,6 @@ export const useMainStore = defineStore('main', {
       }
     },
     async getJourneys() {
-      this.progressing = true
       const response = await fetch('/api/journeys', {
         method: 'POST',
         headers: {
@@ -80,7 +79,6 @@ export const useMainStore = defineStore('main', {
         body: JSON.stringify(this.alphaSearchParams)
       })
       this.journeysAndAlternatives = await (await this.display_fetch_error(response)).json()
-      this.progressing = false
     },
     get_connections() {
       // remove current connections
