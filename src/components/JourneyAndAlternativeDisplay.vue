@@ -127,6 +127,7 @@ function getDisplayedJourneyIndices(extend: [number, number]) {
 }
 
 const [minDates, maxDates] = getAllMinsAndMaxes(props.journeys)
+let translationXCords: number[] = []
 let journeyXCords: number[] = []
 
 const timeScale = d3
@@ -174,37 +175,48 @@ function zoomed({
 }
 
 function closestJourneyX(x: number) {
-  let leftLimit = marginLeft - x
-  let closestJourneyX = journeyXCords[0]
-  let closestJourneyDistance = Math.abs(journeyXCords[0] - leftLimit)
-  for (let i = 1; i < journeyXCords.length; i++) {
-    const distance = Math.abs(journeyXCords[i] - leftLimit)
+  let closestJourneyX = translationXCords[0]
+  let closestJourneyDistance = Math.abs(translationXCords[0] - x)
+  for (let i = 1; i < translationXCords.length; i++) {
+    const distance = Math.abs(translationXCords[i] - x)
     if (distance < closestJourneyDistance) {
-      closestJourneyX = journeyXCords[i]
+      closestJourneyX = translationXCords[i]
       closestJourneyDistance = distance
     }
   }
-  const tx = marginLeft + gap - closestJourneyX
-  return tx
+  return closestJourneyX
 }
 
-function snapToNearestJourney({ transform }: { transform: d3.ZoomTransform }) {
-  const tx = closestJourneyX(transform.x) 
-  gJourneys.transition().duration(transitionDuration).attr('transform', `translate(${tx},0)`)
-  const t = d3.zoomIdentity.translate(tx, 0)
-  zoomed({ transform: t, noXMovement: true })
+function snapToNearestJourney(event: d3.D3ZoomEvent<SVGSVGElement, unknown>) {
+  // Don't snap to nearest journey if the event was triggered by programmatic
+  // zoom (event.sourceEvent === null)
+  if (event.sourceEvent !== null) {
+    const tx = closestJourneyX( event.transform.x)
+    svg
+      .transition()
+      .duration(transitionDuration)
+      .call(zoom.translateBy, tx -  event.transform.x, 0)
+  }
 }
 
 function move(by: number) {
   let transform = d3.zoomTransform(svg.node())
   const xOrigin = transform.x
   transform = transform.translate(by, 0)
-  const tx = closestJourneyX(transform.x)
-  svg.transition().duration(transitionDuration).call(
-    zoom.translateBy,
-    tx - xOrigin, 0,
-  ).on('end', null)
-
+  let tx = closestJourneyX(transform.x)
+  // It might happen, that a journey an its alternatives are so wide, that a move by `by`
+  // would not change the x position of the journey. In this case, we need to move to the next
+  // journey.
+  if (xOrigin === tx) {
+    let currentXIndex = translationXCords.indexOf(xOrigin)
+    currentXIndex += by < 0 ? 1 : -1
+    currentXIndex = Math.min(translationXCords.length - 2, Math.max(0, currentXIndex))
+    tx = translationXCords[currentXIndex]
+  }
+  svg
+    .transition()
+    .duration(transitionDuration)
+    .call(zoom.translateBy, tx - xOrigin, 0)
 }
 
 function next() {
@@ -446,9 +458,11 @@ function onResize() {
 onMounted(() => {
   let x = gap + marginLeft
   journeyXCords.push(x)
+  translationXCords.push(-(x - marginLeft - gap))
   for (let i = 0; i < props.journeys.length; i++) {
     x = drawJourney(x, i, props.journeys[i].journey, props.journeys[i].alternatives)
     journeyXCords.push(x)
+    translationXCords.push(-(x - marginLeft - gap))
   }
 
   const currentXtend: [number, number] = [marginLeft, width]
@@ -464,7 +478,7 @@ onMounted(() => {
     .scaleExtent([1, 1])
     .translateExtent([
       [0, 0],
-      [journeyXCords.at(-1) - marginLeft + trainWidth * 3, 0]
+      [journeyXCords.at(-1), 0]
     ])
     .on('zoom', zoomed)
     .on('end', snapToNearestJourney)
@@ -605,16 +619,16 @@ svg {
   width: 100%;
 }
 
-.journey-control-prev, .journey-control-next {
-    display: none;
-  }
+.journey-control-prev,
+.journey-control-next {
+  display: none;
+}
 
-@include media-breakpoint-up(md) { 
-  .journey-control-prev, .journey-control-next {
+@include media-breakpoint-up(md) {
+  .journey-control-prev,
+  .journey-control-next {
     width: 100px;
     display: block;
   }
- }
-
-
+}
 </style>
