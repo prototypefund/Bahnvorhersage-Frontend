@@ -6,7 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
   <main-layout>
     <div class="content-container">
       <div id="about" class="text-content">
-        <h1 class="text-center">Bahn-Vorhersage</h1>
+        <h1>Bahn-Vorhersage</h1>
         <p>
           Bahn-Vorhersage ist ein Rankingsystem für Zugverbindungen. Es kann für alle Zugverbindung
           innerhalb von Deutschland einen sogenannten Verbindungsscore ermitteln. Dieser sagt aus,
@@ -18,7 +18,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
           Ein hoher Verbindungsscore ist aber keine Garantie dafür, dass eine Verbindung
           funktioniert!
         </p>
-        <h2 class="text-center">Funktionsweise</h2>
+        <h2>Funktionsweise</h2>
         <p>
           Die Webseite zeigt die gleichen Zugverbindungen wie die Seite der Bahn oder wie der DB
           Navigator. Der Verbindungsscore, den diese Seite zusätzlich zu den Informationen der

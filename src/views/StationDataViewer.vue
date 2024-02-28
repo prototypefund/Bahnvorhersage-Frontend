@@ -2,7 +2,7 @@
   <main-layout>
     <div class="content-container">
       <div class="text-content">
-        <h1 class="text-center">Stations- / Bahnhofsdaten</h1>
+        <h1>Stations- / Bahnhofsdaten</h1>
         <p>
           Unsere Stationsdaten kommen in erster Linie vom IRIS (<b>I</b>nternes
           <b>R</b>eisenden<b>i</b>nformations<b>s</b>ystem). Diese werden mit Koordinaten aus Hafas

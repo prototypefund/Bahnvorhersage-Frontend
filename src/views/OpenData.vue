@@ -6,7 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
   <main-layout>
     <div id="open-data" class="content-container">
       <div class="text-content">
-        <h1 class="text-center">Open Data</h1>
+        <h1>Open Data</h1>
         <p>
           Für dieses Projekt haben wir viele Daten gesammelt und kombiniert. Damit auch andere etwas
           von unserer Arbeit haben, stellen wir einige dieser Daten öffentlich zur Verfügung. Dies
