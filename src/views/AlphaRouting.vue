@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AlphaSearchForm from '@/components/AlphaSearchForm.vue'
-import JourneyAndAlternativeDisplay from '@/components/JourneyAndAlternativeDisplay.vue'
 import { useMainStore } from '@/stores/main'
 import { storeToRefs } from 'pinia'
 import MainLayout from '@/layouts/MainLayout.vue'
@@ -13,6 +12,16 @@ const { journeysAndAlternatives } = storeToRefs(store)
 <template>
   <main-layout>
     <div class="max-width content-container">
+      <h1>Alternativen im Voraus finden</h1>
+      <p>
+        Nutze Bahn-Vorhersage, um im Voraus Alternativen zu Deiner Zugverbindung zu finden. So
+        kannst Du diese bei der Wahl Deiner Verbindung mit beachten.
+      </p>
+      <router-link
+          class="btn btn-primary w-100 mb-3"
+          :to="{ path: '/routing/explanation' }"
+          >Funktionsweise und Erklärung</router-link
+        >
       <div class="card mb-3 overflow-hidden">
         <div class="row">
           <div class="col">

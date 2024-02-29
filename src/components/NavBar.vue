@@ -5,19 +5,9 @@
         <button class="navbar-toggler" type="button" @click="collapse.toggle()">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div
-          class="collapse navbar-collapse"
-          id="navbarSupportedContent"
-        >
-          <router-link
-            class="navbar-brand"
-            @click="collapse.hide()"
-            :to="{ path: '/' }"
-            ><img
-              src="../assets/img/IC.svg"
-              height="24"
-              width="32"
-              alt="bahnvorhersage logo"
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <router-link class="navbar-brand" @click="collapse.hide()" :to="{ path: '/' }"
+            ><img src="../assets/img/IC.svg" height="24" width="32" alt="bahnvorhersage logo"
           /></router-link>
           <div class="navbar-nav me-auto">
             <router-link
@@ -26,12 +16,28 @@
               :to="{ path: '/connections', hash: '#content' }"
               >Verbindungen</router-link
             >
-            <router-link
-              class="nav-item nav-link glow"
-              @click="collapse.hide()"
-              :to="{ path: '/routing', hash: '#content' }"
-              >Neu: Routing</router-link
-            >
+            <div class="nav-item dropdown">
+              <router-link
+                class="nav-item nav-link glow"
+                @click="collapse.hide()"
+                :to="{ path: '/routing' }"
+                >Neu: Alternativen</router-link
+              >
+              <div class="dropdown-menu rounded">
+                <router-link
+                  class="nav-item nav-link"
+                  @click="collapse.hide()"
+                  :to="{ path: '/routing' }"
+                  >Alternativen</router-link
+                >
+                <router-link
+                  class="nav-item nav-link"
+                  @click="collapse.hide()"
+                  :to="{ path: '/routing/explanation' }"
+                  >Funktionsweise</router-link
+                >
+              </div>
+            </div>
             <router-link
               class="nav-item nav-link"
               @click="collapse.hide()"
@@ -96,39 +102,38 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import installButton from "./InstallButton.vue";
-import { default as ProgressBar } from "progressbar.js";
-import { Collapse } from "bootstrap";
-import { useMainStore } from "@/stores/main";
-import { storeToRefs } from "pinia";
+import { onMounted, ref, watch } from 'vue'
+import installButton from './InstallButton.vue'
+import { default as ProgressBar } from 'progressbar.js'
+import { Collapse } from 'bootstrap'
+import { useMainStore } from '@/stores/main'
+import { storeToRefs } from 'pinia'
 
-const store = useMainStore();
-const { progressing } = storeToRefs(store);
+const store = useMainStore()
+const { progressing } = storeToRefs(store)
 
-const progress = ref(null);
-const collapse = ref(null);
+const progress = ref(null)
+const collapse = ref(null)
 
 onMounted(() => {
-  progress.value = new ProgressBar.Line("#pgr_bar", {
-      strokeWidth: 0.8,
-      color: "#3f51b5",
-      trailColor: "transparent",
-      trailWidth: 0,
-    });
+  progress.value = new ProgressBar.Line('#pgr_bar', {
+    strokeWidth: 0.8,
+    color: '#3f51b5',
+    trailColor: 'transparent',
+    trailWidth: 0
+  })
   collapse.value = new Collapse('#navbarSupportedContent', {
-      toggle: false,
-    });
-});
-
+    toggle: false
+  })
+})
 
 watch(progressing, (val) => {
   if (val) {
-    progress.value.animate(600, { duration: 300000, easing: "linear" });
+    progress.value.animate(600, { duration: 300000, easing: 'linear' })
   } else {
-    progress.value.animate(0, { duration: 10, easing: "linear" });
+    progress.value.animate(0, { duration: 10, easing: 'linear' })
   }
-});
+})
 </script>
 
 <style lang="scss">
