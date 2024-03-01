@@ -18,12 +18,12 @@
             >
             <div class="nav-item dropdown">
               <router-link
-                class="nav-item nav-link glow"
+                class="nav-link dropdown-toggle glow"
                 @click="collapse.hide()"
                 :to="{ path: '/routing' }"
                 >Neu: Alternativen</router-link
               >
-              <div class="dropdown-menu rounded">
+              <div class="dropdown-menu shadow rounded">
                 <router-link
                   class="nav-item nav-link"
                   @click="collapse.hide()"
@@ -52,7 +52,7 @@
                 :to="{ path: '/stats', hash: '#content' }"
                 >Statistiken</router-link
               >
-              <div class="dropdown-menu rounded">
+              <div class="dropdown-menu shadow rounded">
                 <router-link
                   class="nav-link"
                   @click="collapse.hide()"
